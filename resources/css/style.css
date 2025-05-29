@@ -1,0 +1,16 @@
+/* Custom styles for dropdown visibility */
+.hidden {
+    display: none;
+}
+.block {
+    display: block;
+}
+/* Additional styles for better mobile appearance */
+.dropdown-menu {
+    background-color: #f97316; /* Same as nav color */
+    border-radius: 0.5rem;
+    padding: 1rem; /* Add padding for dropdown */
+}
+.dropdown-menu a {
+    margin-bottom: 0.5rem; /* Add margin between links */
+}
