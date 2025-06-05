@@ -5,7 +5,7 @@
             <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path id="line1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16"></path>
                 <path id="line2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16"></path>
-                <path id="line3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 18h16"></path>
+                <path id="line3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 18h16"></path>.
             </svg>
         </button>
 
@@ -16,7 +16,6 @@
                 <img src="images/logofix1.jpg" alt="Logo Perusahaan" class="h-10 md:h-10 lg:h-12 w-auto rounded-full">
             </div>
         </a>
-
         
         <!-- Desktop and mobile menu -->
         <ul id="menu" class="hidden flex-col md:flex md:flex-row md:space-x-8 text-white mt-4 md:mt-0 md:items-center transition-all duration-300 ease-in-out relative top-full left-0 w-full md:static md:w-auto bg-orange-500 md:bg-transparent">
