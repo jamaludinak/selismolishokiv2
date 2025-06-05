@@ -21,7 +21,7 @@ Route::get('/storage/{filename}', function ($filename) {
 use App\Http\Controllers\homeController;
 
 Route::get('home', [homeController::class, 'index'])->name('home');
-Route::get('/', [homeController::class, 'index'])->name('home');
+// Route::get('/', [homeController::class, 'index'])->name('home');
 
 // about us
 Route::get('aboutus', function () {
