@@ -62,6 +62,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'admin', // Set default role as admin
         ]);
 
         // Redirect setelah registrasi

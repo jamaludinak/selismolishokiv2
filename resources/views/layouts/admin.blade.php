@@ -69,7 +69,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('pegawai.index') ? 'bg-orange-800' : '' }}">
+                    <a href="{{ route('pegawai.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('pegawai.index') ? 'bg-orange-800' : '' }}">
                         <i class="fas fa-user-tie mr-3"></i> Data Pegawai
                     </a>
                 </li>
@@ -174,5 +174,6 @@
         // Initial call to display date and time immediately on load
         updateDateTime();
     </script>
+    @stack('scripts')
 </body>
 </html>

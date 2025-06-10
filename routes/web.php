@@ -21,7 +21,7 @@ Route::get('/storage/{filename}', function ($filename) {
 use App\Http\Controllers\homeController;
 
 Route::get('home', [homeController::class, 'index'])->name('home');
-// Route::get('/', [homeController::class, 'index'])->name('home');
+Route::get('/', [homeController::class, 'index']);
 
 // about us
 Route::get('aboutus', function () {
@@ -70,9 +70,9 @@ Route::get('admin', function(){
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
-// // Rute untuk registrasi
-// Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-// Route::post('/register', [AuthController::class, 'register']);
+// Rute untuk registrasi
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
 
 // Rute untuk logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -89,9 +89,10 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\DataPelangganController;
 use App\Http\Controllers\UlasanController;
+use App\Http\Controllers\PegawaiController;
 
 // ========================================================ADMIN========================================================
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Reservasi Routes
@@ -113,6 +114,9 @@ Route::middleware(['auth'])->group(function () {
     
     // Ulasan Routes
     Route::resource('ulasan', UlasanController::class);
+
+    // Routes for employee management (owner only)
+    Route::resource('pegawai', PegawaiController::class);
 });
 
 
