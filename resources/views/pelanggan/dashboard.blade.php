@@ -22,7 +22,7 @@
             <p class="mb-6 text-gray-700">Ini adalah halaman dashboard pelanggan. Silakan pilih menu di bawah untuk mengelola data Anda.</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <a href="{{ route('kendaraan.index') }}" class="block bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold p-6 rounded-lg text-center shadow transition">Data Kendaraan</a>
-                <a href="#" class="block bg-green-100 hover:bg-green-200 text-green-800 font-semibold p-6 rounded-lg text-center shadow transition">Alamat</a>
+                <a href="{{ route('alamat.index') }}" class="block bg-green-100 hover:bg-green-200 text-green-800 font-semibold p-6 rounded-lg text-center shadow transition">Alamat</a>
                 <a href="#" class="block bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-semibold p-6 rounded-lg text-center shadow transition">Reservasi</a>
             </div>
         </div>
