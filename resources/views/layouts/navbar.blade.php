@@ -26,6 +26,7 @@
             <li class="w-full md:w-auto"><a href="#faq" class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">FAQ</a></li>
             <li class="w-full md:w-auto"><a href="#aboutus" class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Tentang Kami</a></li>
             <li class="w-full md:w-auto"><a href="#contact" class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Kontak</a></li>
+        
         </ul>
     </div>
 </nav>
