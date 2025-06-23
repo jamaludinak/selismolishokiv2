@@ -22,6 +22,10 @@ class Reservasi extends Model
         'video',
         'noResi',
         'status',
+        'longitude',
+        'latitude',
+        'total_harga',
+        'biaya_perjalanan',
     ];
 
     // Relasi dengan model JenisKerusakan (many-to-one)

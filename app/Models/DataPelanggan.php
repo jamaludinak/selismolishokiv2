@@ -22,5 +22,10 @@ class DataPelanggan extends Authenticatable
     {
         return $this->hasMany(AlamatPelanggan::class, 'data_pelanggan_id');
     }
+
+    public function kendaraans()
+    {
+        return $this->hasMany(Kendaraan::class, 'data_pelanggan_id');
+    }
 }
 

@@ -12,7 +12,7 @@ class JenisKerusakan extends Model
     protected $table = 'jenis_kerusakans';
 
     protected $fillable = [
-        'nama',
+        'nama', 'estimasi_harga'
     ];
 
     // Relasi dengan model Reservasi (one-to-many)

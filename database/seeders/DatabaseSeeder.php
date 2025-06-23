@@ -15,9 +15,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        \App\Models\Setting::updateOrCreate([
+            'key' => 'bengkel_longlat'
+        ], [
+            'value' => '109.264502,-7.437347'
+        ]);
+        \App\Models\Setting::updateOrCreate([
+            'key' => 'tarif_per_km'
+        ], [
+            'value' => '5000'
         ]);
     }
 }

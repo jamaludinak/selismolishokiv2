@@ -8,6 +8,7 @@ use App\Models\JenisKerusakan;
 use App\Models\Riwayat;
 use App\Models\DataPelanggan;
 use App\Models\ReqJadwal;
+use App\Models\Setting;
 
 class ReservasiController extends Controller
 {
@@ -58,7 +59,7 @@ class ReservasiController extends Controller
                 return $query->where('idJenisKerusakan', $filterJenisKerusakan);
             })
             ->when($searchKodePelanggan, function ($query, $searchKodePelanggan) {
-                // Lakukan join dengan tabel data_pelanggan untuk mengakses kolom noTelp
+                // Lakukan join dengan tabel data_pelanggans untuk mengakses kolom noTelp
                 $query->join('data_pelanggans', 'reservasis.noTelp', '=', 'data_pelanggans.noHP')
                       ->where('data_pelanggans.kode', $searchKodePelanggan);
             })
@@ -98,7 +99,9 @@ class ReservasiController extends Controller
             'video' => 'nullable|string',
             'noResi' => 'required|unique:reservasis',
             'servis' => 'required|string',
-            'status' => 'nullable|string|in:pending,confirmed,process,completed,cancelled', // Status menjadi nullable
+            'status' => 'nullable|string|in:pending,confirmed,process,completed,cancelled',
+            'longitude' => 'required',
+            'latitude' => 'required',
         ]);
     
         // Cek apakah pelanggan sudah ada berdasarkan noTelp
@@ -120,8 +123,22 @@ class ReservasiController extends Controller
             ]);
         }
     
+        // Ambil longlat bengkel dari settings
+        $bengkelLonglat = Setting::where('key', 'bengkel_longlat')->first();
+        $tarifPerKm = Setting::where('key', 'tarif_per_km')->first();
+        $biayaPerKm = $tarifPerKm ? (int)$tarifPerKm->value : 5000; // default 5000
+        $biayaPerjalanan = 0;
+        if ($bengkelLonglat) {
+            [$bengkelLong, $bengkelLat] = explode(',', $bengkelLonglat->value);
+            $jarak = $this->haversineDistance($request->latitude, $request->longitude, $bengkelLat, $bengkelLong);
+            $biayaPerjalanan = ceil($jarak) * $biayaPerKm;
+        }
+    
         // Simpan data reservasi
-        $reservasi = Reservasi::create(array_merge($validatedData, ['idPelanggan' => $pelanggan->id]));
+        $reservasi = Reservasi::create(array_merge($validatedData, [
+            'idPelanggan' => $pelanggan->id,
+            'biaya_perjalanan' => $biayaPerjalanan,
+        ]));
     
         // Simpan riwayat hanya jika status diberikan
         if (!is_null($reservasi->status)) {
@@ -134,6 +151,21 @@ class ReservasiController extends Controller
         return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil ditambahkan.');
     }
 
+    // Fungsi untuk menghitung jarak Haversine (km)
+    private function haversineDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // km
+        $lat1 = deg2rad($lat1);
+        $lon1 = deg2rad($lon1);
+        $lat2 = deg2rad($lat2);
+        $lon2 = deg2rad($lon2);
+        $dlat = $lat2 - $lat1;
+        $dlon = $lon2 - $lon1;
+        $a = sin($dlat/2) * sin($dlat/2) + cos($lat1) * cos($lat2) * sin($dlon/2) * sin($dlon/2);
+        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+        $distance = $earthRadius * $c;
+        return $distance;
+    }
 
     // Menampilkan form untuk mengedit reservasi
     public function edit($id)

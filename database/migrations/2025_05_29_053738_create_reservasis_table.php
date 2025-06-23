@@ -23,6 +23,10 @@ return new class extends Migration
             $table->string('video')->nullable();
             $table->string('noResi')->unique();
             $table->string('status')->default('pending');
+            $table->string('longitude')->nullable();
+            $table->string('latitude')->nullable();
+            $table->unsignedBigInteger('total_harga')->nullable();
+            $table->unsignedBigInteger('biaya_perjalanan')->nullable();
             $table->timestamps();
         });
     }

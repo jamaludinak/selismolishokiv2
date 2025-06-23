@@ -15,6 +15,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\DataPelangganController;
 use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\KendaraanController;
 
 Route::get('/storage/{filename}', function ($filename) {
     $path = storage_path('app/public/' . $filename);
@@ -100,6 +101,7 @@ Route::middleware(['auth:pelanggan'])->group(function () {
     Route::get('/dashboard-pelanggan', function () {
         return view('pelanggan.dashboard');
     })->name('dashboard.pelanggan');
+    Route::resource('kendaraan', KendaraanController::class);
     // Tambahkan route fitur pelanggan lain di sini
 });
 
