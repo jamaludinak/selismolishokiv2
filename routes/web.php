@@ -3,7 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthPelangganController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReservasiController;
+use App\Http\Controllers\JenisKerusakanController;
+use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\DataPelangganController;
+use App\Http\Controllers\UlasanController;
+use App\Http\Controllers\PegawaiController;
 
 Route::get('/storage/{filename}', function ($filename) {
     $path = storage_path('app/public/' . $filename);
@@ -38,13 +49,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// User Auth
-Route::get('/user/login', [UserAuthController::class, 'showLoginForm'])->name('user.login');
-Route::post('/user/login', [UserAuthController::class, 'login']);
-Route::get('/user/register', [UserAuthController::class, 'showRegisterForm'])->name('user.register');
-Route::post('/user/register', [UserAuthController::class, 'register']);
-Route::post('/user/logout', [UserAuthController::class, 'logout'])->name('user.logout');
 
 // ========================================================
 // ✅ ADMIN & TEKNISI ROUTES (DENGAN MIDDLEWARE auth & role)
@@ -83,19 +87,19 @@ Route::fallback(function () {
     return response()->view('error.404', [], 404);
 });
 
-// Rute untuk login pelanggan
+// ========================================================
+// ✅ AUTHENTICATION & DASHBOARD ROUTES PELANGGAN
+// ========================================================
 Route::get('/login-pelanggan', [AuthPelangganController::class, 'showLoginForm'])->name('login.pelanggan');
 Route::post('/login-pelanggan', [AuthPelangganController::class, 'login']);
-// Rute untuk registrasi pelanggan
 Route::get('/register-pelanggan', [AuthPelangganController::class, 'showRegisterForm'])->name('register.pelanggan');
 Route::post('/register-pelanggan', [AuthPelangganController::class, 'register']);
-// Rute untuk logout pelanggan
 Route::post('/logout-pelanggan', [AuthPelangganController::class, 'logout'])->name('logout.pelanggan');
 
-// Dashboard pelanggan
 Route::middleware(['auth:pelanggan'])->group(function () {
     Route::get('/dashboard-pelanggan', function () {
         return view('pelanggan.dashboard');
     })->name('dashboard.pelanggan');
+    // Tambahkan route fitur pelanggan lain di sini
 });
 
