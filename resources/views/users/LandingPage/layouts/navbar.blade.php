@@ -1,4 +1,4 @@
-<nav class="p-4 fixed top-0 w-full z-10 border-b border-black" style="background-color: #f97316">
+<nav class="p-2 md:p-4 fixed top-0 w-full z-10 border-b border-black" style="background-color: #f97316">
     <div class="container mx-auto flex flex-auto justify-between items-center">
         <!-- Mobile menu button -->
         <button id="menu-btn"
@@ -44,8 +44,10 @@
             <li class="w-full md:w-auto"><a href="#contact"
                     class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Kontak</a>
             </li>
-            <li class="w-full md:w-auto"><a href="{{ route('login') }}"
-                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Masuk</a>
+            <li class="w-full md:w-auto">
+                <a href="{{ route('login.pelanggan') }}"
+                    class="block py-2 px-4 bg-white rounded text-black text-center">Masuk
+                </a>
             </li>
         </ul>
     </div>

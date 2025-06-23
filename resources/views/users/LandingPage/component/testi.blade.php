@@ -1,6 +1,6 @@
-<div class="container mx-auto text-center h-full flex flex-col justify-center">
+<div class="container py-16 mx-auto text-center h-full flex flex-col justify-center">
     <h2 class="text-2xl font-bold mt-8 mb-6 lg:mb-12 pt-10 text-gray-900">Testimoni Pelanggan</h2>
-    <p class="text-lg md:text-xl mb-6 mx-4 lg:mx-0 text-gray-700">
+    <p class="text-sm md:text-xl mb-6 mx-4 lg:mx-0 text-gray-700">
         Lihat apa yang pelanggan kami katakan tentang layanan kami. Kami berkomitmen untuk memberikan pelayanan terbaik
         untuk Anda.
     </p>

@@ -28,8 +28,8 @@ Route::get('/storage/{filename}', function ($filename) {
 // ✅ PUBLIC ROUTES (TIDAK PERLU LOGIN)
 // ========================================================
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/aboutus', fn() => view('users.aboutus'))->name('aboutus');
-Route::get('/contact', fn() => view('users.contact'))->name('contact');
+Route::get('/aboutus', fn() => view('users.LandingPage.aboutus'))->name('aboutus');
+Route::get('/contact', fn() => view('users.LandingPage.contact'))->name('contact');
 
 // Page Service Pelanggan
 Route::get('/servis', [PelangganController::class, 'create'])->name('services.servis');

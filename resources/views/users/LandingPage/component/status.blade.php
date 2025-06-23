@@ -1,9 +1,9 @@
-<div class="container mx-auto text-center">
+<div class="container mx-auto text-center py-16 px-8">
     <!-- Judul Section -->
-    <h2 class="text-2xl font-bold mt-8 mb-8 text-gray-900">Cek Status Perbaikan</h2>
+    <h2 class="text-2xl md:text-3xl font-bold mt-4 mb-4 text-gray-900">Cek Status Perbaikan</h2>
 
     <!-- Paragraph Section -->
-    <p class="text-xl text-gray-700 mb-10">
+    <p class="text-sm md:text-xl text-gray-700 mb-6 md:mb-10">
         Masukkan nomor resi perbaikan Anda untuk melihat status terkini dari unit yang sedang diperbaiki.
     </p>
 
