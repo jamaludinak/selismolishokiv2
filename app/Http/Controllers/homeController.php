@@ -11,6 +11,6 @@ class homeController extends Controller
     {
         $ulasans = Ulasan::all(); // Fetch all reviews
 
-        return view('home', compact('ulasans')); // Adjust the view name as necessary
+        return view('users.LandingPage.home', compact('ulasans')); // Adjust the view name as necessary
     }
 }
