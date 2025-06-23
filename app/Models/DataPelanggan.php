@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class DataPelanggan extends Model
+class DataPelanggan extends Authenticatable
 {
-    protected $fillable = ['kode', 'nama', 'noHP', 'alamat', 'keluhan'];
+    protected $fillable = ['kode', 'nama', 'noHP', 'keluhan', 'password'];
 
     protected static function boot()
     {
@@ -15,6 +16,11 @@ class DataPelanggan extends Model
         static::creating(function ($dataPelanggan) {
             $dataPelanggan->kode = 'P' . (self::max('id') + 1);
         });
+    }
+
+    public function alamatPelanggan()
+    {
+        return $this->hasMany(AlamatPelanggan::class, 'data_pelanggan_id');
     }
 }
 

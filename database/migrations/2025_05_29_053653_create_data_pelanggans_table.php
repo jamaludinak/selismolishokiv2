@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('kode')->unique();
             $table->string('nama');
-            $table->string('noHP');
-            $table->text('alamat');
+            $table->string('noHP')->unique();
+            $table->string('password');
+            $table->string('alamat')->nullable();
             $table->text('keluhan')->nullable();
             $table->timestamps();
         });

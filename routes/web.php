@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\AuthPelangganController;
 
 Route::get('/storage/{filename}', function ($filename) {
     $path = storage_path('app/public/' . $filename);
@@ -117,6 +118,22 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
 
     // Routes for employee management (owner only)
     Route::resource('pegawai', PegawaiController::class);
+});
+
+// Rute untuk login pelanggan
+Route::get('/login-pelanggan', [AuthPelangganController::class, 'showLoginForm'])->name('login.pelanggan');
+Route::post('/login-pelanggan', [AuthPelangganController::class, 'login']);
+// Rute untuk registrasi pelanggan
+Route::get('/register-pelanggan', [AuthPelangganController::class, 'showRegisterForm'])->name('register.pelanggan');
+Route::post('/register-pelanggan', [AuthPelangganController::class, 'register']);
+// Rute untuk logout pelanggan
+Route::post('/logout-pelanggan', [AuthPelangganController::class, 'logout'])->name('logout.pelanggan');
+
+// Dashboard pelanggan
+Route::middleware(['auth:pelanggan'])->group(function () {
+    Route::get('/dashboard-pelanggan', function () {
+        return view('pelanggan.dashboard');
+    })->name('dashboard.pelanggan');
 });
 
 
