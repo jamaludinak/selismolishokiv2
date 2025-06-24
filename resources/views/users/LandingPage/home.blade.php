@@ -12,7 +12,7 @@
     </section>
 
     <!-- Services Section -->
-    <section id="services" style="background-color: #f8f8f8">
+    <section id="services" style="background-color: #f8f8f8" class="mb-8" >
         @include('users.LandingPage.component.service')
     </section>
 

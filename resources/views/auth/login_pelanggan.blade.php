@@ -64,10 +64,18 @@
             <button type="submit"
                 class="w-full py-2 px-4 text-xs sm:text-base text-white bg-orange-500 hover:bg-orange-600 rounded-xl font-semibold transition-colors">Masuk</button>
         </form>
-        <div class="mt-4 text-start text-xs sm:text-sm">
-            Belum punya akun? <a href="{{ url('/register-pelanggan') }}" class="text-orange-600 hover:underline">Daftar
-                di
-                sini</a>
+        <div class="mt-4 flex justify-between items-center text-xs sm:text-sm">
+            <div>
+                Belum punya akun?
+                <a href="{{ url('/register-pelanggan') }}" class="text-orange-600 hover:underline">
+                    Daftar di sini
+                </a>
+            </div>
+            <div>
+                <a href="#" class="text-orange-600 hover:underline">
+                    Lupa password?
+                </a>
+            </div>
         </div>
     </div>
     <script>

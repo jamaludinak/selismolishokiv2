@@ -53,3 +53,114 @@
         </div>
     </div>
 </div>
+@push('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById("status-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const noResi = document.getElementById("noResi").value;
+
+            // Tampilkan loading spinner
+            Swal.fire({
+                title: 'Mengecek Status...',
+                text: 'Harap tunggu sebentar.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch(`/cek-resi/${noResi}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    Swal.close(); // Tutup spinner
+
+                    if (data.success) {
+                        const statusText = mapStatus(data.data.status);
+                        const nama = data.data.namaLengkap;
+                        const telp = data.data.noTelp;
+
+                        // Format riwayat status
+                        let riwayatHTML = "";
+                        data.data.riwayat.forEach((item) => {
+                            const date = new Date(item.created_at).toLocaleDateString("id-ID");
+                            const time = new Date(item.created_at).toLocaleTimeString("id-ID", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false,
+                            });
+                            const status = mapStatus(item.status);
+
+                            riwayatHTML += `<tr>
+                            <td class="p-2">${date}</td>
+                            <td class="p-2">${time}</td>
+                            <td class="p-2">${status}</td>
+                        </tr>`;
+                        });
+
+                        // Masukkan ke tabel
+                        document.getElementById("current-status").innerText = statusText;
+                        document.getElementById("nama-lengkap").innerText = nama;
+                        document.getElementById("nomor-telp").innerText = telp;
+                        document.getElementById("status-riwayat").innerHTML = riwayatHTML;
+                        document.getElementById("status-result").classList.remove("hidden");
+
+                        // Modal ringkasan cepat
+                        Swal.fire({
+                            icon: 'success',
+                            html: `<b>${nama}</b><br>Status: <b>${statusText}</b>`,
+                            confirmButtonText: 'Lihat Detail',
+                            showCancelButton: true,
+                            cancelButtonText: 'Tutup'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Scroll ke hasil
+                                document.getElementById("status-result").scrollIntoView({
+                                    behavior: 'smooth'
+                                });
+                            }
+                        });
+
+                    } else {
+                        Swal.fire('Tidak Ditemukan', data.message || 'Resi tidak valid.', 'error');
+                    }
+                })
+                .catch((error) => {
+                    Swal.close();
+                    console.error("Error:", error);
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat mengambil data.', 'error');
+                });
+        });
+
+        function mapStatus(status) {
+            const statusMapping = {
+                pending: "Menunggu Konfirmasi",
+                confirmed: "Sudah Konfirmasi",
+                process: "Proses Perbaikan",
+                completed: "Selesai",
+                cancelled: "Dibatalkan",
+            };
+            return statusMapping[status] || status;
+        }
+
+        // Toggle Accordion (optional jika masih pakai accordion manual)
+        document.querySelector(".toggle-button").addEventListener("click", function(event) {
+            const statusDetails = document.getElementById("status-details");
+            const chevron = document.getElementById("chevron");
+
+            if (statusDetails.style.maxHeight) {
+                statusDetails.style.maxHeight = null;
+                chevron.style.transform = "rotate(0deg)";
+            } else {
+                statusDetails.style.maxHeight = statusDetails.scrollHeight + "px";
+                chevron.style.transform = "rotate(180deg)";
+            }
+        });
+    </script>
+@endpush

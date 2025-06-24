@@ -6,7 +6,7 @@
                 <h5 class="text-base sm:text-lg mt-0 mb-2 text-white">
                     Tetap terhubung dengan kami melalui :
                 </h5>
-                <div class="mt-4 lg:mb-0 mb-6 flex flex-row space-x-2">
+                <div class="mt-4 lg:mb-0 mb-6 flex flex-row gap-2">
                     <a href="https://www.instagram.com/selismolishokiofficial/" aria-label="Instagram">
                         <button
                             class="bg-white text-black shadow-lg font-normal h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-full"
@@ -14,7 +14,7 @@
                             <i class="fab fa-instagram text-base sm:text-lg"></i>
                         </button>
                     </a>
-                    <a href="https://wa.link/tnpduo" aria-label="WhatsApp">
+                    <a href="https://wa.link/dvjvj1" target="_blank" aria-label="WhatsApp">
                         <button
                             class="bg-white text-black shadow-lg font-normal h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-full"
                             type="button">

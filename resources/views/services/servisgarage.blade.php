@@ -5,20 +5,15 @@
         <div class="container mx-auto max-w-full sm:max-w-2xl px-0 sm:px-4">
             <div class="bg-white rounded-lg shadow-lg p-4 sm:p-8">
                 <!-- Tombol Back -->
-                <div class="flex items-center mb-4">
+                <div class="flex items-center mb-3 sm:mb-4">
                     <a href="{{ route('home') }}">
                         <button"
                             class="flex items-center text-orange-600 hover:text-orange-800 transition duration-300 ease-in-out">
-                            <svg class="h-5 w-5 sm:h-6 sm:w-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
-                                </path>
-                            </svg>
-                            <span class="font-semibold text-base sm:text-lg">Kembali</span>
+                            <i class="fa fa-arrow-left h-5 w-5 md:h-15 md:w-15 mr-1"></i>
                             </button>
                     </a>
-
                 </div>
+
 
                 <div class="text-center">
                     <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Formulir Servis di
