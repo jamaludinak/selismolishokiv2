@@ -15,7 +15,7 @@
             allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
         </iframe>
     </div>
-    <!-- Button Section (uncomment if needed) -->
+    {{-- <!-- Button Section (uncomment if needed) -->
     <!--
     <a href="{{ route('aboutus') }}"
         style="background-color: #d97706"
@@ -24,5 +24,5 @@
         onmouseout="this.style.backgroundColor='#d97706'">
         Selengkapnya
     </a>
-    -->
+    --> --}}
 </div>
