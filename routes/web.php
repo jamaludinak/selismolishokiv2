@@ -18,6 +18,8 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\AlamatPelangganController;
 use App\Http\Controllers\ReservasiPelangganController;
+use App\Http\Controllers\RiwayatServisPelangganController;
+
 // Route akses file storage
 Route::get('/storage/{filename}', function ($filename) {
     $path = storage_path('app/public/' . $filename);
@@ -93,6 +95,7 @@ Route::middleware(['auth:pelanggan'])->group(function () {
     Route::resource('kendaraan', KendaraanController::class);
     Route::resource('alamat', AlamatPelangganController::class);
     Route::resource('reservasi', ReservasiPelangganController::class);
+    Route::resource('riwayat-servis', RiwayatServisPelangganController::class);
 });
 
 // ========================================================
