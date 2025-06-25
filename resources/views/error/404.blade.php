@@ -22,7 +22,7 @@
         <h1 class="text-5xl font-bold text-yellow-400">404</h1>
         <p class="text-xl mt-4">Halaman Tidak Ditemukan</p>
         <p class="text-gray-400 mb-6">Ups! Sepertinya kamu nyasar ke halaman yang tidak ada.</p>
-        <a href="{{ route('home') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">
+        <a href="{{ url()->previous() }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">
             Kembali ke Beranda
         </a>
     </div>

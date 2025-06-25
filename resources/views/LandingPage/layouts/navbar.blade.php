@@ -1,4 +1,4 @@
-<nav class="p-4 fixed top-0 w-full z-10 border-b border-black" style="background-color: #f97316">
+<nav class="p-2 md:p-4 fixed top-0 w-full z-10 border-b border-black" style="background-color: #f97316">
     <div class="container mx-auto flex flex-auto justify-between items-center">
         <!-- Mobile menu button -->
         <button id="menu-btn"
@@ -22,10 +22,9 @@
             </div>
         </a>
 
-
         <!-- Desktop and mobile menu -->
         <ul id="menu"
-            class="hidden flex-col md:flex md:flex-row md:space-x-8 text-white mt-4 md:mt-0 md:items-center transition-all duration-300 ease-in-out relative top-full left-0 w-full md:static md:w-auto bg-orange-500 md:bg-transparent">
+            class="hidden flex-col md:flex md:flex-row md:gap-2 text-white mt-4 md:mt-0 md:items-center transition-all duration-300 ease-in-out relative top-full left-0 w-full md:static md:w-auto bg-orange-500 md:bg-transparent">
             <li class="w-full md:w-auto"><a href="#services"
                     class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Servis</a>
             </li>
@@ -44,8 +43,10 @@
             <li class="w-full md:w-auto"><a href="#contact"
                     class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Kontak</a>
             </li>
-            <li class="w-full md:w-auto"><a href="{{ route('login') }}"
-                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Masuk</a>
+            <li class="w-full md:w-auto">
+                <a href="{{ route('login.pelanggan') }}"
+                    class="block py-2 px-4 bg-white rounded text-black text-center">Masuk
+                </a>
             </li>
         </ul>
     </div>

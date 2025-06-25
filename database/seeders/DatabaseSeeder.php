@@ -14,7 +14,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
+        $this->call(UlasanSeeder::class);
+        $this->call(JenisKerusakanSeeder::class);
+        $this->call(ReservasiSeeder::class);
+        $this->call(RiwayatSeeder::class);
+        // Create an admin user
         \App\Models\Setting::updateOrCreate([
             'key' => 'bengkel_longlat'
         ], [

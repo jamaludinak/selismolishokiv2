@@ -76,8 +76,6 @@ class ReservasiController extends Controller
     }
 
 
-
-
     // Menampilkan form untuk menambahkan reservasi baru
     public function create()
     {
@@ -150,6 +148,7 @@ class ReservasiController extends Controller
     
         return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil ditambahkan.');
     }
+
 
     // Fungsi untuk menghitung jarak Haversine (km)
     private function haversineDistance($lat1, $lon1, $lat2, $lon2)

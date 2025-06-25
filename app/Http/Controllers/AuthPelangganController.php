@@ -69,6 +69,6 @@ class AuthPelangganController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login-pelanggan');
+        return view('auth.login_pelanggan')->with('success', 'Anda telah berhasil logout.');
     }
 } 
