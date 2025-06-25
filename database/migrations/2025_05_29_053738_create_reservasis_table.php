@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('latitude')->nullable();
             $table->unsignedBigInteger('total_harga')->nullable();
             $table->unsignedBigInteger('biaya_perjalanan')->nullable();
+            $table->date('tanggal_berakhir_garansi')->nullable();
             $table->timestamps();
         });
     }

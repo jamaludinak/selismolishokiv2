@@ -26,6 +26,7 @@ class Reservasi extends Model
         'latitude',
         'total_harga',
         'biaya_perjalanan',
+        'tanggal_berakhir_garansi',
     ];
 
     // Relasi dengan model JenisKerusakan (many-to-one)
