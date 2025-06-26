@@ -18,6 +18,8 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\AlamatPelangganController;
 use App\Http\Controllers\ReservasiPelangganController;
+use App\Http\Controllers\RiwayatServisPelangganController;
+
 use App\Http\Controllers\ProfilePelangganController;
 use App\Http\Controllers\RiwayatServisPelangganController;
 use App\Http\Controllers\KlaimGaransiController;
