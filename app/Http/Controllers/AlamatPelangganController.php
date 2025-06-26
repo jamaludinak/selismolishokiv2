@@ -34,7 +34,7 @@ class AlamatPelangganController extends Controller
         $data = $request->all();
         $data['data_pelanggan_id'] = $user->id;
         AlamatPelanggan::create($data);
-        return redirect()->route('alamat.index')->with('success', 'Alamat berhasil ditambahkan.');
+        return redirect()->route('profile.index')->with('success', 'Alamat berhasil ditambahkan.');
     }
 
     // Tampilkan form edit alamat
@@ -56,7 +56,7 @@ class AlamatPelangganController extends Controller
         $user = Auth::guard('pelanggan')->user();
         $alamat = AlamatPelanggan::where('id', $id)->where('data_pelanggan_id', $user->id)->firstOrFail();
         $alamat->update($request->all());
-        return redirect()->route('alamat.index')->with('success', 'Alamat berhasil diupdate.');
+        return redirect()->route('profile.index')->with('success', 'Alamat berhasil diupdate.');
     }
 
     // Hapus alamat
@@ -65,6 +65,21 @@ class AlamatPelangganController extends Controller
         $user = Auth::guard('pelanggan')->user();
         $alamat = AlamatPelanggan::where('id', $id)->where('data_pelanggan_id', $user->id)->firstOrFail();
         $alamat->delete();
-        return redirect()->route('alamat.index')->with('success', 'Alamat berhasil dihapus.');
+        return redirect()->route('profile.index')->with('success', 'Alamat berhasil dihapus.');
     }
-} 
+
+    public function jadikanUtama($id)
+    {
+        $user = Auth::guard('pelanggan')->user();
+
+        // Reset semua alamat menjadi bukan utama
+        $user->alamatPelanggan()->update(['is_utama' => false]);
+
+        // Set alamat terpilih menjadi utama
+        $alamat = $user->alamatPelanggan()->findOrFail($id);
+        $alamat->is_utama = true;
+        $alamat->save();
+
+        return redirect()->route('profile.index')->with('success', 'Alamat berhasil dijadikan alamat utama.');
+    }
+}

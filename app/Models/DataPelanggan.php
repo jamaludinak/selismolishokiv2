@@ -27,5 +27,9 @@ class DataPelanggan extends Authenticatable
     {
         return $this->hasMany(Kendaraan::class, 'data_pelanggan_id');
     }
-}
 
+    public function reservasis()
+    {
+        return $this->hasMany(Reservasi::class, 'noTelp', 'noHP');
+    }
+}

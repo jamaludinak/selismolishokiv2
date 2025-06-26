@@ -40,7 +40,7 @@
                                     Lihat Lokasi
                                 </a>
                             </td>
-                            <td class="px-4 py-2 flex flex-col sm:flex-row gap-2">
+                            <td class="px-4 py-2 flex flex-col sm:flex-row gap-3">
                                 <a href="{{ route('alamat.edit', $a->id) }}"
                                     class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 text-xs sm:text-sm text-center">
                                     Edit
@@ -54,6 +54,10 @@
                                         Hapus
                                     </button>
                                 </form>
+                                <a href="#"
+                                    class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 text-xs sm:text-sm text-center">
+                                    jadi Alamat Utama
+                                </a>
                             </td>
                         </tr>
                     @empty

@@ -2,7 +2,7 @@
 @section('title', 'Profile Pelanggan')
 
 @section('content')
-    <div class="container mx-auto py-2 px-4 sm:px-6 lg:px-4">
+    <div class="container mx-auto py-2 px-2 sm:px-6 lg:px-2">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold">Profil Pelanggan</h1>
         </div>
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <div class="container mx-auto py-2 px-4 sm:px-6 lg:px-4">
+    <div class="container mx-auto py-2 px-4 sm:px-6 lg:px-2">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h1 class="text-xl sm:text-2xl font-bold">Data Alamat</h1>
             <a href="{{ route('alamat.create') }}"
@@ -66,30 +66,30 @@
             </div>
         @endif
 
-        <div class="bg-white rounded shadow p-4 overflow-x-auto text-sm sm:text-base">
-            <table class="min-w-full table-auto whitespace-nowrap">
+        <div class="bg-white rounded shadow p-4 text-sm sm:text-base">
+            <table class="w-full table-auto whitespace-nowrap">
                 <thead>
                     <tr class="bg-gray-200 text-left text-sm">
-                        <th class="px-4 py-2">Alamat</th>
-                        <th class="px-4 py-2">Longitude</th>
-                        <th class="px-4 py-2">Latitude</th>
-                        <th class="px-4 py-2">Lokasi</th>
-                        <th class="px-4 py-2">Aksi</th>
+                        <th class="px-2 py-2 w-2/5">Alamat</th>
+                        <th class="px-2 py-2 w-1/6">Longitude</th>
+                        <th class="px-2 py-2 w-1/6">Latitude</th>
+                        <th class="px-2 py-2 w-1/6">Lokasi</th>
+                        <th class="px-2 py-2 w-1/6">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($alamats as $a)
                         <tr class="border-b">
-                            <td class="px-4 py-2">{{ $a->alamat }}</td>
-                            <td class="px-4 py-2">{{ $a->longitude }}</td>
-                            <td class="px-4 py-2">{{ $a->latitude }}</td>
-                            <td class="px-4 py-2">
+                            <td class="px-2 py-2 break-words">{{ $a->alamat }}</td>
+                            <td class="px-2 py-2">{{ $a->longitude }}</td>
+                            <td class="px-2 py-2">{{ $a->latitude }}</td>
+                            <td class="px-2 py-2">
                                 <a href="#" onclick="showMap({{ $a->latitude }}, {{ $a->longitude }})"
                                     class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-xs sm:text-sm text-center block sm:inline-block">
                                     Lihat Lokasi
                                 </a>
                             </td>
-                            <td class="px-4 py-2 flex flex-col sm:flex-row gap-2">
+                            <td class="px-2 py-2 flex flex-col sm:flex-row gap-1">
                                 <a href="{{ route('alamat.edit', $a->id) }}"
                                     class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 text-xs sm:text-sm text-center">
                                     Edit
@@ -103,6 +103,20 @@
                                         Hapus
                                     </button>
                                 </form>
+                                @if (!$a->is_utama)
+                                    <form action="{{ route('alamat.utama', $a->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs sm:text-sm text-center">
+                                            Jadikan Alamat Utama
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="bg-green-500 text-white px-3 py-1 rounded text-xs sm:text-sm text-center">
+                                        Alamat Utama
+                                    </span>
+                                @endif
+
                             </td>
                         </tr>
                     @empty

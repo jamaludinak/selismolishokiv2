@@ -21,6 +21,7 @@ use App\Http\Controllers\ProfilePelangganController;
 use App\Http\Controllers\ReservasiPelangganController;
 use App\Http\Controllers\RiwayatServisPelangganController;
 use App\Http\Controllers\KlaimGaransiController;
+use App\Http\Controllers\DashboardPelangganController;
 
 // Route akses file storage
 Route::get('/storage/{filename}', function ($filename) {
@@ -93,13 +94,14 @@ Route::middleware(['auth', 'role:admin,teknisi'])->group(function () {
 // ✅ PELANGGAN ROUTES (auth:pelanggan)
 // ========================================================
 Route::middleware(['auth:pelanggan'])->group(function () {
-    Route::get('/dashboard-pelanggan', fn() => view('pelanggan.dashboard'))->name('dashboard.pelanggan');
+    Route::get('/dashboard-pelanggan', [DashboardPelangganController::class, 'index'])->name('dashboard.pelanggan');
     Route::resource('kendaraan', KendaraanController::class);
     Route::resource('alamat', AlamatPelangganController::class);
+    Route::post('/alamat/jadikan-utama/{id}', [AlamatPelangganController::class, 'jadikanUtama'])->name('alamat.utama');
     Route::resource('reservasi', ReservasiPelangganController::class);
     Route::resource('profile', ProfilePelangganController::class);
     Route::resource('riwayats', RiwayatServisPelangganController::class)->only(['index', 'show']);
-    Route::resource('klaim-garansi', KlaimGaransiController::class)->only(['index','store']);
+    Route::resource('klaim-garansi', KlaimGaransiController::class)->only(['index', 'store']);
     Route::get('/klaim-garansi/create/resi/{noResi}', [KlaimGaransiController::class, 'create'])->name('klaim-garansi.create');
 });
 
