@@ -46,10 +46,14 @@ class Reservasi extends Model
     {
         return $this->hasMany(Riwayat::class, 'idReservasi');
     }
-    
+
     public function reqJadwals()
     {
         return $this->hasMany(ReqJadwal::class, 'idReservasi');
     }
 
+    public function kendaraan()
+    {
+        return $this->belongsTo(Kendaraan::class, 'kendaraan_id');
+    }
 }

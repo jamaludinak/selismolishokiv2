@@ -7,47 +7,70 @@
                     Anda di bengkel.</p>
             </div>
             <form id="reservation-form" action="{{ route('services.submitGarage') }}" method="POST"
-                enctype="multipart/form-data" class="mx-auto mt-8 sm:mt-10 md:mt-16 max-w-full sm:max-w-xl">
+                enctype="multipart/form-data" class="mx-auto mt-8 max-w-xl">
                 @csrf
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <!-- Nama Lengkap -->
                     <div>
-                        <label for="name" class="block text-xs sm:text-sm font-semibold leading-6 text-black">Nama
+                        <label for="name" class="block text-sm font-semibold text-black">Nama
                             Lengkap</label>
                         <div class="mt-2">
                             <input type="text" id="name" placeholder="Tulis nama lengkap anda"
                                 name="namaLengkap" required
-                                class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                         </div>
                     </div>
                     <!-- Nomor Telepon -->
                     <div>
-                        <label for="phone" class="block text-xs sm:text-sm font-semibold leading-6 text-black">Nomor
+                        <label for="phone" class="block text-sm font-semibold text-black">Nomor
                             WhatsApp/Telepon</label>
                         <div class="mt-2">
                             <input type="text" id="phone" placeholder="Tulis nomor WA/Telp anda" name="noTelp"
                                 required
-                                class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                         </div>
                     </div>
-                    <!-- Alamat -->
+
+                    <!-- Pilih Alamat -->
                     <div class="sm:col-span-2">
-                        <label for="address" class="block text-xs sm:text-sm font-semibold leading-6 text-black">Alamat
-                            Lengkap</label>
+                        <label for="alamat_id" class="block text-sm font-semibold text-black">Pilih Alamat</label>
                         <div class="mt-2">
-                            <textarea id="address" placeholder="Tulis alamat lengkap beserta patokan rumah anda" name="alamatLengkap"
-                                rows="3" required
-                                class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"></textarea>
+                            <select name="alamat_id" id="alamat_id" required
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                <option value="">Pilih salah satu alamat</option>
+                                @foreach ($alamatList as $alamat)
+                                    <option value="{{ $alamat->id }}">
+                                        {{ $alamat->alamat }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
+                    
+                    <!-- Pilih Kendaraan -->
+                    <div class="sm:col-span-2">
+                        <label for="kendaraan_id" class="block text-sm font-semibold text-black">Pilih Kendaraan</label>
+                        <div class="mt-2">
+                            <select name="kendaraan_id" id="kendaraan_id" required
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                <option value="">Pilih salah satu kendaraan</option>
+                                @foreach ($kendaraanList as $kendaraan)
+                                    <option value="{{ $kendaraan->id }}">
+                                        {{ $kendaraan->merk }} - {{ $kendaraan->tipe }}
+                                        ({{ $kendaraan->tahun_pembelian }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <!-- Jenis Kerusakan -->
                     <div class="sm:col-span-2">
-                        <label for="damage_type"
-                            class="block text-xs sm:text-sm font-semibold leading-6 text-black">Jenis
+                        <label for="damage_type" class="block text-sm font-semibold text-black">Jenis
                             Kerusakan</label>
                         <div class="mt-2">
                             <select id="damage_type" name="idJenisKerusakan" required
-                                class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                                 <option value="">Pilih Jenis Kerusakan</option>
                                 @foreach ($jenisKerusakan as $kerusakan)
                                     <option value="{{ $kerusakan->id }}">{{ $kerusakan->nama }}</option>
@@ -57,22 +80,20 @@
                     </div>
                     <!-- Deskripsi Kerusakan -->
                     <div class="sm:col-span-2">
-                        <label for="damage_description"
-                            class="block text-xs sm:text-sm font-semibold leading-6 text-black">Deskripsi
+                        <label for="damage_description" class="block text-sm font-semibold text-black">Deskripsi
                             Kerusakan</label>
                         <div class="mt-2">
                             <textarea id="damage_description" placeholder="Dekripsikan secara jelas kerusakan kendaraan anda" name="deskripsi"
                                 rows="4" required
-                                class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"></textarea>
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"></textarea>
                         </div>
                     </div>
                     <!-- Input Jadwal -->
                     <div class="sm:col-span-2">
-                        <label for="tanggal"
-                            class="block text-xs sm:text-sm font-semibold leading-6 text-black">Tanggal</label>
+                        <label for="tanggal" class="block text-sm font-semibold text-black">Tanggal</label>
                         <div class="mt-2">
                             <input type="date" name="tanggal" id="tanggal"
-                                class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"
                                 value="{{ old('tanggal') }}" required>
                             @error('tanggal')
                                 <div class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</div>
@@ -81,12 +102,11 @@
                     </div>
 
                     <div>
-                        <label for="waktuMulai"
-                            class="block text-xs sm:text-sm font-semibold leading-6 text-black">Waktu
+                        <label for="waktuMulai" class="block text-sm font-semibold text-black">Waktu
                             Mulai</label>
                         <div class="mt-2">
                             <select name="waktuMulai" id="waktuMulai"
-                                class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"
                                 required>
                                 <option value="">Pilih Waktu Mulai</option>
                                 @for ($hour = 8; $hour <= 17; $hour++)
@@ -101,12 +121,11 @@
                     </div>
 
                     <div>
-                        <label for="waktuSelesai"
-                            class="block text-xs sm:text-sm font-semibold leading-6 text-black">Waktu
+                        <label for="waktuSelesai" class="block text-sm font-semibold text-black">Waktu
                             Selesai</label>
                         <div class="mt-2">
                             <select name="waktuSelesai" id="waktuSelesai"
-                                class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"
                                 required>
                                 <option value="">Pilih Waktu Selesai</option>
                                 @for ($hour = 9; $hour <= 18; $hour++)
@@ -123,12 +142,11 @@
 
                     <!-- Upload Gambar Kerusakan -->
                     <div class="sm:col-span-2">
-                        <label for="damage_image"
-                            class="block text-xs sm:text-sm font-semibold leading-6 text-black">Upload Gambar
+                        <label for="damage_image" class="block text-sm font-semibold text-black">Upload Gambar
                             Kerusakan</label>
                         <div class="mt-2">
                             <input type="file" id="damage_image" name="gambar" accept="image/*" required
-                                class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                         </div>
                     </div>
                 </div>

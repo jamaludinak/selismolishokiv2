@@ -1,4 +1,4 @@
-@extends('users.LandingPage.layouts.app')
+@extends('LandingPage.layouts.app')
 @section('title', 'Service di Rumah')
 
 @push('css')

@@ -22,12 +22,15 @@
 </head>
 
 <body class="bg-gray-100">
+    <!-- Sidebar (mobile & desktop) -->
     @include('pelanggan.layouts.sidebar')
-    <div class="pl-64">
-        @include('pelanggan.layouts.navbar')
-        <div class="pt-20 px-6" style="background: #FFF5F5">
-            @yield('content')
 
+    <!-- Main Content -->
+    <div class="pt-16 md:pl-64 transition-all duration-300 min-h-screen">
+        @include('pelanggan.layouts.navbar')
+
+        <div class="px-4 md:px-6 py-4 bg-[#FFF5F5]">
+            @yield('content')
         </div>
     </div>
 
@@ -66,7 +69,8 @@
 
                     const entity = form.getAttribute('data-entity') || 'data ini';
 
-                    Swal.fire({p
+                    Swal.fire({
+                        p
                         title: `Yakin ingin menghapus ${entity}?`,
                         text: "Data yang dihapus tidak bisa dikembalikan!",
                         icon: 'warning',

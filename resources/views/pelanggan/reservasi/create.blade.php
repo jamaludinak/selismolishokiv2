@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <div class="max-w-4xl mx-auto py-6">
+    <div class="max-w-4xl mx-auto md:py-6">
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex justify-center mb-6">
                 <button id="tab-home" class="tab-button bg-orange-500 text-white px-4 py-2 rounded-l-md">Home

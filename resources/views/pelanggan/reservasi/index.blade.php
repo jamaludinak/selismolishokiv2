@@ -2,22 +2,25 @@
 @section('title', 'Data Reservasi Servis')
 
 @section('content')
-    <div class="container mx-auto py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Data Reservasi Servis</h1>
-            <a href="{{ route('reservasi.create') }}" class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
+    <div class="container mx-auto py-2 px-4 sm:px-6 lg:px-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <h1 class="text-xl sm:text-2xl font-bold">Data Reservasi Servis</h1>
+            <a href="{{ route('reservasi.create') }}"
+                class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700 text-sm sm:text-base w-full sm:w-auto text-center">
                 + Buat Reservasi
             </a>
         </div>
 
         @if (session('success'))
-            <div class="bg-green-100 text-green-700 p-2 rounded mb-4">{{ session('success') }}</div>
+            <div class="bg-green-100 text-green-700 p-3 rounded mb-4 text-sm sm:text-base">
+                {{ session('success') }}
+            </div>
         @endif
 
-        <div class="bg-white rounded shadow p-4 overflow-x-auto">
-            <table class="min-w-full table-auto">
+        <div class="bg-white rounded shadow p-4 overflow-x-auto text-sm sm:text-base">
+            <table class="min-w-full table-auto whitespace-nowrap">
                 <thead>
-                    <tr class="bg-gray-200 text-sm text-left">
+                    <tr class="bg-gray-200 text-left text-sm">
                         <th class="px-4 py-2">No. Resi</th>
                         <th class="px-4 py-2">Nama</th>
                         <th class="px-4 py-2">Jenis Layanan</th>
@@ -37,16 +40,16 @@
                             <td class="px-4 py-2">{{ $r->waktuMulai }} - {{ $r->waktuSelesai }}</td>
                             <td class="px-4 py-2">
                                 <span
-                                    class="px-2 py-1 rounded text-white 
+                                    class="px-2 py-1 rounded text-white text-xs sm:text-sm
                                     @if ($r->status == 'selesai') bg-green-600
                                     @elseif($r->status == 'proses') bg-yellow-500
                                     @else bg-gray-400 @endif">
                                     {{ ucfirst($r->status) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-2 flex gap-2">
+                            <td class="px-4 py-2 flex flex-col sm:flex-row gap-2">
                                 <a href="{{ route('reservasi.show', $r->id) }}"
-                                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs">
+                                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs text-center">
                                     Detail
                                 </a>
                                 <form action="{{ route('reservasi.destroy', $r->id) }}" method="POST" class="delete-form"
@@ -54,7 +57,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-xs">
+                                        class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-xs w-full text-center">
                                         Hapus
                                     </button>
                                 </form>

@@ -35,6 +35,7 @@
                 <p><strong>Status:</strong> <span id="current-status"></span></p>
                 <p><strong>Nama:</strong> <span id="nama-lengkap"></span></p>
                 <p><strong>No. Telp:</strong> <span id="nomor-telp"></span></p>
+                <p><strong>Estimasi Harga:</strong> <span id="estimasi-harga"></span></p>
             </div>
 
             <!-- Riwayat Status Table -->
@@ -85,6 +86,9 @@
                         const statusText = mapStatus(data.data.status);
                         const nama = data.data.namaLengkap;
                         const telp = data.data.noTelp;
+                        const estimasiHarga = data.data.estimasiHarga ?
+                            `Rp${Number(data.data.estimasiHarga).toLocaleString("id-ID")}` :
+                            "-";
 
                         // Format riwayat status
                         let riwayatHTML = "";
@@ -98,39 +102,40 @@
                             const status = mapStatus(item.status);
 
                             riwayatHTML += `<tr>
-                            <td class="p-2">${date}</td>
-                            <td class="p-2">${time}</td>
-                            <td class="p-2">${status}</td>
-                        </tr>`;
+                <td class="p-2">${date}</td>
+                <td class="p-2">${time}</td>
+                <td class="p-2">${status}</td>
+
+            </tr>`;
                         });
 
-                        // Masukkan ke tabel
+                        // Masukkan ke HTML
                         document.getElementById("current-status").innerText = statusText;
                         document.getElementById("nama-lengkap").innerText = nama;
                         document.getElementById("nomor-telp").innerText = telp;
+                        document.getElementById("estimasi-harga").innerText = estimasiHarga;
                         document.getElementById("status-riwayat").innerHTML = riwayatHTML;
                         document.getElementById("status-result").classList.remove("hidden");
 
                         // Modal ringkasan cepat
                         Swal.fire({
                             icon: 'success',
-                            html: `<b>${nama}</b><br>Status: <b>${statusText}</b>`,
+                            html: `<b>${nama}</b><br>Status: <b>${statusText}</b><br>Estimasi: <b>${estimasiHarga}</b>`,
                             confirmButtonText: 'Lihat Detail',
                             showCancelButton: true,
                             cancelButtonText: 'Tutup'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Scroll ke hasil
                                 document.getElementById("status-result").scrollIntoView({
                                     behavior: 'smooth'
                                 });
                             }
                         });
-
                     } else {
                         Swal.fire('Tidak Ditemukan', data.message || 'Resi tidak valid.', 'error');
                     }
                 })
+
                 .catch((error) => {
                     Swal.close();
                     console.error("Error:", error);
