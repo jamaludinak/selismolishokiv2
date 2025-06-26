@@ -17,12 +17,14 @@ use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\AlamatPelangganController;
+use app\Http\Controllers\KlaimGaransiController;
+use App\Http\Controllers\ProfilePelangganController;
 use App\Http\Controllers\ReservasiPelangganController;
 use App\Http\Controllers\RiwayatServisPelangganController;
 
-use App\Http\Controllers\ProfilePelangganController;
-use App\Http\Controllers\RiwayatServisPelangganController;
-use App\Http\Controllers\KlaimGaransiController;
+// use App\Http\Controllers\ProfilePelangganController;
+// use App\Http\Controllers\RiwayatServisPelangganController;
+// use App\Http\Controllers\KlaimGaransiController;
 
 // Route akses file storage
 Route::get('/storage/{filename}', function ($filename) {
