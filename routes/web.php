@@ -18,6 +18,10 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\AlamatPelangganController;
 use App\Http\Controllers\ReservasiPelangganController;
+use App\Http\Controllers\ProfilePelangganController;
+use App\Http\Controllers\RiwayatServisPelangganController;
+use App\Http\Controllers\KlaimGaransiController;
+
 // Route akses file storage
 Route::get('/storage/{filename}', function ($filename) {
     $path = storage_path('app/public/' . $filename);
@@ -93,6 +97,10 @@ Route::middleware(['auth:pelanggan'])->group(function () {
     Route::resource('kendaraan', KendaraanController::class);
     Route::resource('alamat', AlamatPelangganController::class);
     Route::resource('reservasi', ReservasiPelangganController::class);
+    Route::resource('profile', ProfilePelangganController::class);
+    Route::resource('riwayats', RiwayatServisPelangganController::class)->only(['index', 'show']);
+    Route::resource('klaim-garansi', KlaimGaransiController::class)->only(['index','store']);
+    Route::get('/klaim-garansi/create/resi/{noResi}', [KlaimGaransiController::class, 'create'])->name('klaim-garansi.create');
 });
 
 // ========================================================

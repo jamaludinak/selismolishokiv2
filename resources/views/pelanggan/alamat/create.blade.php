@@ -2,13 +2,12 @@
 @section('title', 'Tambah Alamat')
 
 @section('content')
-    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md mt-6 p-6">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md mt-2 md:mt-6 p-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Tambah Alamat</h1>
 
         <form method="POST" action="{{ route('alamat.store') }}" class="space-y-5">
             @csrf
 
-            <!-- Alamat -->
             <!-- bagian dalam <form> -->
             <div>
                 <label for="alamat" class="block text-xs sm:text-sm font-medium text-gray-700">Alamat <span
@@ -40,7 +39,7 @@
 
             <!-- Tombol -->
             <div class="flex justify-end gap-2 pt-2">
-                <a href="{{ route('alamat.index') }}"
+                <a href="{{ route('profile.index') }}"
                     class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">Batal</a>
                 <button type="submit"
                     class="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition">Simpan</button>

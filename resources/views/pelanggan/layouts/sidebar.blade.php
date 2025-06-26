@@ -6,9 +6,13 @@
 <aside id="mobile-sidebar"
     class="md:translate-x-0 -translate-x-full fixed md:fixed top-0 left-0 h-full w-64 bg-white z-40 shadow-lg transform transition-transform duration-300 md:static md:flex md:flex-col p-4 space-y-6">
     <!-- Logo -->
-    <div class="flex items-center space-x-2">
-        <img src="{{ asset('images/logofix2.png') }}" alt="Logo" class="w-10 h-10">
-        <span class="text-xl font-bold text-black">Selismolis<br><span class="text-xl font-bold">Hoki</span></span>
+    <div class="flex items-center">
+        <a href="{{ route('dashboard.pelanggan') }}" class="flex items-center space-x-3">
+            <img src="{{ asset('images/logofix2.png') }}" alt="Logo" class="w-8 h-8 md:w-12 md:h-12 border-2 border-black rounded-full">
+            <span class="text-base md:text-xl font-bold text-black">
+                Selismolis <br> <span class="text-base md:text-xl font-bold">Hoki</span>
+            </span>
+        </a>
     </div>
 
     <!-- Menu -->
@@ -21,13 +25,17 @@
             class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('reservasi.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
             <i class="fas fa-calendar-check"></i> Reservasi
         </a>
-        <a href="{{ route('alamat.index') }}"
-            class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('alamat.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
-            <i class="fas fa-location"></i> Alamat
+        <a href="{{ route('klaim-garansi.index') }}"
+            class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('klaim-garansi.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
+            <i class="fas fa-shield-alt"></i> Klaim Garansi
         </a>
         <a href="{{ route('kendaraan.index') }}"
             class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('kendaraan.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
             <i class="fas fa-motorcycle"></i> Kendaraan
+        </a>
+        <a href="{{ route('riwayats.index') }}"
+            class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('riwayats.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
+            <i class="fas fa-clock"></i> Riwayat
         </a>
     </nav>
 
@@ -84,7 +92,7 @@
             const toggleBtn = document.getElementById('sidebarToggle');
             toggleBtn?.addEventListener('click', openSidebar);
         });
-        
+
         window.closeSidebar = closeSidebar;
     </script>
 @endpush

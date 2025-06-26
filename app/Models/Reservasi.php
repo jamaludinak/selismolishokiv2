@@ -56,4 +56,11 @@ class Reservasi extends Model
     {
         return $this->belongsTo(Kendaraan::class, 'kendaraan_id');
     }
+
+    public function klaimGaransi()
+    {
+        return $this->hasOne(KlaimGaransi::class, 'reservasi_id');
+    }
+
+
 }

@@ -53,7 +53,7 @@
 
             <!-- Tombol -->
             <div class="flex justify-end gap-2 pt-2">
-                <a href="{{ route('alamat.index') }}"
+                <a href="{{ route('profile.index') }}"
                     class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">Batal</a>
                 <button type="submit"
                     class="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition">Simpan</button>

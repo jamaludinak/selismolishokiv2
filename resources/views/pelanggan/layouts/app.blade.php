@@ -21,7 +21,7 @@
     @stack('css')
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-50">
     <!-- Sidebar (mobile & desktop) -->
     @include('pelanggan.layouts.sidebar')
 
@@ -29,7 +29,7 @@
     <div class="pt-16 md:pl-64 transition-all duration-300 min-h-screen">
         @include('pelanggan.layouts.navbar')
 
-        <div class="px-4 md:px-6 py-4 bg-[#FFF5F5]">
+        <div class="px-4 md:px-6 py-4 bg-gray-50">
             @yield('content')
         </div>
     </div>
