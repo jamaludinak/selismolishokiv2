@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,26 +17,29 @@ class ProfilePelangganController extends Controller
 
         return view('pelanggan.profile.index', compact('user', 'alamats'));
     }
-    
+
     public function update(Request $request)
     {
-        $user = Auth::guard('pelanggan')->user();
+        $user = Auth::guard('pelanggan')->user(); // ✅ Eloquent instance
 
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:data_pelanggans,email,' . $user->id,
+            'noHP' => 'required|string|unique:data_pelanggans,noHP,' . $user->id,
             'password' => 'nullable|string|min:6',
         ]);
 
         $user->nama = $request->nama;
-        $user->email = $request->email;
+        $user->noHP = $request->noHP;
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
 
-        // $user->save();
+        /** @var \App\Models\DataPelanggan $user */
 
-        return redirect()->route('pelanggan.profile')->with('success', 'Profil berhasil diperbarui.');
+        $user->save();
+
+
+        return redirect()->route('profile.index')->with('success', 'Profil berhasil diperbarui.');
     }
 }
