@@ -1,19 +1,26 @@
 @extends('pelanggan.layouts.app')
 @section('title', 'Data Kendaraan')
+
 @section('content')
-    <div class="container mx-auto py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Data Kendaraan</h1>
-            <a href="{{ route('kendaraan.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+
-                Tambah Kendaraan</a>
+    <div class="container mx-auto py-2 px-4 sm:px-6 lg:px-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <h1 class="text-xl sm:text-2xl font-bold">Data Kendaraan</h1>
+            <a href="{{ route('kendaraan.create') }}"
+                class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700 text-sm sm:text-base w-full sm:w-auto text-center">
+                + Tambah Kendaraan
+            </a>
         </div>
+
         @if (session('success'))
-            <div class="bg-green-100 text-green-700 p-2 rounded mb-4">{{ session('success') }}</div>
+            <div class="bg-green-100 text-green-700 p-2 rounded mb-4 text-sm sm:text-base">
+                {{ session('success') }}
+            </div>
         @endif
-        <div class="bg-white rounded shadow p-4">
-            <table class="min-w-full table-auto">
+
+        <div class="bg-white rounded shadow p-4 overflow-x-auto text-sm sm:text-base">
+            <table class="min-w-full table-auto whitespace-nowrap">
                 <thead>
-                    <tr class="bg-gray-200">
+                    <tr class="bg-gray-200 text-left text-sm">
                         <th class="px-4 py-2">Merk</th>
                         <th class="px-4 py-2">Jenis</th>
                         <th class="px-4 py-2">Tipe</th>
@@ -30,19 +37,20 @@
                             <td class="px-4 py-2">{{ $k->tipe ?? '-' }}</td>
                             <td class="px-4 py-2">{{ $k->nomor_rangka ?? '-' }}</td>
                             <td class="px-4 py-2">{{ $k->tahun_pembelian }}</td>
-                            <td class="px-4 py-2 flex gap-2">
+                            <td class="px-4 py-2 flex flex-col sm:flex-row gap-2">
                                 <a href="{{ route('kendaraan.edit', $k->id) }}"
-                                    class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">Edit</a>
+                                    class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 text-xs sm:text-sm text-center">
+                                    Edit
+                                </a>
                                 <form action="{{ route('kendaraan.destroy', $k->id) }}" method="POST" class="delete-form"
                                     data-entity="kendaraan">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="delete-btn bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+                                        class="delete-btn bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-xs sm:text-sm text-center">
                                         Hapus
                                     </button>
                                 </form>
-
                             </td>
                         </tr>
                     @empty
@@ -55,6 +63,7 @@
         </div>
     </div>
 @endsection
+
 @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {

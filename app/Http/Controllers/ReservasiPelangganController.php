@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JenisKerusakan;
 use App\Models\Reservasi;
 use App\Models\Riwayat;
+use App\Models\AlamatPelanggan;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -44,12 +45,19 @@ class ReservasiPelangganController extends Controller
 
     public function create()
     {
-        $jenisKerusakan = JenisKerusakan::all();
         $user = auth('pelanggan')->user();
-        $alamat = $user->alamat;
+
+        $jenisKerusakan = JenisKerusakan::all();
+        $alamatList = $user->alamatPelanggan;
+        $kendaraanList = $user->kendaraans;
         $nomor = $user->noHP;
 
-        return view('pelanggan.reservasi.create', compact('jenisKerusakan', 'alamat', 'nomor'));
+        return view('pelanggan.reservasi.create', compact(
+            'jenisKerusakan',
+            'alamatList',
+            'kendaraanList',
+            'nomor'
+        ));
     }
 
     public function store(Request $request)
@@ -94,6 +102,60 @@ class ReservasiPelangganController extends Controller
         ]);
 
         return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil ditambahkan.');
+    }
+
+    public function storeGarage(Request $request)
+    {
+        $alamat = AlamatPelanggan::findOrFail($request->alamat_id);
+        $user = auth('pelanggan')->user();
+        $validatedData = $request->validate([
+            'namaLengkap' => 'required|string',
+            'noTelp' => 'required|string',
+            'idJenisKerusakan' => 'required|exists:jenis_kerusakans,id',
+            'deskripsi' => 'required|string',
+            'gambar' => 'nullable|image',
+            'tanggal' => 'required|date',
+            'waktuMulai' => 'required',
+            'waktuSelesai' => 'required',
+            'servis' => 'required|string|in:home,garage',
+            'alamat_id' => 'required|exists:alamat_pelanggans,id',
+            'kendaraan_id' => 'required|exists:kendaraans,id',
+        ]);
+
+        $alamat = AlamatPelanggan::findOrFail($request->alamat_id);
+
+        $gambarPath = null;
+        if ($request->hasFile('gambar')) {
+            $gambarPath = $request->file('gambar')->store('gambar_kerusakan', 'public');
+        }
+
+        $noResi = 'RSV-' . strtoupper(Str::random(10));
+
+        $reservasi = Reservasi::create([
+            'noResi' => $noResi,
+            'namaLengkap' => $validatedData['namaLengkap'],
+            'noTelp' => $validatedData['noTelp'],
+            'alamatLengkap' => $alamat->alamat,
+            'longitude' => $alamat->longitude,
+            'latitude' => $alamat->latitude,
+            'kendaraan_id' => $validatedData['kendaraan_id'], // <- ini tambahan penting
+            'idJenisKerusakan' => $validatedData['idJenisKerusakan'],
+            'deskripsi' => $validatedData['deskripsi'],
+            'gambar' => $gambarPath,
+            'tanggal' => $validatedData['tanggal'],
+            'waktuMulai' => $validatedData['waktuMulai'],
+            'waktuSelesai' => $validatedData['waktuSelesai'],
+            'servis' => 'garage',
+            'status' => 'pending',
+            'biaya_perjalanan' => 0,
+        ]);
+        
+        Riwayat::create([
+            'idReservasi' => $reservasi->id,
+            'status' => $reservasi->status,
+        ]);
+
+        return response()->json(['success' => true, 'no_resi' => $reservasi->noResi]);
     }
 
     private function haversineDistance($lat1, $lon1, $lat2, $lon2)

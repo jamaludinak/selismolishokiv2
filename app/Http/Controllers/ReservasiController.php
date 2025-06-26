@@ -226,7 +226,7 @@ class ReservasiController extends Controller
         // Mengambil data reservasi berdasarkan ID, beserta jenis kerusakan dan riwayat
         $reservasi = Reservasi::with('jenisKerusakan')->findOrFail($id);
         $riwayats = Riwayat::where('idReservasi', $id)->get(); // Mengambil data riwayat terkait
-
+        
         return view('admin.reservasi.show', compact('reservasi', 'riwayats'));
     }
 

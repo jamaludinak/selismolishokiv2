@@ -31,10 +31,9 @@
                     class="mt-1 block w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-xs sm:text-base">
             </div>
 
-
             <!-- Peta -->
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Atau pilih lokasi di peta:</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1 z-[-1]">Atau pilih lokasi di peta:</label>
                 <div id="map" class="w-full h-64 rounded border mb-2"></div>
                 <small class="text-gray-500">Geser pin merah ke lokasi alamat Anda, koordinat akan terisi otomatis.</small>
             </div>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Reservasi; 
+use App\Models\Reservasi;
 use App\Models\JenisKerusakan;
 use App\Models\Riwayat;
 use App\Models\Jadwal;
@@ -37,13 +37,13 @@ class PelangganController extends Controller
             'waktuMulai' => 'required|date_format:H:i', // Tambahkan validasi waktu mulai
             'waktuSelesai' => 'required|date_format:H:i|after:waktuMulai', // Validasi waktu selesai
         ]);
-    
+
         // Menyimpan gambar kerusakan
         $imagePath = $request->file('gambar')->store('images/damage', 'public');
-    
+
         // Menyimpan video kerusakan (jika ada)
         $videoPath = $request->hasFile('video') ? $request->file('video')->store('videos/damage', 'public') : null;
-    
+
         // Membuat reservasi baru untuk Home Service
         $reservasi = new Reservasi();
         $reservasi->servis = 'Home Service';
@@ -54,17 +54,17 @@ class PelangganController extends Controller
         $reservasi->deskripsi = $validatedData['deskripsi'];
         $reservasi->gambar = $imagePath;
         $reservasi->video = $videoPath;
-        
+
         // Set status default ke pending
         $reservasi->status = 'pending';
-    
+
         // Format nomor resi untuk Home Service
         $reservasi->noResi = 'HM-' . now()->format('ymd') . strtoupper(substr(uniqid(), -2));
         $reservasi->save();
-        
+
         // Cek apakah pelanggan sudah ada berdasarkan noTelp
         $pelanggan = DataPelanggan::where('noHP', $request->noTelp)->first();
-    
+
         // Jika pelanggan tidak ada, buat pelanggan baru
         if (!$pelanggan) {
             $pelanggan = DataPelanggan::create([
@@ -81,13 +81,13 @@ class PelangganController extends Controller
                 'keluhan' => $request->deskripsi,
             ]);
         }
-        
+
         // Buat riwayat untuk reservasi
         Riwayat::create([
             'idReservasi' => $reservasi->id,
             'status' => $reservasi->status,
         ]);
-    
+
         // Tambahkan Request Jadwal
         $this->tambahRequestJadwal(new Request([
             'idReservasi' => $reservasi->id,
@@ -95,7 +95,7 @@ class PelangganController extends Controller
             'waktuMulai' => $validatedData['waktuMulai'],
             'waktuSelesai' => $validatedData['waktuSelesai'],
         ]));
-    
+
         // Redirect atau tampilkan modal setelah reservasi berhasil
         return response()->json([
             'success' => true,
@@ -119,21 +119,21 @@ class PelangganController extends Controller
             'waktuMulai' => 'required|date_format:H:i', // Validasi waktu mulai
             'waktuSelesai' => 'required|date_format:H:i|after:waktuMulai', // Validasi waktu selesai
         ]);
-    
+
         // Inisialisasi variabel untuk menyimpan gambar dan video
         $imagePath = null;
         $videoPath = null;
-    
+
         // Menyimpan gambar kerusakan jika ada
         if ($request->hasFile('gambar')) {
             $imagePath = $request->file('gambar')->store('images/damage', 'public');
         }
-    
+
         // Menyimpan video kerusakan jika ada
         if ($request->hasFile('video')) {
             $videoPath = $request->file('video')->store('videos/damage', 'public');
         }
-    
+
         // Membuat reservasi baru untuk Garage Service
         $reservasi = new Reservasi();
         $reservasi->servis = 'Garage Service';
@@ -144,17 +144,17 @@ class PelangganController extends Controller
         $reservasi->deskripsi = $validatedData['deskripsi'];
         $reservasi->gambar = $imagePath;
         $reservasi->video = $videoPath;
-    
+
         // Set status default ke pending
         $reservasi->status = 'pending';
-    
+
         // Format nomor resi untuk Garage Service
         $reservasi->noResi = 'GR-' . now()->format('ymd') . strtoupper(substr(uniqid(), -2));
         $reservasi->save();
-        
+
         // Cek apakah pelanggan sudah ada berdasarkan noTelp
         $pelanggan = DataPelanggan::where('noHP', $request->noTelp)->first();
-    
+
         // Jika pelanggan tidak ada, buat pelanggan baru
         if (!$pelanggan) {
             $pelanggan = DataPelanggan::create([
@@ -171,13 +171,13 @@ class PelangganController extends Controller
                 'keluhan' => $request->deskripsi,
             ]);
         }
-    
+
         // Buat riwayat untuk reservasi
         Riwayat::create([
             'idReservasi' => $reservasi->id,
             'status' => $reservasi->status,
         ]);
-    
+
         // Tambahkan Request Jadwal
         $this->tambahRequestJadwal(new Request([
             'idReservasi' => $reservasi->id,
@@ -185,7 +185,7 @@ class PelangganController extends Controller
             'waktuMulai' => $validatedData['waktuMulai'],
             'waktuSelesai' => $validatedData['waktuSelesai'],
         ]));
-    
+
         // Redirect atau tampilkan modal setelah reservasi berhasil
         return response()->json([
             'success' => true,
@@ -202,14 +202,15 @@ class PelangganController extends Controller
         return view('services.servisgarage', compact('jenisKerusakan'));
     }
 
-    public function formCekResi(){
+    public function formCekResi()
+    {
         return view('services.cekresi');
     }
-     // Fungsi untuk cek resi
+    // Fungsi untuk cek resi
     public function cekResi($noResi)
     {
         // Cari reservasi berdasarkan noResi
-        $reservasi = Reservasi::where('noResi', $noResi)->first();
+        $reservasi = Reservasi::with('jenisKerusakan')->where('noResi', $noResi)->first();
 
         // Jika tidak ditemukan
         if (!$reservasi) {
@@ -248,6 +249,7 @@ class PelangganController extends Controller
                 'servis' => $reservasi->servis,
                 'deskripsi' => $reservasi->deskripsi,
                 'status' => $statusMapping[$reservasi->status] ?? $reservasi->status, // Gunakan mapping atau default ke status asli
+                'estimasiHarga' => $reservasi->jenisKerusakan->estimasi_harga ?? null, // 👈 ini dia!
                 'riwayat' => $riwayat,
                 'jadwal' => $jadwal ? [
                     'tanggal' => $jadwal->tanggal,
@@ -259,36 +261,36 @@ class PelangganController extends Controller
 
         return response()->json($response);
     }
-    
+
     public function showUploadForm()
     {
         return view('services.upload_video');
     }
-    
+
     public function upload(Request $request)
     {
         $request->validate([
             'video' => 'required|file|mimes:mp4,mov,avi,wmv',
             'no_resi' => 'required|string', // Validasi nomor resi
         ]);
-    
+
         // Mencari reservasi berdasarkan nomor resi
         $reservasi = Reservasi::where('noResi', $request->input('no_resi'))->first();
-    
+
         if (!$reservasi) {
             return response()->json([
                 'success' => false,
                 'message' => 'Reservasi tidak ditemukan.',
             ]);
         }
-    
+
         // Simpan video ke storage
         $videoPath = $request->file('video')->store('videos/damage', 'public');
-    
+
         // Simpan path video ke dalam data reservasi
         $reservasi->video = $videoPath;
         $reservasi->save();
-    
+
         return response()->json([
             'success' => true,
             'message' => 'Video berhasil diupload!',
@@ -313,8 +315,8 @@ class PelangganController extends Controller
 
         // Cek apakah noResi dan noTelp sesuai dengan data reservasi
         $reservasi = Reservasi::where('noResi', $validatedData['noResi'])
-                              ->where('noTelp', $validatedData['noTelp'])
-                              ->first();
+            ->where('noTelp', $validatedData['noTelp'])
+            ->first();
 
         if (!$reservasi) {
             return response()->json([
@@ -335,7 +337,7 @@ class PelangganController extends Controller
             'message' => 'Ulasan berhasil disimpan.'
         ]);
     }
-    
+
     public function tambahRequestJadwal(Request $request)
     {
         // Validasi data input

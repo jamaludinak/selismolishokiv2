@@ -20,7 +20,8 @@
                     </div>
 
                     <div>
-                        <label for="phone" class="block text-sm font-semibold text-black">Nomor WA/Telp</label>
+                        <label for="phone" class="block text-sm font-semibold text-black">Nomor
+                            WhatsApp/Telepon</label>
                         <input type="text" id="phone" name="noTelp" required
                             placeholder="Tulis nomor WA/Telp anda"
                             class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
@@ -33,26 +34,39 @@
                             class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"></textarea>
                     </div>
 
+                    <!-- Pilih Alamat -->
                     <div class="sm:col-span-2">
-                        <label class="block text-sm font-semibold text-black mb-1">Lokasi Anda</label>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex gap-2">
-                                <input type="text" id="latitude" name="latitude" placeholder="Latitude"
-                                    class="w-1/2 rounded-md border-0 px-2 py-2 shadow-sm ring-1 ring-orange-300 text-sm"
-                                    required>
-                                <input type="text" id="longitude" name="longitude" placeholder="Longitude"
-                                    class="w-1/2 rounded-md border-0 px-2 py-2 shadow-sm ring-1 ring-orange-300 text-sm"
-                                    required>
-                            </div>
-                            <button type="button" onclick="getLocationFromDevice()"
-                                class="px-4 py-2 bg-orange-500 text-white rounded-md text-sm w-fit">Ambil Lokasi Saya
-                                Sekarang</button>
-                            <div id="lokasi-status" class="text-sm text-gray-600 italic">Klik tombol atau geser pin di
-                                peta. Biaya dihitung otomatis.</div>
-                            <div id="map" class="w-full h-64 rounded-md border"></div>
+                        <label for="alamat_id" class="block text-sm font-semibold text-black">Pilih Alamat</label>
+                        <div class="mt-2">
+                            <select name="alamat_id" id="alamat_id" required
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                <option value="">Pilih salah satu alamat</option>
+                                @foreach ($alamatList as $alamat)
+                                    <option value="{{ $alamat->id }}">
+                                        {{ $alamat->alamat }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
+                    <!-- Pilih Kendaraan -->
+                    <div class="sm:col-span-2">
+                        <label for="kendaraan_id" class="block text-sm font-semibold text-black">Pilih Kendaraan</label>
+                        <div class="mt-2">
+                            <select name="kendaraan_id" id="kendaraan_id" required
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                <option value="">Pilih salah satu kendaraan</option>
+                                @foreach ($kendaraanList as $kendaraan)
+                                    <option value="{{ $kendaraan->id }}">
+                                        {{ $kendaraan->merk }} - {{ $kendaraan->tipe }}
+                                        ({{ $kendaraan->tahun_pembelian }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    
                     <div class="sm:col-span-2">
                         <label for="damage_type" class="block text-sm font-semibold text-black">Jenis Kerusakan</label>
                         <select id="damage_type" name="idJenisKerusakan" required
