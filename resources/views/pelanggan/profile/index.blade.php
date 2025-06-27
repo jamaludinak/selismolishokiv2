@@ -66,17 +66,18 @@
             </div>
         @endif
 
-        <div class="bg-white rounded shadow p-4 text-sm sm:text-base">
-            <table class="w-full table-auto whitespace-nowrap">
+        <div class="bg-white rounded shadow p-4 text-sm sm:text-base overflow-x-auto">
+            <table class="min-w-full table-auto whitespace-nowrap">
                 <thead>
                     <tr class="bg-gray-200 text-left text-sm">
-                        <th class="px-2 py-2 w-2/5">Alamat</th>
-                        <th class="px-2 py-2 w-1/6">Longitude</th>
-                        <th class="px-2 py-2 w-1/6">Latitude</th>
-                        <th class="px-2 py-2 w-1/6">Lokasi</th>
-                        <th class="px-2 py-2 w-1/6">Aksi</th>
+                        <th class="px-2 py-2">Alamat</th>
+                        <th class="px-2 py-2">Longitude</th>
+                        <th class="px-2 py-2">Latitude</th>
+                        <th class="px-2 py-2">Lokasi</th>
+                        <th class="px-2 py-2">Aksi</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @forelse($alamats as $a)
                         <tr class="border-b">

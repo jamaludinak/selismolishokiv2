@@ -1,4 +1,4 @@
-@extends('users.LandingPage.layouts.app')
+@extends('LandingPage.layouts.app')
 @section('title', 'Service di Bengkel')
 @section('content')
     <section id="form" class="py-24 sm:py-16 md:py-24 isolate bg-gray-100 px-2 sm:px-6 lg:px-8">
