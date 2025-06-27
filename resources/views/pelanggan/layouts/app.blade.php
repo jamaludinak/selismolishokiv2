@@ -23,6 +23,10 @@
 
 <body class="bg-gray-50">
     <!-- Sidebar (mobile & desktop) -->
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-white">
+        <img src="{{ asset('images/logofix2.png') }}" alt="Loading..." class="w-24 h-24 animate-pulse">
+    </div>
+
     @include('pelanggan.layouts.sidebar')
 
     <!-- Main Content -->
@@ -34,9 +38,17 @@
         </div>
     </div>
 
+
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = 0;
+            loader.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(() => loader.style.display = 'none', 500);
+        });
+    </script>
     @if (session('success'))
         <script>
             Swal.fire({

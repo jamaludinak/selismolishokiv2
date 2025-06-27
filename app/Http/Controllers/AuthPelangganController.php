@@ -71,4 +71,4 @@ class AuthPelangganController extends Controller
 
         return view('auth.login_pelanggan')->with('success', 'Anda telah berhasil logout.');
     }
-} 
+}
