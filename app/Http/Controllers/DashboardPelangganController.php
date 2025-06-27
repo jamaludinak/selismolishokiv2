@@ -20,6 +20,8 @@ class DashboardPelangganController extends Controller
         // Hitung total kendaraan
         $totalKendaraan = $kendaraans->count();
 
+        $kendaraans = $user->kendaraans()->latest()->take(2)->get();
+
         // Hitung garansi aktif (yang belum lewat tanggal akhir)
         $garansiAktif = $user->reservasis()
             ->where('tanggal_berakhir_garansi', '>=', now())

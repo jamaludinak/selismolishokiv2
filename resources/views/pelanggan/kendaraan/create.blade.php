@@ -40,7 +40,7 @@
                 <label for="tahun_pembelian" class="block text-xs sm:text-sm font-medium text-gray-700">Tahun Pembelian
                     <span class="text-red-500">*</span></label>
                 <input type="number" id="tahun_pembelian" name="tahun_pembelian" min="2000" max="{{ date('Y') + 1 }}"
-                    placeholder="2024" required
+                    placeholder="contoh : 2024" required
                     class="mt-1 block w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-xs sm:text-base">
             </div>
 

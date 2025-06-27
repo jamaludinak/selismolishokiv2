@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>404 - Halaman Tidak Ditemukan</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-900 text-white flex items-center justify-center h-screen px-4">
+<body class="text-white flex items-center justify-center h-screen px-4">
     <div class="text-center">
         <div class="w-24 h-24 mx-auto mb-6">
             <!-- SVG wajah bingung -->
@@ -22,7 +23,8 @@
         <h1 class="text-5xl font-bold text-yellow-400">404</h1>
         <p class="text-xl mt-4">Halaman Tidak Ditemukan</p>
         <p class="text-gray-400 mb-6">Ups! Sepertinya kamu nyasar ke halaman yang tidak ada.</p>
-        <a href="{{ url()->previous() }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">
+        <a href="{{ url()->previous() }}"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">
             Kembali ke Beranda
         </a>
     </div>

@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>403 - Akses Ditolak</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-900 text-white flex items-center justify-center h-screen px-4">
+<body class="text-white flex items-center justify-center h-screen px-4">
     <div class="text-center">
         <div class="w-24 h-24 mx-auto mb-6">
             <!-- SVG Gembok -->
