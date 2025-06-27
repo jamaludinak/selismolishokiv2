@@ -26,7 +26,7 @@
     @endif
 
     <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-        <form class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end" method="GET" action="{{ route('reservasi.history') }}">
+        <form class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end" method="GET" action="{{ route('admin.reservasi.history') }}">
             <div>
                 <label for="searchResi" class="block text-sm font-medium text-gray-700">Cari No. Resi</label>
                 <input
@@ -164,7 +164,7 @@
                                 <button type="button" onclick="confirmDeleteHistory({{ $reservasi->id }})" class="text-red-600 hover:text-red-900 transition duration-150 ease-in-out">
                                     <i class="fas fa-trash-alt text-lg"></i>
                                 </button>
-                                <form id="delete-history-form-{{ $reservasi->id }}" action="{{ route('reservasi.destroy', $reservasi->id) }}" method="POST" class="hidden">
+                                <form id="delete-history-form-{{ $reservasi->id }}" action="{{ route('admin.reservasi.destroy', $reservasi->id) }}" method="POST" class="hidden">
                                     @csrf
                                     @method('DELETE')
                                 </form>

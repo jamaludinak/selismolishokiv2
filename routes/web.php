@@ -67,7 +67,7 @@ Route::post('/logout-pelanggan', [AuthPelangganController::class, 'logout'])->na
 // ========================================================
 // ✅ ADMIN & TEKNISI ROUTES (auth:web, role:admin|teknisi)
 // ========================================================
-Route::middleware(['auth', 'role:admin,teknisi'])->group(function () {
+Route::middleware(['auth', 'role:admin,teknisi,owner'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('admin/reservasi', ReservasiController::class)->names([
@@ -88,6 +88,8 @@ Route::middleware(['auth', 'role:admin,teknisi'])->group(function () {
     Route::resource('jadwal', JadwalController::class);
     Route::resource('pelanggan', DataPelangganController::class);
     Route::resource('ulasan', UlasanController::class);
+    Route::resource('pegawai', PegawaiController::class); // <-- ini akan otomatis jadi 'admin.pegawai.index'
+
 });
 
 // ========================================================

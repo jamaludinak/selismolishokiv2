@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="flex flex-col space-y-3 mt-5">
-                    <form action="{{ route('update.status', $reservasi->id) }}" method="POST" class="w-full">
+                    <form action="{{ route('reservasi.update', $reservasi->id) }}" method="POST" class="w-full">
                         @csrf
                         <label for="status-{{ $reservasi->id }}" class="sr-only">Ubah Status</label>
                         <select
@@ -193,7 +193,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $reservasi->servis }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-orange-600">{{ $reservasi->noResi }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <form action="{{ route('update.status', $reservasi->id) }}" method="POST" class="w-full">
+                            <form action="{{ route('reservasi.update', $reservasi->id) }}" method="POST" class="w-full">
                                 @csrf
                                 <select
                                     name="status"

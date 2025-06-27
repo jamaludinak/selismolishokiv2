@@ -44,12 +44,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('reservasi.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('reservasi.index') ? 'bg-orange-800' : '' }}">
+                    <a href="{{ route('admin.reservasi.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('admin.reservasi.index') ? 'bg-orange-800' : '' }}">
                         <i class="fas fa-clipboard-list mr-3"></i> Daftar Reservasi
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('reservasi.history') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('reservasi.history') ? 'bg-orange-800' : '' }}">
+                    <a href="{{ route('admin.reservasi.history') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('admin.reservasi.history') ? 'bg-orange-800' : '' }}">
                         <i class="fas fa-history mr-3"></i> History Reservasi
                     </a>
                 </li>
