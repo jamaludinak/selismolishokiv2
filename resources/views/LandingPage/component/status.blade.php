@@ -115,7 +115,16 @@
                         document.getElementById("nomor-telp").innerText = telp;
                         document.getElementById("estimasi-harga").innerText = estimasiHarga;
                         document.getElementById("status-riwayat").innerHTML = riwayatHTML;
-                        document.getElementById("status-result").classList.remove("hidden");
+                        const statusResult = document.getElementById("status-result");
+                        const statusDetails = document.getElementById("status-details");
+                        const chevron = document.getElementById("chevron");
+
+                        statusResult.classList.remove("hidden");
+
+                        // Buka accordion secara default
+                        statusDetails.style.maxHeight = statusDetails.scrollHeight + "px";
+                        chevron.style.transform = "rotate(180deg)";
+
 
                         // Modal ringkasan cepat
                         Swal.fire({

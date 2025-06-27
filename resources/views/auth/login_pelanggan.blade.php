@@ -21,6 +21,9 @@
 <body class="bg-gray-100 min-h-screen flex items-center justify-center"
     style="background-image: url('{{ asset('images/bengkel.jpg') }}'); background-size: cover; background-position: center;">
     <div class="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-6 sm:p-8">
+        <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-white">
+            <img src="{{ asset('images/logofix2.png') }}" alt="Loading..." class="w-24 h-24 animate-pulse">
+        </div>
         <div class="flex justify-center mb-4">
             <img src="{{ asset('images/logofix2.png') }}" alt="Logo" class="logo">
         </div>
@@ -80,6 +83,14 @@
             </div>
         </div>
     </div>
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = 0;
+            loader.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(() => loader.style.display = 'none', 500);
+        });
+    </script>
     <script>
         function togglePassword() {
             const passwordField = document.getElementById('password');
