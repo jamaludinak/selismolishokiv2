@@ -1,6 +1,31 @@
 @extends('pelanggan.layouts.app')
 @section('title', 'Tambah Alamat')
 
+@push('css')
+<style>
+    /* Ensure Leaflet maps don't overlap with sidebar */
+    .leaflet-container {
+        z-index: 10 !important;
+    }
+    
+    .leaflet-control-container {
+        z-index: 11 !important;
+    }
+    
+    /* Ensure map container respects sidebar */
+    #map {
+        position: relative;
+        z-index: 10;
+    }
+    
+    @media (max-width: 768px) {
+        .leaflet-container {
+            z-index: 10 !important;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md mt-2 md:mt-6 p-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Tambah Alamat</h1>
@@ -31,9 +56,9 @@
             </div>
 
             <!-- Peta -->
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1 z-[-1]">Atau pilih lokasi di peta:</label>
-                <div id="map" class="w-full h-64 rounded border mb-2"></div>
+            <div class="mb-4 relative">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Atau pilih lokasi di peta:</label>
+                <div id="map" class="w-full h-64 rounded border mb-2 relative z-10"></div>
                 <small class="text-gray-500">Geser pin merah ke lokasi alamat Anda, koordinat akan terisi otomatis.</small>
             </div>
 
@@ -45,11 +70,6 @@
                     class="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition">Simpan</button>
             </div>
         </form>
-
-        <div class="mt-6 text-sm text-gray-600">
-            <strong>Cara mendapatkan longlat manual:</strong> Buka Google Maps, klik kanan lokasi Anda, pilih "Apa yang ada
-            di sini?", lalu salin angka koordinat yang muncul.
-        </div>
     </div>
 @endsection
 

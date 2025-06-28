@@ -6,7 +6,7 @@
 <div class="container mx-auto p-4 sm:p-6 lg:p-8">
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-3xl font-extrabold text-gray-900">Detail Reservasi</h2>
-        <a href="{{ route('reservasi.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-md shadow-sm hover:bg-gray-300 transition duration-300 ease-in-out">
+        <a href="{{ route('admin.reservasi.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-md shadow-sm hover:bg-gray-300 transition duration-300 ease-in-out">
             <i class="fas fa-arrow-left mr-2"></i> Kembali
         </a>
     </div>
@@ -53,6 +53,12 @@
                     <span class="font-semibold text-gray-700">Jenis Kerusakan:</span>
                     <span class="text-gray-800">{{ $reservasi->jenisKerusakan->nama ?? 'N/A' }}</span>
                 </div>
+                @if($reservasi->teknisi)
+                <div class="py-3 flex justify-between items-center">
+                    <span class="font-semibold text-gray-700">Teknisi:</span>
+                    <span class="text-green-600 font-semibold">{{ $reservasi->teknisi->name }}</span>
+                </div>
+                @endif
             </div>
             
             <div class="mt-6">

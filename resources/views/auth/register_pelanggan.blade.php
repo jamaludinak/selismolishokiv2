@@ -20,89 +20,135 @@
                 width: 48px;
                 height: 48px;
             }
+            
+            body {
+                height: 100vh;
+                overflow: hidden;
+            }
+            
+            .mobile-container {
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.5rem;
+                margin: 0 0.5rem;
+            }
+            
+            .mobile-form {
+                width: 100%;
+                max-height: 95vh;
+                overflow-y: auto;
+                padding: 1rem;
+            }
+            
+            .mobile-input {
+                font-size: 16px !important; /* Prevents zoom on iOS */
+                padding: 14px 12px !important;
+                min-height: 52px;
+            }
+            
+            .mobile-button {
+                min-height: 52px;
+                font-size: 16px;
+            }
+            
+            .mobile-card {
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+            }
         }
     </style>
 </head>
 
 <body class="bg-gray-100 min-h-screen flex items-center justify-center"
     style="background-image: url('{{ asset('images/bengkel.jpg') }}'); background-size: cover; background-position: center;">
-    <div class="w-full max-w-md sm:max-w-lg md:max-w-xl mx-auto bg-white rounded-lg shadow-md p-4 sm:p-6 md:p-8">
+    
+    <div class="mobile-container mobile-card bg-white rounded-lg shadow-md p-4 sm:p-6 md:p-8">
         <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-white">
             <img src="{{ asset('images/logofix2.png') }}" alt="Loading..." class="w-24 h-24 animate-pulse">
         </div>
-        <div class="flex justify-center mb-4">
-            <img src="{{ asset('images/logofix2.png') }}" alt="Logo" class="logo">
-        </div>
-        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 text-center">Selis Molis Hoki</h2>
-        <p class="text-xs sm:text-sm md:text-base text-black text-center mb-4">Membantu Penyebaran Kendaraan Listrik di
-            Indonesia</p>
-        @if ($errors->any())
-            <div class="bg-red-100 text-red-700 p-2 rounded mb-4 text-xs sm:text-sm">
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+        
+        <div class="mobile-form">
+            <div class="flex justify-center mb-4">
+                <img src="{{ asset('images/logofix2.png') }}" alt="Logo" class="logo">
             </div>
-        @endif
-        <form method="POST" action="{{ url('/register-pelanggan') }}" class="space-y-4 sm:space-y-5">
-            @csrf
-            <div class="mb-3 sm:mb-4">
-                <label for="nama" class="block text-gray-700 text-xs sm:text-sm font-bold mb-1 sm:mb-2">Nama</label>
-                <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" required autofocus
-                    class="mt-1 block w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 pr-10 text-xs sm:text-sm">
-            </div>
-
-            <!-- Password -->
-            <div class="mb-3 sm:mb-4">
-                <label for="password" class="block text-gray-700 text-xs sm:text-sm font-bold mb-1">Password</label>
-                <div class="relative">
-                    <input type="password" id="password" name="password" placeholder="********" required
-                        class="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 pr-10 text-xs sm:text-sm">
-                    <button type="button" onclick="togglePassword('password', 'eye-password')"
-                        class="absolute inset-y-0 right-3 flex items-center focus:outline-none">
-                        <svg id="eye-password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M15.42 15.42A5 5 0 018.58 8.58M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
-                        </svg>
-                    </button>
+            
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 text-center">Selis Molis Hoki</h2>
+            <p class="text-xs sm:text-sm md:text-base text-black text-center mb-6">Membantu Penyebaran Kendaraan Listrik di Indonesia</p>
+            
+            @if ($errors->any())
+                <div class="bg-red-100 text-red-700 p-3 rounded mb-4 text-xs sm:text-sm">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-            </div>
-
-            <!-- Konfirmasi Password -->
-            <div class="mb-3 sm:mb-4">
-                <label for="password_confirmation"
-                    class="block text-gray-700 text-xs sm:text-sm font-bold mb-1">Konfirmasi
-                    Password</label>
-                <div class="relative">
-                    <input type="password" id="password_confirmation" name="password_confirmation"
-                        placeholder="********" required
-                        class="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 pr-10 text-xs sm:text-sm">
-                    <button type="button" onclick="togglePassword('password_confirmation', 'eye-confirmation')"
-                        class="absolute inset-y-0 right-3 flex items-center focus:outline-none">
-                        <svg id="eye-confirmation" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M15.42 15.42A5 5 0 018.58 8.58M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
-                        </svg>
-                    </button>
+            @endif
+            
+            <form method="POST" action="{{ url('/register-pelanggan') }}" class="space-y-4">
+                @csrf
+                <div>
+                    <label for="nama" class="block text-gray-700 text-sm font-bold mb-2">Nama</label>
+                    <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" required autofocus
+                        class="mobile-input block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-base">
                 </div>
-            </div>
 
-            <div>
-                <label for="noHP" class="block text-xs sm:text-sm font-medium">Nomor HP</label>
-                <input type="text" id="noHP" name="noHP" placeholder="08XXXXXXX" required
-                    class="mt-1 block w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 pr-10 text-xs sm:text-sm">
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" placeholder="********" required
+                            class="mobile-input block w-full px-3 py-3 pr-12 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-base">
+                        <button type="button" onclick="togglePassword('password', 'eye-password')"
+                            class="absolute inset-y-0 right-3 flex items-center focus:outline-none">
+                            <svg id="eye-password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.42 15.42A5 5 0 018.58 8.58M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Konfirmasi Password -->
+                <div>
+                    <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Konfirmasi Password</label>
+                    <div class="relative">
+                        <input type="password" id="password_confirmation" name="password_confirmation"
+                            placeholder="********" required
+                            class="mobile-input block w-full px-3 py-3 pr-12 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-base">
+                        <button type="button" onclick="togglePassword('password_confirmation', 'eye-confirmation')"
+                            class="absolute inset-y-0 right-3 flex items-center focus:outline-none">
+                            <svg id="eye-confirmation" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.42 15.42A5 5 0 018.58 8.58M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="noHP" class="block text-sm font-medium mb-2">Nomor HP</label>
+                    <input type="text" id="noHP" name="noHP" placeholder="08XXXXXXX" required
+                        class="mobile-input block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-base">
+                </div>
+                
+                <button type="submit"
+                    class="mobile-button w-full py-3 px-4 text-white bg-orange-500 hover:bg-orange-600 rounded-xl font-semibold transition-colors">
+                    Daftar
+                </button>
+            </form>
+            
+            <div class="mt-6 text-start text-sm">
+                Sudah punya akun? <a href="{{ url('/login-pelanggan') }}" class="text-orange-600 hover:underline">Login di sini</a>
             </div>
-            <button type="submit"
-                class="w-full py-2 px-4 text-xs sm:text-sm md:text-base text-white bg-orange-500 hover:bg-orange-600 rounded-xl font-semibold transition-colors">Daftar</button>
-        </form>
-        <div class="mt-4 text-start text-xs sm:text-sm">
-            Sudah punya akun? <a href="{{ url('/login-pelanggan') }}" class="text-orange-600 hover:underline">Login di
-                sini</a>
         </div>
     </div>
+    
     <script>
         window.addEventListener('load', function() {
             const loader = document.getElementById('loader');
@@ -111,6 +157,7 @@
             setTimeout(() => loader.style.display = 'none', 500);
         });
     </script>
+    
     <script>
         function togglePassword(inputId, iconId) {
             const input = document.getElementById(inputId);
@@ -131,6 +178,7 @@
             }
         }
     </script>
+    
     <script>
         @if (session('success'))
             Swal.fire({

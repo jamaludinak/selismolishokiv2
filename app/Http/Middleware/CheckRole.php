@@ -9,12 +9,29 @@ class CheckRole
 {
     public function handle($request, Closure $next, ...$roles)
     {
-        if (!Auth::check()) return redirect('/login');
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
 
         $user = Auth::user();
-        $userRole = optional($user->role)->name;
+        $userRoleId = $user->role_id;
 
-        if (in_array($userRole, $roles)) {
+        // Mapping role names ke role_id
+        $roleMapping = [
+            'admin' => 1,
+            'teknisi' => 2,
+            'owner' => 3
+        ];
+
+        // Convert role names ke role_id untuk pengecekan
+        $requiredRoleIds = [];
+        foreach ($roles as $role) {
+            if (isset($roleMapping[$role])) {
+                $requiredRoleIds[] = $roleMapping[$role];
+            }
+        }
+
+        if (in_array($userRoleId, $requiredRoleIds)) {
             return $next($request);
         }
 

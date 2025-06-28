@@ -47,6 +47,17 @@
                     class="mt-1 block w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-xs sm:text-base">
             </div>
 
+            <div>
+                <label for="status_garansi" class="block text-xs sm:text-sm font-medium text-gray-700">Status Garansi
+                    <span class="text-red-500">*</span></label>
+                <select id="status_garansi" name="status_garansi" required
+                    class="mt-1 block w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-xs sm:text-base">
+                    <option value="">-- Pilih Status --</option>
+                    <option value="aktif" {{ $kendaraan->status_garansi == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="tidak_aktif" {{ $kendaraan->status_garansi == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                </select>
+            </div>
+
             <div class="flex justify-end gap-2">
                 <a href="{{ route('kendaraan.index') }}"
                     class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-xs sm:text-sm">Batal</a>

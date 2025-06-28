@@ -22,6 +22,9 @@ use App\Http\Controllers\ReservasiPelangganController;
 use App\Http\Controllers\RiwayatServisPelangganController;
 use App\Http\Controllers\KlaimGaransiController;
 use App\Http\Controllers\DashboardPelangganController;
+use App\Http\Controllers\Admin\KlaimGaransiController as AdminKlaimGaransiController;
+use App\Http\Controllers\Admin\TeknisiController;
+use App\Http\Controllers\SettingController;
 
 // Route akses file storage
 Route::get('/storage/{filename}', function ($filename) {
@@ -65,31 +68,84 @@ Route::post('/register-pelanggan', [AuthPelangganController::class, 'register'])
 Route::post('/logout-pelanggan', [AuthPelangganController::class, 'logout'])->name('logout.pelanggan');
 
 // ========================================================
-// ✅ ADMIN & TEKNISI ROUTES (auth:web, role:admin|teknisi)
+// ✅ ADMIN & TEKNISI ROUTES (auth:web, role:admin|teknisi|owner)
 // ========================================================
 Route::middleware(['auth', 'role:admin,teknisi,owner'])->group(function () {
+    // Dashboard - Semua role bisa akses
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('admin/reservasi', ReservasiController::class)->names([
-        'index' => 'admin.reservasi.index',
-        'create' => 'admin.reservasi.create',
-        'store' => 'admin.reservasi.store',
-        'show' => 'admin.reservasi.show',
-        'edit' => 'admin.reservasi.edit',
-        'update' => 'admin.reservasi.update',
-        'destroy' => 'admin.reservasi.destroy',
-    ]);
+    // Settings - Semua role bisa akses
+    Route::resource('settings', SettingController::class);
 
-    Route::post('/admin/reservasi/updateStatus/{id}', [ReservasiController::class, 'updateStatus'])->name('admin.reservasi.updateStatus');
-    Route::get('/admin/historireservasi', [ReservasiController::class, 'history'])->name('admin.reservasi.history');
+    // ========================================================
+    // ✅ ADMIN & OWNER ROUTES (Reservasi, History, Jenis Kerusakan, Jadwal, Data Pelanggan, Ulasan, Klaim Garansi)
+    // ========================================================
+    Route::middleware(['role:admin,owner'])->group(function () {
+        // Reservasi
+        Route::resource('admin/reservasi', ReservasiController::class)->names([
+            'index' => 'admin.reservasi.index',
+            'create' => 'admin.reservasi.create',
+            'store' => 'admin.reservasi.store',
+            'show' => 'admin.reservasi.show',
+            'edit' => 'admin.reservasi.edit',
+            'update' => 'admin.reservasi.update',
+            'destroy' => 'admin.reservasi.destroy',
+        ]);
 
-    Route::resource('jenis_kerusakan', JenisKerusakanController::class);
-    Route::resource('riwayat', RiwayatController::class);
-    Route::resource('jadwal', JadwalController::class);
-    Route::resource('pelanggan', DataPelangganController::class);
-    Route::resource('ulasan', UlasanController::class);
-    Route::resource('pegawai', PegawaiController::class); // <-- ini akan otomatis jadi 'admin.pegawai.index'
+        Route::post('/admin/reservasi/updateStatus/{id}', [ReservasiController::class, 'updateStatus'])->name('admin.reservasi.updateStatus');
+        Route::get('/admin/historireservasi', [ReservasiController::class, 'history'])->name('admin.reservasi.history');
 
+        // Jenis Kerusakan
+        Route::resource('admin/jenis_kerusakan', JenisKerusakanController::class)->names([
+            'index' => 'jenis_kerusakan.index',
+            'create' => 'jenis_kerusakan.create',
+            'store' => 'jenis_kerusakan.store',
+            'show' => 'jenis_kerusakan.show',
+            'edit' => 'jenis_kerusakan.edit',
+            'update' => 'jenis_kerusakan.update',
+            'destroy' => 'jenis_kerusakan.destroy',
+        ]);
+        
+        // Jadwal
+        Route::resource('jadwal', JadwalController::class);
+        
+        // Data Pelanggan
+        Route::resource('pelanggan', DataPelangganController::class);
+        
+        // Ulasan
+        Route::resource('ulasan', UlasanController::class);
+        
+        // Riwayat
+        Route::resource('riwayat', RiwayatController::class);
+
+        // Admin Klaim Garansi Routes
+        Route::prefix('admin/klaim-garansi')->name('admin.klaim-garansi.')->group(function () {
+            Route::get('/', [AdminKlaimGaransiController::class, 'index'])->name('index');
+            Route::get('/{id}', [AdminKlaimGaransiController::class, 'show'])->name('show');
+            Route::post('/{id}/approve', [AdminKlaimGaransiController::class, 'approve'])->name('approve');
+            Route::post('/{id}/reject', [AdminKlaimGaransiController::class, 'reject'])->name('reject');
+            Route::put('/{id}/status', [AdminKlaimGaransiController::class, 'updateStatus'])->name('updateStatus');
+        });
+    });
+
+    // ========================================================
+    // ✅ OWNER ONLY ROUTES (Data Pegawai)
+    // ========================================================
+    Route::middleware(['role:owner'])->group(function () {
+        Route::resource('pegawai', PegawaiController::class);
+    });
+
+    // ========================================================
+    // ✅ OWNER & TEKNISI ROUTES (Panel Teknisi)
+    // ========================================================
+    Route::middleware(['role:owner,teknisi'])->group(function () {
+        // Admin Teknisi Routes
+        Route::prefix('admin/teknisi')->name('admin.teknisi.')->group(function () {
+            Route::get('/', [TeknisiController::class, 'index'])->name('index');
+            Route::put('/{id}/status', [TeknisiController::class, 'updateStatus'])->name('updateStatus');
+            Route::get('/{id}/detail', [TeknisiController::class, 'getReservasiDetail'])->name('detail');
+        });
+    });
 });
 
 // ========================================================

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Dashboard')</title>
     <link rel="icon" type="image/png" href="{{ asset('images/logofix2.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -43,6 +44,9 @@
                         <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
                     </a>
                 </li>
+
+                {{-- Menu untuk Owner dan Admin --}}
+                @anyrole(['owner', 'admin'])
                 <li>
                     <a href="{{ route('admin.reservasi.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('admin.reservasi.index') ? 'bg-orange-800' : '' }}">
                         <i class="fas fa-clipboard-list mr-3"></i> Daftar Reservasi
@@ -69,17 +73,38 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('pegawai.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('pegawai.index') ? 'bg-orange-800' : '' }}">
-                        <i class="fas fa-user-tie mr-3"></i> Data Pegawai
-                    </a>
-                </li>
-                <li>
                     <a href="{{ route('ulasan.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('ulasan.index') ? 'bg-orange-800' : '' }}">
                         <i class="fas fa-star mr-3"></i> Ulasan
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('pengaturan.index') ? 'bg-orange-800' : '' }}">
+                    <a href="{{ route('admin.klaim-garansi.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('admin.klaim-garansi.*') ? 'bg-orange-800' : '' }}">
+                        <i class="fas fa-shield-alt mr-3"></i> Klaim Garansi
+                    </a>
+                </li>
+                @endanyrole
+
+                {{-- Menu untuk Owner saja --}}
+                @role('owner')
+                <li>
+                    <a href="{{ route('pegawai.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('pegawai.index') ? 'bg-orange-800' : '' }}">
+                        <i class="fas fa-user-tie mr-3"></i> Data Pegawai
+                    </a>
+                </li>
+                @endrole
+
+                {{-- Menu untuk Owner dan Teknisi --}}
+                @anyrole(['owner', 'teknisi'])
+                <li>
+                    <a href="{{ route('admin.teknisi.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('admin.teknisi.*') ? 'bg-orange-800' : '' }}">
+                        <i class="fas fa-tools mr-3"></i> Teknisi
+                    </a>
+                </li>
+                @endanyrole
+
+                {{-- Menu untuk semua role --}}
+                <li>
+                    <a href="{{ route('settings.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('settings.*') ? 'bg-orange-800' : '' }}">
                         <i class="fas fa-cog mr-3"></i> Pengaturan
                     </a>
                 </li>

@@ -9,7 +9,7 @@ class JenisKerusakanController extends Controller
 {
     public function index()
     {
-        $jenisKerusakan = JenisKerusakan::all();
+        $jenisKerusakan = JenisKerusakan::paginate(10);
         return view('admin.jenis_kerusakan.index', compact('jenisKerusakan'));
     }
 
@@ -21,7 +21,8 @@ class JenisKerusakanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|unique:jenis_kerusakans,nama',
+            'biaya_estimasi' => 'nullable|numeric|min:0',
         ]);
 
         JenisKerusakan::create($request->all());
@@ -36,7 +37,8 @@ class JenisKerusakanController extends Controller
     public function update(Request $request, JenisKerusakan $jenisKerusakan)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|unique:jenis_kerusakans,nama,' . $jenisKerusakan->id,
+            'biaya_estimasi' => 'nullable|numeric|min:0',
         ]);
 
         $jenisKerusakan->update($request->all());

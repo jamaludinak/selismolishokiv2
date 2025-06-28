@@ -27,7 +27,31 @@ class Reservasi extends Model
         'total_harga',
         'biaya_perjalanan',
         'tanggal_berakhir_garansi',
+        'id_user',
     ];
+
+    protected $casts = [
+        'tanggal_berakhir_garansi' => 'date',
+    ];
+
+    // Status constants
+    const STATUS_PENDING = 'pending';
+    const STATUS_CONFIRMED = 'confirmed';
+    const STATUS_PROCESS = 'process';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_CANCELLED = 'cancelled';
+
+    // Get all available statuses
+    public static function getStatuses()
+    {
+        return [
+            self::STATUS_PENDING,
+            self::STATUS_CONFIRMED,
+            self::STATUS_PROCESS,
+            self::STATUS_COMPLETED,
+            self::STATUS_CANCELLED,
+        ];
+    }
 
     // Relasi dengan model JenisKerusakan (many-to-one)
     public function jenisKerusakan()
@@ -62,5 +86,9 @@ class Reservasi extends Model
         return $this->hasOne(KlaimGaransi::class, 'reservasi_id');
     }
 
-
+    // Relasi dengan model User (many-to-one)
+    public function teknisi()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
 }

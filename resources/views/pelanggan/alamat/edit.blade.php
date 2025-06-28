@@ -1,6 +1,31 @@
 @extends('pelanggan.layouts.app')
 @section('title', 'Edit Alamat')
 
+@push('css')
+<style>
+    /* Ensure Leaflet maps don't overlap with sidebar */
+    .leaflet-container {
+        z-index: 10 !important;
+    }
+    
+    .leaflet-control-container {
+        z-index: 11 !important;
+    }
+    
+    /* Ensure map container respects sidebar */
+    #map {
+        position: relative;
+        z-index: 10;
+    }
+    
+    @media (max-width: 768px) {
+        .leaflet-container {
+            z-index: 10 !important;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md mt-6 p-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Alamat</h1>
@@ -45,9 +70,9 @@
             </div>
 
             <!-- Peta -->
-            <div class="mb-4">
+            <div class="mb-4 relative">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Atau pilih lokasi di peta:</label>
-                <div id="map" class="w-full h-64 rounded border mb-2"></div>
+                <div id="map" class="w-full h-64 rounded border mb-2 relative z-10"></div>
                 <small class="text-gray-500">Geser pin merah ke lokasi alamat Anda, koordinat akan terisi otomatis.</small>
             </div>
 

@@ -20,7 +20,7 @@ class ReservasiController extends Controller
         $filterJenisKerusakan = $request->input('jenisKerusakan');
     
         // Query untuk reservasi yang belum 'completed'
-        $reservasis = Reservasi::with(['jenisKerusakan', 'reqJadwals']) // Tambahkan relasi reqJadwals
+        $reservasis = Reservasi::with(['jenisKerusakan', 'reqJadwals', 'teknisi']) // Tambahkan relasi teknisi
             ->where('status', '!=', 'completed')
             ->when($searchResi, function ($query, $searchResi) {
                 return $query->where('noResi', 'like', "%{$searchResi}%");
@@ -47,7 +47,7 @@ class ReservasiController extends Controller
         $filterJenisKerusakan = $request->input('jenisKerusakan');
     
         // Query awal untuk reservasi yang sudah 'completed'
-        $reservasiQuery = Reservasi::with('jenisKerusakan')
+        $reservasiQuery = Reservasi::with(['jenisKerusakan', 'teknisi']) // Tambahkan relasi teknisi
             ->where('status', 'completed')
             ->when($searchResi, function ($query, $searchResi) {
                 return $query->where('noResi', 'like', "%{$searchResi}%");
@@ -146,7 +146,7 @@ class ReservasiController extends Controller
             ]);
         }
     
-        return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil ditambahkan.');
+        return redirect()->route('admin.reservasi.index')->with('success', 'Reservasi berhasil ditambahkan.');
     }
 
 
@@ -204,7 +204,7 @@ class ReservasiController extends Controller
             ]);
         }
 
-        return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil diperbarui.');
+        return redirect()->route('admin.reservasi.index')->with('success', 'Reservasi berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -217,14 +217,14 @@ class ReservasiController extends Controller
         // Hapus data di reservasi
         $reservasi->delete();
     
-        return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil dihapus.');
+        return redirect()->route('admin.reservasi.index')->with('success', 'Reservasi berhasil dihapus.');
     }
 
     // Menampilkan detail reservasi dan riwayatnya
     public function show($id)
     {
         // Mengambil data reservasi berdasarkan ID, beserta jenis kerusakan dan riwayat
-        $reservasi = Reservasi::with('jenisKerusakan')->findOrFail($id);
+        $reservasi = Reservasi::with(['jenisKerusakan', 'teknisi'])->findOrFail($id);
         $riwayats = Riwayat::where('idReservasi', $id)->get(); // Mengambil data riwayat terkait
         
         return view('admin.reservasi.show', compact('reservasi', 'riwayats'));
@@ -262,8 +262,15 @@ class ReservasiController extends Controller
             }
         }
 
-        // Update status reservasi
-        $reservasi->update(['status' => $validatedData['status']]);
+        // Update status reservasi dan id_user jika status adalah 'process' atau 'completed'
+        $updateData = ['status' => $validatedData['status']];
+        
+        // Jika status adalah 'process' atau 'completed', isi id_user dengan user yang sedang login
+        if (in_array($validatedData['status'], ['process', 'completed'])) {
+            $updateData['id_user'] = auth()->id();
+        }
+        
+        $reservasi->update($updateData);
     
         // Simpan perubahan status ke riwayat
         Riwayat::create([
@@ -271,7 +278,7 @@ class ReservasiController extends Controller
             'status' => $reservasi->status,
         ]);
     
-        return redirect()->route('reservasi.index')->with('success', 'Status reservasi berhasil diperbarui.');
+        return redirect()->route('admin.reservasi.index')->with('success', 'Status reservasi berhasil diperbarui.');
     }
 
 }

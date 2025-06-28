@@ -21,7 +21,7 @@
             class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('dashboard.pelanggan') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
             <i class="fas fa-home"></i> Beranda
         </a>
-        <a href="{{ route('reservasi.index') }}"
+        <a href="{{ route('reservasi.create') }}"
             class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('reservasi.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
             <i class="fas fa-calendar-check"></i> Reservasi
         </a>

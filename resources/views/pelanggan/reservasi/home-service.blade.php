@@ -16,7 +16,9 @@
                         <label for="name" class="block text-sm font-semibold text-black">Nama Lengkap</label>
                         <input type="text" id="name" name="namaLengkap" required
                             placeholder="Tulis nama lengkap anda"
-                            class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                            value="{{ auth('pelanggan')->user()->nama }}"
+                            disabled
+                            class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 bg-gray-100 text-gray-600">
                     </div>
 
                     <div>
@@ -24,15 +26,10 @@
                             WhatsApp/Telepon</label>
                         <input type="text" id="phone" name="noTelp" required
                             placeholder="Tulis nomor WA/Telp anda"
+                            value="{{ auth('pelanggan')->user()->noHP }}"
                             class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                     </div>
 
-                    <div class="sm:col-span-2">
-                        <label for="address" class="block text-sm font-semibold text-black">Alamat Lengkap</label>
-                        <textarea id="address" name="alamatLengkap" rows="3" required
-                            placeholder="Tulis alamat lengkap beserta patokan rumah anda"
-                            class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"></textarea>
-                    </div>
 
                     <!-- Pilih Alamat -->
                     <div class="sm:col-span-2">
@@ -42,11 +39,21 @@
                                 class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                                 <option value="">Pilih salah satu alamat</option>
                                 @foreach ($alamatList as $alamat)
-                                    <option value="{{ $alamat->id }}">
+                                    <option value="{{ $alamat->id }}" data-lat="{{ $alamat->latitude }}" data-lng="{{ $alamat->longitude }}">
                                         {{ $alamat->alamat }}
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+                        <!-- Biaya Perjalanan -->
+                        <div id="biaya-perjalanan" class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200 hidden">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-blue-800">Biaya Perjalanan:</span>
+                                <span id="biaya-perjalanan-text" class="text-sm font-bold text-blue-900">Rp 0</span>
+                            </div>
+                            <div class="text-xs text-blue-600 mt-1">
+                                <span id="jarak-text">Jarak: 0 km</span>
+                            </div>
                         </div>
                     </div>
 
@@ -73,9 +80,18 @@
                             class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                             <option value="">Pilih Jenis Kerusakan</option>
                             @foreach ($jenisKerusakan as $kerusakan)
-                                <option value="{{ $kerusakan->id }}">{{ $kerusakan->nama }}</option>
+                                <option value="{{ $kerusakan->id }}" data-biaya="{{ $kerusakan->biaya_estimasi }}">
+                                    {{ $kerusakan->nama }}
+                                </option>
                             @endforeach
                         </select>
+                        <!-- Biaya Estimasi Servis -->
+                        <div id="biaya-estimasi" class="mt-2 p-3 bg-green-50 rounded-lg border border-green-200 hidden">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-green-800">Biaya Estimasi Servis:</span>
+                                <span id="biaya-estimasi-text" class="text-sm font-bold text-green-900">Rp 0</span>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="sm:col-span-2">
@@ -168,6 +184,56 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Konfigurasi bengkel
+        const bengkelLat = {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[1] ?? -6.2 }};
+        const bengkelLng = {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[0] ?? 106.8 }};
+        const tarifPerKm = {{ \App\Models\Setting::where('key', 'tarif_per_km')->first()->value ?? 5000 }};
+
+        // Event listeners
+        document.getElementById('alamat_id').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                const lat = parseFloat(selectedOption.dataset.lat);
+                const lng = parseFloat(selectedOption.dataset.lng);
+                hitungBiayaPerjalanan(lat, lng);
+            } else {
+                document.getElementById('biaya-perjalanan').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('damage_type').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                const biaya = parseFloat(selectedOption.dataset.biaya) || 0;
+                tampilkanBiayaEstimasi(biaya);
+            } else {
+                document.getElementById('biaya-estimasi').classList.add('hidden');
+            }
+        });
+
+        function hitungBiayaPerjalanan(userLat, userLng) {
+            const jarak = hitungJarak(userLat, userLng, bengkelLat, bengkelLng);
+            const biaya = Math.ceil(jarak) * tarifPerKm;
+            
+            document.getElementById('jarak-text').textContent = `Jarak: ${jarak.toFixed(2)} km`;
+            document.getElementById('biaya-perjalanan-text').textContent = `Rp ${biaya.toLocaleString()}`;
+            document.getElementById('biaya-perjalanan').classList.remove('hidden');
+        }
+
+        function tampilkanBiayaEstimasi(biaya) {
+            document.getElementById('biaya-estimasi-text').textContent = `Rp ${biaya.toLocaleString()}`;
+            document.getElementById('biaya-estimasi').classList.remove('hidden');
+        }
+
+        function hitungJarak(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius bumi dalam km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
         // Peta
         let map, marker;
         window.addEventListener('DOMContentLoaded', () => {
@@ -208,25 +274,10 @@
         }
 
         function hitungBiaya(userLat, userLng) {
-            const bengkelLat =
-                {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[1] ?? -6.2 }};
-            const bengkelLng =
-                {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[0] ?? 106.8 }};
-            const tarif = {{ \App\Models\Setting::where('key', 'tarif_per_km')->first()->value ?? 5000 }};
             const jarak = hitungJarak(userLat, userLng, bengkelLat, bengkelLng);
-            const biaya = Math.ceil(jarak) * tarif;
+            const biaya = Math.ceil(jarak) * tarifPerKm;
             document.getElementById('lokasi-status').innerHTML =
                 `✅ Jarak: <b>${jarak.toFixed(2)} km</b>, Biaya: <b>Rp${biaya.toLocaleString()}</b>`;
-        }
-
-        function hitungJarak(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(
-                dLon / 2) ** 2;
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
         }
 
         document.getElementById('reservation-form').addEventListener('submit', function(e) {

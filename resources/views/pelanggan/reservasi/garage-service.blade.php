@@ -16,8 +16,9 @@
                             Lengkap</label>
                         <div class="mt-2">
                             <input type="text" id="name" placeholder="Tulis nama lengkap anda"
-                                name="namaLengkap" required
-                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                name="namaLengkap" required value="{{ auth('pelanggan')->user()->nama }}"
+                                disabled
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 bg-gray-100 text-gray-600">
                         </div>
                     </div>
                     <!-- Nomor Telepon -->
@@ -26,24 +27,8 @@
                             WhatsApp/Telepon</label>
                         <div class="mt-2">
                             <input type="text" id="phone" placeholder="Tulis nomor WA/Telp anda" name="noTelp"
-                                required
+                                required value="{{ auth('pelanggan')->user()->noHP }}"
                                 class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
-                        </div>
-                    </div>
-
-                    <!-- Pilih Alamat -->
-                    <div class="sm:col-span-2">
-                        <label for="alamat_id" class="block text-sm font-semibold text-black">Pilih Alamat</label>
-                        <div class="mt-2">
-                            <select name="alamat_id" id="alamat_id" required
-                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
-                                <option value="">Pilih salah satu alamat</option>
-                                @foreach ($alamatList as $alamat)
-                                    <option value="{{ $alamat->id }}">
-                                        {{ $alamat->alamat }}
-                                    </option>
-                                @endforeach
-                            </select>
                         </div>
                     </div>
                     
@@ -86,57 +71,6 @@
                             <textarea id="damage_description" placeholder="Dekripsikan secara jelas kerusakan kendaraan anda" name="deskripsi"
                                 rows="4" required
                                 class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"></textarea>
-                        </div>
-                    </div>
-                    <!-- Input Jadwal -->
-                    <div class="sm:col-span-2">
-                        <label for="tanggal" class="block text-sm font-semibold text-black">Tanggal</label>
-                        <div class="mt-2">
-                            <input type="date" name="tanggal" id="tanggal"
-                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"
-                                value="{{ old('tanggal') }}" required>
-                            @error('tanggal')
-                                <div class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="waktuMulai" class="block text-sm font-semibold text-black">Waktu
-                            Mulai</label>
-                        <div class="mt-2">
-                            <select name="waktuMulai" id="waktuMulai"
-                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"
-                                required>
-                                <option value="">Pilih Waktu Mulai</option>
-                                @for ($hour = 8; $hour <= 17; $hour++)
-                                    <option value="{{ sprintf('%02d:00', $hour) }}">{{ sprintf('%02d:00', $hour) }}
-                                    </option>
-                                @endfor
-                            </select>
-                            @error('waktuMulai')
-                                <div class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="waktuSelesai" class="block text-sm font-semibold text-black">Waktu
-                            Selesai</label>
-                        <div class="mt-2">
-                            <select name="waktuSelesai" id="waktuSelesai"
-                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400"
-                                required>
-                                <option value="">Pilih Waktu Selesai</option>
-                                @for ($hour = 9; $hour <= 18; $hour++)
-                                    <!-- Waktu selesai harus lebih dari waktu mulai -->
-                                    <option value="{{ sprintf('%02d:00', $hour) }}">{{ sprintf('%02d:00', $hour) }}
-                                    </option>
-                                @endfor
-                            </select>
-                            @error('waktuSelesai')
-                                <div class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
 

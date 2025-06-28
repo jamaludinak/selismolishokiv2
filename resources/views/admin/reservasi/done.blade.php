@@ -105,8 +105,15 @@
                     </a>
                 </p>
 
+                @if($reservasi->teknisi)
+                    <p class="text-gray-600 mb-3">
+                        <strong class="text-gray-800">Teknisi:</strong> 
+                        <span class="text-green-600 font-semibold">{{ $reservasi->teknisi->name }}</span>
+                    </p>
+                @endif
+
                 <div class="flex flex-col space-y-3 mt-5">
-                    <a href="{{ route('reservasi.show', $reservasi->id) }}" class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                    <a href="{{ route('admin.reservasi.show', $reservasi->id) }}" class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                         <i class="fas fa-info-circle mr-2"></i> Detail
                     </a>
                     <button type="button" onclick="confirmDeleteHistory({{ $reservasi->id }})" class="flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
@@ -137,6 +144,7 @@
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Jenis Kerusakan</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Servis</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">No. Resi</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Teknisi</th>
                     <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Aksi</th>
                 </tr>
             </thead>
@@ -156,9 +164,16 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $reservasi->jenisKerusakan->nama ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $reservasi->servis }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-orange-600">{{ $reservasi->noResi }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            @if($reservasi->teknisi)
+                                <span class="text-green-600 font-semibold">{{ $reservasi->teknisi->name }}</span>
+                            @else
+                                <span class="text-gray-500 italic">Tidak ada data</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                             <div class="flex items-center justify-center space-x-2">
-                                <a href="{{ route('reservasi.show', $reservasi->id) }}" class="text-blue-600 hover:text-blue-900 transition duration-150 ease-in-out">
+                                <a href="{{ route('admin.reservasi.show', $reservasi->id) }}" class="text-blue-600 hover:text-blue-900 transition duration-150 ease-in-out">
                                     <i class="fas fa-eye text-lg"></i>
                                 </a>
                                 <button type="button" onclick="confirmDeleteHistory({{ $reservasi->id }})" class="text-red-600 hover:text-red-900 transition duration-150 ease-in-out">

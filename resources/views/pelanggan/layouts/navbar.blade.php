@@ -10,8 +10,6 @@
         </div>
     </div>
     <div class="flex items-center gap-3 text-gray-700 text-lg md:text-xl ml-auto md:px-4">
-        <i class="fas fa-search cursor-pointer hover:text-orange-500"></i>
-        <i class="fas fa-bell cursor-pointer hover:text-orange-500"></i>
         <a href="{{ route('profile.index') }}"
             class="{{ request()->routeIs('profile.index') ? 'text-orange-500' : '' }}">
             <i class="fas fa-user-circle cursor-pointer hover:text-orange-500"></i>

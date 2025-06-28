@@ -31,6 +31,7 @@ class KendaraanController extends Controller
             'tipe' => 'nullable|string|max:255',
             'nomor_rangka' => 'nullable|string|max:255',
             'tahun_pembelian' => 'required|digits:4|integer|min:2000|max:' . (date('Y')+1),
+            'status_garansi' => 'required|in:aktif,tidak_aktif',
         ]);
         $user = Auth::guard('pelanggan')->user();
         $data = $request->all();
@@ -56,6 +57,7 @@ class KendaraanController extends Controller
             'tipe' => 'nullable|string|max:255',
             'nomor_rangka' => 'nullable|string|max:255',
             'tahun_pembelian' => 'required|digits:4|integer|min:2000|max:' . (date('Y')+1),
+            'status_garansi' => 'required|in:aktif,tidak_aktif',
         ]);
         $user = Auth::guard('pelanggan')->user();
         $kendaraan = Kendaraan::where('id', $id)->where('data_pelanggan_id', $user->id)->firstOrFail();

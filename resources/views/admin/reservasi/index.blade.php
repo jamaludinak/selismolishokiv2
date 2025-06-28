@@ -26,7 +26,7 @@
     @endif
 
     <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-        <form class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end" method="GET" action="{{ route('reservasi.index') }}">
+        <form class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end" method="GET" action="{{ route('admin.reservasi.index') }}">
             <div>
                 <label for="searchResi" class="block text-sm font-medium text-gray-700">Cari No. Resi</label>
                 <input
@@ -100,6 +100,13 @@
                     </a>
                 </p>
 
+                @if($reservasi->teknisi)
+                    <p class="text-gray-600 mb-3">
+                        <strong class="text-gray-800">Teknisi:</strong> 
+                        <span class="text-green-600 font-semibold">{{ $reservasi->teknisi->name }}</span>
+                    </p>
+                @endif
+
                 <div class="mt-4 border-t border-gray-200 pt-4">
                     <h4 class="text-md font-semibold text-gray-800 mb-2">Jadwal yang Diminta:</h4>
                     @if ($reservasi->reqJadwals->isNotEmpty())
@@ -117,7 +124,7 @@
                 </div>
 
                 <div class="flex flex-col space-y-3 mt-5">
-                    <form action="{{ route('reservasi.update', $reservasi->id) }}" method="POST" class="w-full">
+                    <form action="{{ route('admin.reservasi.updateStatus', $reservasi->id) }}" method="POST" class="w-full">
                         @csrf
                         <label for="status-{{ $reservasi->id }}" class="sr-only">Ubah Status</label>
                         <select
@@ -132,7 +139,7 @@
                             <option value="cancelled" {{ $reservasi->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                         </select>
                     </form>
-                    <a href="{{ route('reservasi.show', $reservasi->id) }}" class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                    <a href="{{ route('admin.reservasi.show', $reservasi->id) }}" class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                         <i class="fas fa-info-circle mr-2"></i> Detail
                     </a>
                     <a href="{{ route('reservasi.edit', $reservasi->id) }}" class="flex items-center justify-center bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-2 px-4 rounded-md transition duration-300">
@@ -160,6 +167,7 @@
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Jenis Kerusakan</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Servis</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">No. Resi</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Teknisi</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
                     <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Aksi</th>
                 </tr>
@@ -192,8 +200,15 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $reservasi->jenisKerusakan->nama ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $reservasi->servis }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-orange-600">{{ $reservasi->noResi }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            @if($reservasi->teknisi)
+                                <span class="text-green-600 font-semibold">{{ $reservasi->teknisi->name }}</span>
+                            @else
+                                <span class="text-gray-500 italic">Belum ditugaskan</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <form action="{{ route('reservasi.update', $reservasi->id) }}" method="POST" class="w-full">
+                            <form action="{{ route('admin.reservasi.updateStatus', $reservasi->id) }}" method="POST" class="w-full">
                                 @csrf
                                 <select
                                     name="status"
@@ -215,7 +230,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                             <div class="flex items-center justify-center space-x-2">
-                                <a href="{{ route('reservasi.show', $reservasi->id) }}" class="text-blue-600 hover:text-blue-900 transition duration-150 ease-in-out">
+                                <a href="{{ route('admin.reservasi.show', $reservasi->id) }}" class="text-blue-600 hover:text-blue-900 transition duration-150 ease-in-out">
                                     <i class="fas fa-eye text-lg"></i>
                                 </a>
                                 <a href="{{ route('reservasi.edit', $reservasi->id) }}" class="text-yellow-600 hover:text-yellow-900 transition duration-150 ease-in-out">

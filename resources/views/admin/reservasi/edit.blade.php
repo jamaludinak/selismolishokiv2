@@ -6,7 +6,7 @@
 <div class="container mx-auto p-4 sm:p-6 lg:p-8">
     <div class="flex items-center justify-between mb-6">
         <h1 class="text-3xl font-extrabold text-gray-900">Edit Reservasi</h1>
-        <a href="{{ route('reservasi.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-md shadow-sm hover:bg-gray-300 transition duration-300 ease-in-out">
+        <a href="{{ route('admin.reservasi.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-md shadow-sm hover:bg-gray-300 transition duration-300 ease-in-out">
             <i class="fas fa-arrow-left mr-2"></i> Kembali
         </a>
     </div>
