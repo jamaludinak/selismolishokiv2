@@ -26,26 +26,26 @@
         <ul id="menu"
             class="hidden flex-col md:flex md:flex-row md:gap-2 text-white mt-4 md:mt-0 md:items-center transition-all duration-300 ease-in-out relative top-full left-0 w-full md:static md:w-auto bg-orange-500 md:bg-transparent">
             <li class="w-full md:w-auto"><a href="#services"
-                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Servis</a>
+                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-start md:text-center">Servis</a>
             </li>
             <li class="w-full md:w-auto"><a href="#cek-status"
-                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Cek
+                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-start md:text-center">Cek
                     Status</a></li>
             <li class="w-full md:w-auto"><a href="#testimoni"
-                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Testimoni</a>
+                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-start md:text-center">Testimoni</a>
             </li>
             <li class="w-full md:w-auto"><a href="#faq"
-                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">FAQ</a>
+                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-start md:text-center">FAQ</a>
             </li>
             <li class="w-full md:w-auto"><a href="#aboutus"
-                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Tentang
+                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-start md:text-center">Tentang
                     Kami</a></li>
             <li class="w-full md:w-auto"><a href="#contact"
-                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-center">Kontak</a>
+                    class="block py-2 px-4 bg-orange-500 hover:bg-yellow-700 rounded transition-colors duration-300 ease-in-out text-start md:text-center">Kontak</a>
             </li>
             <li class="w-full md:w-auto">
                 <a href="{{ route('login.pelanggan') }}"
-                    class="block py-2 px-4 bg-white rounded text-black text-center">Masuk
+                    class="block py-2 px-4 bg-white rounded text-black text-start md:text-center">Masuk
                 </a>
             </li>
         </ul>
@@ -60,24 +60,32 @@
     const line1 = document.getElementById('line1');
     const line2 = document.getElementById('line2');
     const line3 = document.getElementById('line3');
-    const logoContainer = document.getElementById('logo-container'); // Reference to the logo container
+    const logoContainer = document.getElementById('logo-container');
 
     menuBtn.addEventListener('click', () => {
         menu.classList.toggle('hidden');
         menu.classList.toggle('block');
 
-        // Toggle the icon appearance
+        // Hide/show hamburger icon, logo text, and logo when menu is opened/closed
         if (menu.classList.contains('hidden')) {
-            line1.setAttribute('d', 'M4 6h16');
-            line2.setAttribute('d', 'M4 12h16');
-            line3.setAttribute('d', 'M4 18h16');
-            line3.classList.remove('hidden');
-            logoContainer.classList.remove('hidden'); // Show logo when menu is hidden
+            // Menu is closed - show hamburger icon, logo text, and logo
+            menuIcon.classList.remove('hidden');
+            logoContainer.classList.remove('hidden');
         } else {
-            line1.setAttribute('d', 'M6 4L18 20');
-            line2.setAttribute('d', 'M6 20L18 4');
-            line3.classList.add('hidden');
-            logoContainer.classList.add('hidden'); // Hide logo when menu is opened
+            // Menu is opened - hide hamburger icon, logo text, and logo
+            menuIcon.classList.add('hidden');
+            logoContainer.classList.add('hidden');
+        }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!menuBtn.contains(e.target) && !menu.contains(e.target)) {
+            menu.classList.add('hidden');
+            menu.classList.remove('block');
+            // Show hamburger icon, logo text, and logo when menu is closed
+            menuIcon.classList.remove('hidden');
+            logoContainer.classList.remove('hidden');
         }
     });
 

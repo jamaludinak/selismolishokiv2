@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ulasan;
 
-class homeController extends Controller
+class HomeController extends Controller
 {
     public function index()
     {

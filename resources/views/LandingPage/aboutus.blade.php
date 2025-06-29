@@ -1,4 +1,4 @@
-@extends('users.LandingPage.layouts.app')
+@extends('LandingPage.layouts.app')
 @section('title', 'Tentang Kami')
 @section('content')
     <div class="text-left py-8 ml-8">

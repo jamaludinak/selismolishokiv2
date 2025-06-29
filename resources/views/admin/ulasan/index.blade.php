@@ -14,9 +14,9 @@
     @endif
 
     <div class="flex justify-start mb-6">
-        <a href="{{ route('ulasan.create') }}" class="inline-flex items-center px-4 py-2 bg-orange-600 text-white font-semibold rounded-md shadow-lg hover:bg-orange-700 transition duration-300 ease-in-out transform hover:scale-105">
+        <button onclick="openCreateModal()" class="inline-flex items-center px-4 py-2 bg-orange-600 text-white font-semibold rounded-md shadow-lg hover:bg-orange-700 transition duration-300 ease-in-out transform hover:scale-105">
             <i class="fas fa-plus-circle mr-2"></i> Tambah Ulasan
-        </a>
+        </button>
     </div>
 
     <div class="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -80,16 +80,12 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                             <div class="flex items-center justify-center space-x-2">
-                                <a href="{{ route('ulasan.edit', $ulasan->id) }}" class="text-yellow-600 hover:text-yellow-900 transition duration-150 ease-in-out">
+                                <button onclick="openEditModal({{ $ulasan->id }})" class="text-yellow-600 hover:text-yellow-900 transition duration-150 ease-in-out">
                                     <i class="fas fa-edit text-lg"></i>
-                                </a>
+                                </button>
                                 <button type="button" onclick="confirmDeleteUlasan({{ $ulasan->id }})" class="text-red-600 hover:text-red-900 transition duration-150 ease-in-out">
                                     <i class="fas fa-trash-alt text-lg"></i>
                                 </button>
-                                <form id="delete-ulasan-form-{{ $ulasan->id }}" action="{{ route('ulasan.destroy', $ulasan->id) }}" method="POST" class="hidden">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
                             </div>
                         </td>
                     </tr>
@@ -118,16 +114,12 @@
                 </div>
 
                 <div class="flex space-x-3 mt-4">
-                    <a href="{{ route('ulasan.edit', $ulasan->id) }}" class="inline-flex items-center px-4 py-2 bg-yellow-500 text-gray-900 font-semibold rounded-md transition duration-300 hover:bg-yellow-600">
+                    <button onclick="openEditModal({{ $ulasan->id }})" class="inline-flex items-center px-4 py-2 bg-yellow-500 text-gray-900 font-semibold rounded-md transition duration-300 hover:bg-yellow-600">
                         <i class="fas fa-edit mr-2"></i> Edit
-                    </a>
+                    </button>
                     <button type="button" onclick="confirmDeleteUlasan({{ $ulasan->id }})" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold rounded-md transition duration-300 hover:bg-red-700">
                         <i class="fas fa-trash-alt mr-2"></i> Hapus
                     </button>
-                    <form id="delete-ulasan-form-{{ $ulasan->id }}" action="{{ route('ulasan.destroy', $ulasan->id) }}" method="POST" class="hidden">
-                        @csrf
-                        @method('DELETE')
-                    </form>
                 </div>
             </div>
         @empty
@@ -137,9 +129,129 @@
             </div>
         @endforelse
     </div>
+
+    <div class="mt-6">
+        {{ $ulasans->links('vendor.pagination.tailwind') }}
+    </div>
+</div>
+
+<!-- Create/Edit Modal -->
+<div id="ulasanModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h3 id="modalTitle" class="text-lg font-medium text-gray-900">Tambah Ulasan</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="ulasanForm">
+                @csrf
+                <input type="hidden" id="ulasan_id" name="ulasan_id">
+                
+                <div class="mb-4">
+                    <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
+                    <input type="text" id="nama" name="nama" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="ulasan" class="block text-sm font-medium text-gray-700">Ulasan</label>
+                    <textarea id="ulasan" name="ulasan" rows="4" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"></textarea>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="rating" class="block text-sm font-medium text-gray-700">Rating (1-5 Bintang)</label>
+                    <input type="number" id="rating" name="rating" min="1" max="5" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal()" 
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+                        Batal
+                    </button>
+                    <button type="submit" 
+                        class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script>
+    function openCreateModal() {
+        document.getElementById('modalTitle').textContent = 'Tambah Ulasan';
+        document.getElementById('ulasanForm').reset();
+        document.getElementById('ulasan_id').value = '';
+        document.getElementById('ulasanModal').classList.remove('hidden');
+    }
+
+    function openEditModal(id) {
+        document.getElementById('modalTitle').textContent = 'Edit Ulasan';
+        
+        fetch(`/ulasan/${id}/edit`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ulasan_id').value = data.id;
+                document.getElementById('nama').value = data.nama;
+                document.getElementById('ulasan').value = data.ulasan;
+                document.getElementById('rating').value = data.rating;
+                document.getElementById('ulasanModal').classList.remove('hidden');
+            });
+    }
+
+    function closeModal() {
+        document.getElementById('ulasanModal').classList.add('hidden');
+    }
+
+    document.getElementById('ulasanForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const id = formData.get('ulasan_id');
+        const url = id ? `/ulasan/${id}` : '/ulasan';
+        const method = id ? 'PUT' : 'POST';
+        
+        if (id) {
+            formData.append('_method', 'PUT');
+        }
+        
+        fetch(url, {
+            method: method,
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Terjadi kesalahan saat menyimpan data.'
+            });
+        });
+    });
+
     function confirmDeleteUlasan(id) {
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -152,7 +264,26 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('delete-ulasan-form-' + id).submit();
+                fetch(`/ulasan/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                });
             }
         });
     }

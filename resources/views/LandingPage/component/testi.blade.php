@@ -4,10 +4,12 @@
         Lihat apa yang pelanggan kami katakan tentang layanan kami. Kami berkomitmen untuk memberikan pelayanan terbaik
         untuk Anda.
     </p>
+    
+    <!-- Testimonials Swiper -->
     <div class="swiper-container w-full mb-4">
         <div class="swiper-wrapper">
             @foreach ($ulasans as $ulasan)
-                <article class="swiper-slide h-[350px] md:h-[400px] lg:h-[420px]">
+                <article class="swiper-slide h-[350px] md:h-[400px] lg:h-[420px]" itemscope itemtype="https://schema.org/Review">
                     <div class="flex flex-col justify-between h-full py-12 p-6 lg:p-12 bg-white rounded-lg shadow-lg lg:text-xl"
                         aria-labelledby="testimonial-{{ $loop->index }}">
                         <div class="testimoni-content">
@@ -23,47 +25,76 @@
                                 @endfor
                             </div>
                             <!-- Testimonial Text -->
-                            <p class="text-lg lg:text-2xl italic mb-4 text-gray-800">"{{ $ulasan->ulasan }}"</p>
+                            <p class="text-lg lg:text-2xl italic mb-4 text-gray-800" itemprop="reviewBody">"{{ $ulasan->ulasan }}"</p>
                         </div>
-                        <p class="text-sm lg:text-lg text-gray-500 text-center" id="testimonial-{{ $loop->index }}">-
-                            {{ $ulasan->nama }}</p>
+                        <div class="testimoni-author">
+                            <div class="flex items-center justify-center">
+                                <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                    {{ strtoupper(substr($ulasan->nama, 0, 1)) }}
+                                </div>
+                                <div class="ml-4">
+                                    <p class="font-semibold text-gray-900 text-lg" itemprop="author">{{ $ulasan->nama }}</p>
+                                    <p class="text-gray-600">Pelanggan</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </article>
             @endforeach
         </div>
+        <!-- Swiper Pagination -->
         <div class="swiper-pagination mt-4"></div>
     </div>
+    
+    <!-- Call to Action -->
+
 </div>
 
-@push('js')
-    <script>
-        // swiper-init.js
-        var swiper = new Swiper('.swiper-container', {
-            loop: true,
-            autoplay: {
-                delay: 3000, // Delay for better readability
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            lazy: true, // Lazy loading enabled
-            slidesPerView: 1,
-            initialSlide: 0, // Default to first slide
-            breakpoints: {
-                640: {
-                    initialSlide: document.querySelectorAll('.swiper-slide').length -
-                        1, // Show last testimonial in mobile view
-                    slidesPerView: 1,
+<script>
+    // Wait for Swiper to be available
+    function initSwiper() {
+        if (typeof Swiper !== 'undefined') {
+            var swiper = new Swiper('.swiper-container', {
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
                 },
-                768: {
-                    slidesPerView: 2,
+                lazy: true,
+                slidesPerView: 1,
+                initialSlide: 0,
+                breakpoints: {
+                    640: {
+                        slidesPerView: 1,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                    },
                 },
-                1024: {
-                    slidesPerView: 3,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
                 },
-            },
-        });
-    </script>
-@endpush
+            });
+            console.log('Swiper initialized successfully');
+        } else {
+            console.log('Swiper not loaded yet, retrying...');
+            setTimeout(initSwiper, 100);
+        }
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        initSwiper();
+    });
+
+    // Also try to initialize when window loads (in case Swiper loads after DOM)
+    window.addEventListener('load', function() {
+        if (typeof Swiper === 'undefined') {
+            initSwiper();
+        }
+    });
+</script>

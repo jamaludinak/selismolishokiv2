@@ -9,13 +9,29 @@ use Illuminate\Support\Facades\Auth;
 
 class KlaimGaransiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $query = KlaimGaransi::with(['reservasi', 'dataPelanggan']);
         
         // Filter by status if provided
-        if (request('status')) {
-            $query->where('status', request('status'));
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Search by no resi
+        if ($request->filled('search_no_resi')) {
+            $query->whereHas('reservasi', function($q) use ($request) {
+                $q->where('noResi', 'like', '%' . $request->search_no_resi . '%');
+            });
+        }
+
+        // Search by pelanggan name
+        if ($request->filled('search_pelanggan')) {
+            $query->whereHas('dataPelanggan', function($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search_pelanggan . '%');
+            })->orWhereHas('reservasi', function($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search_pelanggan . '%');
+            });
         }
         
         $klaimGaransis = $query->orderBy('created_at', 'desc')->paginate(10);

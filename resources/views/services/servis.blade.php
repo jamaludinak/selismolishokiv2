@@ -52,20 +52,26 @@
                         <div class="sm:col-span-2">
                             <label class="block text-sm font-semibold text-black mb-1">Lokasi Anda</label>
                             <div class="flex flex-col gap-2">
-                                <div class="flex gap-2">
-                                    <input type="text" id="latitude" name="latitude" placeholder="Latitude"
-                                        class="w-1/2 rounded-md border-0 px-2 py-2 shadow-sm ring-1 ring-orange-300 text-sm"
-                                        required>
-                                    <input type="text" id="longitude" name="longitude" placeholder="Longitude"
-                                        class="w-1/2 rounded-md border-0 px-2 py-2 shadow-sm ring-1 ring-orange-300 text-sm"
-                                        required>
-                                </div>
+                                <!-- Hidden latitude and longitude fields -->
+                                <input type="hidden" id="latitude" name="latitude" required>
+                                <input type="hidden" id="longitude" name="longitude" required>
+                                
                                 <button type="button" onclick="getLocationFromDevice()"
                                     class="px-4 py-2 bg-orange-500 text-white rounded-md text-sm w-fit">Ambil Lokasi Saya
                                     Sekarang</button>
                                 <div id="lokasi-status" class="text-sm text-gray-600 italic">Klik tombol atau geser pin di
                                     peta. Biaya dihitung otomatis.</div>
                                 <div id="map" class="w-full h-64 rounded-md border"></div>
+                                <!-- Biaya Perjalanan -->
+                                <div id="biaya-perjalanan" class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200 hidden">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-medium text-blue-800">Biaya Perjalanan:</span>
+                                        <span id="biaya-perjalanan-text" class="text-sm font-bold text-blue-900">Rp 0</span>
+                                    </div>
+                                    <div class="text-xs text-blue-600 mt-1">
+                                        <span id="jarak-text">Jarak: 0 km</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -75,9 +81,18 @@
                                 class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                                 <option value="">Pilih Jenis Kerusakan</option>
                                 @foreach ($jenisKerusakan as $kerusakan)
-                                    <option value="{{ $kerusakan->id }}">{{ $kerusakan->nama }}</option>
+                                    <option value="{{ $kerusakan->id }}" data-biaya="{{ $kerusakan->biaya_estimasi }}">
+                                        {{ $kerusakan->nama }}
+                                    </option>
                                 @endforeach
                             </select>
+                            <!-- Biaya Estimasi Servis -->
+                            <div id="biaya-estimasi" class="mt-2 p-3 bg-green-50 rounded-lg border border-green-200 hidden">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-green-800">Biaya Estimasi Servis:</span>
+                                    <span id="biaya-estimasi-text" class="text-sm font-bold text-green-900">Rp 0</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="sm:col-span-2">
@@ -273,6 +288,83 @@
                     Swal.fire('Error', 'Terjadi kesalahan saat mengirim data.', 'error');
                     console.error('Error:', error);
                 });
+        });
+
+        // Tambahan untuk menampilkan biaya perjalanan dan estimasi perbaikan
+        const tarifPerKm = {{ \App\Models\Setting::where('key', 'tarif_per_km')->first()->value ?? 5000 }};
+        const bengkelLat = {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[1] ?? -6.2 }};
+        const bengkelLng = {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[0] ?? 106.8 }};
+
+        function hitungBiayaPerjalanan(userLat, userLng) {
+            const jarak = hitungJarak(userLat, userLng, bengkelLat, bengkelLng);
+            const biaya = Math.ceil(jarak) * tarifPerKm;
+            document.getElementById('jarak-text').textContent = `Jarak: ${jarak.toFixed(2)} km`;
+            document.getElementById('biaya-perjalanan-text').textContent = `Rp ${biaya.toLocaleString()}`;
+            document.getElementById('biaya-perjalanan').classList.remove('hidden');
+        }
+
+        function tampilkanBiayaEstimasi(biaya) {
+            document.getElementById('biaya-estimasi-text').textContent = `Rp ${biaya.toLocaleString()}`;
+            document.getElementById('biaya-estimasi').classList.remove('hidden');
+        }
+
+        // Trigger biaya perjalanan saat lokasi diubah
+        function triggerBiayaPerjalanan() {
+            const lat = parseFloat(document.getElementById('latitude').value);
+            const lng = parseFloat(document.getElementById('longitude').value);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                hitungBiayaPerjalanan(lat, lng);
+            }
+        }
+
+        // Trigger estimasi biaya saat jenis kerusakan dipilih
+        document.getElementById('damage_type').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                const biaya = parseFloat(selectedOption.dataset.biaya) || 0;
+                tampilkanBiayaEstimasi(biaya);
+            } else {
+                document.getElementById('biaya-estimasi').classList.add('hidden');
+            }
+        });
+
+        // Trigger biaya perjalanan saat lokasi diambil dari device atau pin digeser
+        window.addEventListener('DOMContentLoaded', function() {
+            // Panggil trigger saat lokasi berubah
+            document.getElementById('latitude').addEventListener('change', triggerBiayaPerjalanan);
+            document.getElementById('longitude').addEventListener('change', triggerBiayaPerjalanan);
+        });
+
+        // Modifikasi fungsi getLocationFromDevice dan marker dragend agar trigger biaya perjalanan
+        function getLocationFromDevice() {
+            const status = document.getElementById('lokasi-status');
+            if (navigator.geolocation) {
+                status.textContent = "Mengambil lokasi...";
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    document.getElementById('latitude').value = lat;
+                    document.getElementById('longitude').value = lng;
+                    marker.setLatLng([lat, lng]);
+                    map.setView([lat, lng], 15);
+                    hitungBiaya(lat, lng);
+                    triggerBiayaPerjalanan();
+                }, function(error) {
+                    status.textContent = "❌ Gagal mendapatkan lokasi: " + error.message;
+                });
+            } else {
+                status.textContent = "❌ Browser tidak mendukung geolocation.";
+            }
+        }
+        // Modifikasi marker dragend
+        window.addEventListener('DOMContentLoaded', () => {
+            marker.on('dragend', function(e) {
+                const latlng = marker.getLatLng();
+                document.getElementById('latitude').value = latlng.lat;
+                document.getElementById('longitude').value = latlng.lng;
+                hitungBiaya(latlng.lat, latlng.lng);
+                triggerBiayaPerjalanan();
+            });
         });
     </script>
 @endpush

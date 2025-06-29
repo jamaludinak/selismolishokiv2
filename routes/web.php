@@ -37,8 +37,8 @@ Route::get('/storage/{filename}', function ($filename) {
 // ✅ PUBLIC ROUTES (TIDAK PERLU LOGIN)
 // ========================================================
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/aboutus', fn() => view('users.LandingPage.aboutus'))->name('aboutus');
-Route::get('/contact', fn() => view('users.LandingPage.contact'))->name('contact');
+Route::get('/aboutus', fn() => view('LandingPage.aboutus'))->name('aboutus');
+Route::get('/contact', fn() => view('LandingPage.contact'))->name('contact');
 
 Route::get('/servis', [PelangganController::class, 'create'])->name('services.servis');
 Route::post('/servis/submit', [PelangganController::class, 'store'])->name('services.submit');

@@ -1,2 +1,23 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://selismolishoki.com/sitemap.xml
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /register
+
+# Allow important pages
+Allow: /
+Allow: /aboutus
+Allow: /contact
+Allow: /servis
+Allow: /servisgarage
+Allow: /login-pelanggan
+Allow: /register-pelanggan
+
+# Crawl delay
+Crawl-delay: 1

@@ -27,7 +27,8 @@
                         <input type="text" id="phone" name="noTelp" required
                             placeholder="Tulis nomor WA/Telp anda"
                             value="{{ auth('pelanggan')->user()->noHP }}"
-                            class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                            disabled
+                            class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 bg-gray-100 text-gray-600">
                     </div>
 
 
@@ -36,15 +37,29 @@
                         <label for="alamat_id" class="block text-sm font-semibold text-black">Pilih Alamat</label>
                         <div class="mt-2">
                             <select name="alamat_id" id="alamat_id" required
-                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 min-h-[44px] address-select">
                                 <option value="">Pilih salah satu alamat</option>
                                 @foreach ($alamatList as $alamat)
-                                    <option value="{{ $alamat->id }}" data-lat="{{ $alamat->latitude }}" data-lng="{{ $alamat->longitude }}">
-                                        {{ $alamat->alamat }}
+                                    <option value="{{ $alamat->id }}" data-lat="{{ $alamat->latitude }}" data-lng="{{ $alamat->longitude }}" data-alamat="{{ $alamat->alamat }}">
+                                        {{ Str::limit($alamat->alamat, 80, '...') }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
+                        
+                        <!-- Alamat Terpilih (Preview) -->
+                        <div id="alamat-preview" class="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 hidden address-preview">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1 min-w-0">
+                                    <span class="text-xs font-medium text-gray-600 block mb-1">Alamat Terpilih:</span>
+                                    <span id="alamat-text" class="text-sm text-gray-800 break-words leading-relaxed address-text"></span>
+                                </div>
+                                <button type="button" id="ubah-alamat" class="ml-2 text-xs text-orange-600 hover:text-orange-800 font-medium">
+                                    Ubah
+                                </button>
+                            </div>
+                        </div>
+                        
                         <!-- Biaya Perjalanan -->
                         <div id="biaya-perjalanan" class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200 hidden">
                             <div class="flex items-center justify-between">
@@ -195,11 +210,33 @@
             if (selectedOption.value) {
                 const lat = parseFloat(selectedOption.dataset.lat);
                 const lng = parseFloat(selectedOption.dataset.lng);
+                const alamatLengkap = selectedOption.dataset.alamat;
+                
+                // Tampilkan preview alamat
+                tampilkanPreviewAlamat(alamatLengkap);
+                
+                // Hitung biaya perjalanan
                 hitungBiayaPerjalanan(lat, lng);
             } else {
+                // Sembunyikan preview dan biaya perjalanan
+                document.getElementById('alamat-preview').classList.add('hidden');
                 document.getElementById('biaya-perjalanan').classList.add('hidden');
             }
         });
+
+        // Event listener untuk tombol "Ubah" alamat
+        document.getElementById('ubah-alamat').addEventListener('click', function() {
+            document.getElementById('alamat-preview').classList.add('hidden');
+            document.getElementById('alamat_id').focus();
+        });
+
+        function tampilkanPreviewAlamat(alamat) {
+            const previewElement = document.getElementById('alamat-preview');
+            const alamatTextElement = document.getElementById('alamat-text');
+            
+            alamatTextElement.textContent = alamat;
+            previewElement.classList.remove('hidden');
+        }
 
         document.getElementById('damage_type').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
@@ -323,4 +360,76 @@
                 });
         });
     </script>
+@endpush
+
+@push('css')
+    <style>
+        /* Custom styles for address display */
+        .address-select {
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+        
+        .address-select option {
+            padding: 8px 12px;
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+        
+        .address-preview {
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        
+        .address-text {
+            display: block;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .address-select option {
+                font-size: 14px;
+                padding: 10px 12px;
+            }
+            
+            .address-preview {
+                padding: 12px;
+            }
+            
+            .address-text {
+                font-size: 14px;
+            }
+        }
+        
+        /* Ensure select dropdown is properly sized */
+        select#alamat_id {
+            min-height: 44px;
+            max-height: 200px;
+        }
+        
+        /* Custom scrollbar for long address lists */
+        select#alamat_id::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        select#alamat_id::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        select#alamat_id::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        select#alamat_id::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
 @endpush

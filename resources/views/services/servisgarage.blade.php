@@ -47,15 +47,7 @@
                             </div>
                         </div>
                         <!-- Alamat -->
-                        <div class="sm:col-span-2">
-                            <label for="address" class="block text-xs sm:text-sm font-semibold leading-6 text-black">Alamat
-                                Lengkap</label>
-                            <div class="mt-2">
-                                <textarea id="address" placeholder="Tulis alamat lengkap beserta patokan rumah anda" name="alamatLengkap"
-                                    rows="3" required
-                                    class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"></textarea>
-                            </div>
-                        </div>
+
                         <!-- Jenis Kerusakan -->
                         <div class="sm:col-span-2">
                             <label for="damage_type"
@@ -80,60 +72,6 @@
                                 <textarea id="damage_description" placeholder="Dekripsikan secara jelas kerusakan kendaraan anda" name="deskripsi"
                                     rows="4" required
                                     class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"></textarea>
-                            </div>
-                        </div>
-                        <!-- Input Jadwal -->
-                        <div class="sm:col-span-2">
-                            <label for="tanggal"
-                                class="block text-xs sm:text-sm font-semibold leading-6 text-black">Tanggal</label>
-                            <div class="mt-2">
-                                <input type="date" name="tanggal" id="tanggal"
-                                    class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"
-                                    value="{{ old('tanggal') }}" required>
-                                @error('tanggal')
-                                    <div class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="waktuMulai"
-                                class="block text-xs sm:text-sm font-semibold leading-6 text-black">Waktu
-                                Mulai</label>
-                            <div class="mt-2">
-                                <select name="waktuMulai" id="waktuMulai"
-                                    class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"
-                                    required>
-                                    <option value="">Pilih Waktu Mulai</option>
-                                    @for ($hour = 8; $hour <= 17; $hour++)
-                                        <option value="{{ sprintf('%02d:00', $hour) }}">{{ sprintf('%02d:00', $hour) }}
-                                        </option>
-                                    @endfor
-                                </select>
-                                @error('waktuMulai')
-                                    <div class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="waktuSelesai"
-                                class="block text-xs sm:text-sm font-semibold leading-6 text-black">Waktu
-                                Selesai</label>
-                            <div class="mt-2">
-                                <select name="waktuSelesai" id="waktuSelesai"
-                                    class="block w-full rounded-md border-0 px-3 py-2 text-xs sm:text-sm shadow-sm ring-1 ring-inset ring-orange-300 focus:ring-2 focus:ring-orange-400"
-                                    required>
-                                    <option value="">Pilih Waktu Selesai</option>
-                                    @for ($hour = 9; $hour <= 18; $hour++)
-                                        <!-- Waktu selesai harus lebih dari waktu mulai -->
-                                        <option value="{{ sprintf('%02d:00', $hour) }}">{{ sprintf('%02d:00', $hour) }}
-                                        </option>
-                                    @endfor
-                                </select>
-                                @error('waktuSelesai')
-                                    <div class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</div>
-                                @enderror
                             </div>
                         </div>
 

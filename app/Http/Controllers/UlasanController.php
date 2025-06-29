@@ -21,7 +21,7 @@ class UlasanController extends Controller
             $query->where('rating', $request->filter_rating);
         }
 
-        $ulasans = $query->get();
+        $ulasans = $query->paginate(10);
 
         return view('admin.ulasan.index', compact('ulasans'));
     }
@@ -39,14 +39,18 @@ class UlasanController extends Controller
             'rating' => 'required|integer|between:1,5',
         ]);
 
-        Ulasan::create($request->all());
+        $ulasan = Ulasan::create($request->all());
 
-        return redirect()->route('ulasan.index')->with('success', 'Ulasan berhasil ditambahkan.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Ulasan berhasil ditambahkan.',
+            'data' => $ulasan
+        ]);
     }
 
     public function edit(Ulasan $ulasan)
     {
-        return view('admin.ulasan.edit', compact('ulasan'));
+        return response()->json($ulasan);
     }
 
     public function update(Request $request, Ulasan $ulasan)
@@ -59,12 +63,19 @@ class UlasanController extends Controller
 
         $ulasan->update($request->all());
 
-        return redirect()->route('ulasan.index')->with('success', 'Ulasan berhasil diperbarui.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Ulasan berhasil diperbarui.',
+            'data' => $ulasan
+        ]);
     }
 
     public function destroy(Ulasan $ulasan)
     {
         $ulasan->delete();
-        return redirect()->route('ulasan.index')->with('success', 'Ulasan berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Ulasan berhasil dihapus.'
+        ]);
     }
 }
