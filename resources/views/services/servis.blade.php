@@ -30,15 +30,13 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <div>
                             <label for="name" class="block text-sm font-semibold text-black">Nama Lengkap</label>
-                            <input type="text" id="name" name="namaLengkap" required
-                                placeholder="Tulis nama lengkap anda"
+                            <input type="text" id="name" name="namaLengkap" required placeholder="Tulis nama lengkap anda"
                                 class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                         </div>
 
                         <div>
                             <label for="phone" class="block text-sm font-semibold text-black">Nomor WA/Telp</label>
-                            <input type="text" id="phone" name="noTelp" required
-                                placeholder="Tulis nomor WA/Telp anda"
+                            <input type="text" id="phone" name="noTelp" required placeholder="Tulis nomor WA/Telp anda"
                                 class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                         </div>
 
@@ -55,7 +53,7 @@
                                 <!-- Hidden latitude and longitude fields -->
                                 <input type="hidden" id="latitude" name="latitude" required>
                                 <input type="hidden" id="longitude" name="longitude" required>
-                                
+
                                 <button type="button" onclick="getLocationFromDevice()"
                                     class="px-4 py-2 bg-orange-500 text-white rounded-md text-sm w-fit">Ambil Lokasi Saya
                                     Sekarang</button>
@@ -63,7 +61,8 @@
                                     peta. Biaya dihitung otomatis.</div>
                                 <div id="map" class="w-full h-64 rounded-md border"></div>
                                 <!-- Biaya Perjalanan -->
-                                <div id="biaya-perjalanan" class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200 hidden">
+                                <div id="biaya-perjalanan"
+                                    class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200 hidden">
                                     <div class="flex items-center justify-between">
                                         <span class="text-sm font-medium text-blue-800">Biaya Perjalanan:</span>
                                         <span id="biaya-perjalanan-text" class="text-sm font-bold text-blue-900">Rp 0</span>
@@ -86,11 +85,19 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <!-- Biaya Estimasi Servis -->
-                            <div id="biaya-estimasi" class="mt-2 p-3 bg-green-50 rounded-lg border border-green-200 hidden">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-sm font-medium text-green-800">Biaya Estimasi Servis:</span>
-                                    <span id="biaya-estimasi-text" class="text-sm font-bold text-green-900">Rp 0</span>
+                        </div>
+                        <!-- Biaya Estimasi Servis -->
+                        <div class="sm:col-span-2">
+                            <div id="biaya-estimasi" class="hidden">
+                                <label class="block text-xs sm:text-sm font-semibold leading-6 text-black mb-2">
+                                    Estimasi Perbaikan:
+                                </label>
+                                <div class="bg-orange-50 border border-orange-200 rounded-md p-3">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs sm:text-sm font-medium text-orange-800">Biaya Estimasi:</span>
+                                        <span id="estimasi-biaya" class="text-xs sm:text-sm font-bold text-orange-900"></span>
+                                    </div>
+                                    <p class="text-xs text-orange-700 mt-1">*Estimasi ini dapat berubah setelah pemeriksaan detail oleh teknisi</p>
                                 </div>
                             </div>
                         </div>
@@ -196,7 +203,7 @@
             marker = L.marker([defaultLat, defaultLng], {
                 draggable: true
             }).addTo(map);
-            marker.on('dragend', function(e) {
+            marker.on('dragend', function (e) {
                 const latlng = marker.getLatLng();
                 document.getElementById('latitude').value = latlng.lat;
                 document.getElementById('longitude').value = latlng.lng;
@@ -209,7 +216,7 @@
             const status = document.getElementById('lokasi-status');
             if (navigator.geolocation) {
                 status.textContent = "Mengambil lokasi...";
-                navigator.geolocation.getCurrentPosition(function(position) {
+                navigator.geolocation.getCurrentPosition(function (position) {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     document.getElementById('latitude').value = lat;
@@ -217,7 +224,7 @@
                     marker.setLatLng([lat, lng]);
                     map.setView([lat, lng], 15);
                     hitungBiaya(lat, lng);
-                }, function(error) {
+                }, function (error) {
                     status.textContent = "❌ Gagal mendapatkan lokasi: " + error.message;
                 });
             } else {
@@ -227,9 +234,9 @@
 
         function hitungBiaya(userLat, userLng) {
             const bengkelLat =
-                {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[1] ?? -6.2 }};
+                                        {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[1] ?? -6.2 }};
             const bengkelLng =
-                {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[0] ?? 106.8 }};
+                                        {{ explode(',', \App\Models\Setting::where('key', 'bengkel_longlat')->first()->value)[0] ?? 106.8 }};
             const tarif = {{ \App\Models\Setting::where('key', 'tarif_per_km')->first()->value ?? 5000 }};
             const jarak = hitungJarak(userLat, userLng, bengkelLat, bengkelLng);
             const biaya = Math.ceil(jarak) * tarif;
@@ -247,19 +254,19 @@
             return R * c;
         }
 
-        document.getElementById('reservation-form').addEventListener('submit', function(e) {
+        document.getElementById('reservation-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(this);
             const loadingElement = document.getElementById('loading');
             loadingElement.classList.remove('hidden');
 
             fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     loadingElement.classList.add('hidden');
@@ -303,11 +310,6 @@
             document.getElementById('biaya-perjalanan').classList.remove('hidden');
         }
 
-        function tampilkanBiayaEstimasi(biaya) {
-            document.getElementById('biaya-estimasi-text').textContent = `Rp ${biaya.toLocaleString()}`;
-            document.getElementById('biaya-estimasi').classList.remove('hidden');
-        }
-
         // Trigger biaya perjalanan saat lokasi diubah
         function triggerBiayaPerjalanan() {
             const lat = parseFloat(document.getElementById('latitude').value);
@@ -318,18 +320,24 @@
         }
 
         // Trigger estimasi biaya saat jenis kerusakan dipilih
-        document.getElementById('damage_type').addEventListener('change', function() {
+        document.getElementById('damage_type').addEventListener('change', function () {
             const selectedOption = this.options[this.selectedIndex];
             if (selectedOption.value) {
                 const biaya = parseFloat(selectedOption.dataset.biaya) || 0;
-                tampilkanBiayaEstimasi(biaya);
+                if (biaya > 0) {
+                    document.getElementById('estimasi-biaya').textContent = `Rp ${biaya.toLocaleString()}`;
+                    document.getElementById('biaya-estimasi').classList.remove('hidden');
+                } else {
+                    document.getElementById('estimasi-biaya').textContent = 'Belum ditentukan';
+                    document.getElementById('biaya-estimasi').classList.remove('hidden');
+                }
             } else {
                 document.getElementById('biaya-estimasi').classList.add('hidden');
             }
         });
 
         // Trigger biaya perjalanan saat lokasi diambil dari device atau pin digeser
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function () {
             // Panggil trigger saat lokasi berubah
             document.getElementById('latitude').addEventListener('change', triggerBiayaPerjalanan);
             document.getElementById('longitude').addEventListener('change', triggerBiayaPerjalanan);
@@ -340,7 +348,7 @@
             const status = document.getElementById('lokasi-status');
             if (navigator.geolocation) {
                 status.textContent = "Mengambil lokasi...";
-                navigator.geolocation.getCurrentPosition(function(position) {
+                navigator.geolocation.getCurrentPosition(function (position) {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     document.getElementById('latitude').value = lat;
@@ -349,7 +357,7 @@
                     map.setView([lat, lng], 15);
                     hitungBiaya(lat, lng);
                     triggerBiayaPerjalanan();
-                }, function(error) {
+                }, function (error) {
                     status.textContent = "❌ Gagal mendapatkan lokasi: " + error.message;
                 });
             } else {
@@ -358,7 +366,7 @@
         }
         // Modifikasi marker dragend
         window.addEventListener('DOMContentLoaded', () => {
-            marker.on('dragend', function(e) {
+            marker.on('dragend', function (e) {
                 const latlng = marker.getLatLng();
                 document.getElementById('latitude').value = latlng.lat;
                 document.getElementById('longitude').value = latlng.lng;

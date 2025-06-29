@@ -14,21 +14,19 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                         <label for="name" class="block text-sm font-semibold text-black">Nama Lengkap</label>
-                        <input type="text" id="name" name="namaLengkap" required
-                            placeholder="Tulis nama lengkap anda"
-                            value="{{ auth('pelanggan')->user()->nama }}"
-                            disabled
+                        <input type="text" id="name" name="namaLengkap" required placeholder="Tulis nama lengkap anda"
+                            value="{{ auth('pelanggan')->user()->nama }}" disabled
                             class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 bg-gray-100 text-gray-600">
                     </div>
 
                     <div>
                         <label for="phone" class="block text-sm font-semibold text-black">Nomor
                             WhatsApp/Telepon</label>
-                        <input type="text" id="phone" name="noTelp" required
-                            placeholder="Tulis nomor WA/Telp anda"
-                            value="{{ auth('pelanggan')->user()->noHP }}"
-                            disabled
-                            class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 bg-gray-100 text-gray-600">
+                        <div class="mt-2">
+                            <input type="text" id="phone" placeholder="Tulis nomor WA/Telp anda" name="noTelp" required
+                                value="{{ auth('pelanggan')->user()->noHP }}"
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
+                        </div>
                     </div>
 
 
@@ -40,26 +38,30 @@
                                 class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 min-h-[44px] address-select">
                                 <option value="">Pilih salah satu alamat</option>
                                 @foreach ($alamatList as $alamat)
-                                    <option value="{{ $alamat->id }}" data-lat="{{ $alamat->latitude }}" data-lng="{{ $alamat->longitude }}" data-alamat="{{ $alamat->alamat }}">
+                                    <option value="{{ $alamat->id }}" data-lat="{{ $alamat->latitude }}"
+                                        data-lng="{{ $alamat->longitude }}" data-alamat="{{ $alamat->alamat }}">
                                         {{ Str::limit($alamat->alamat, 80, '...') }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-                        
+
                         <!-- Alamat Terpilih (Preview) -->
-                        <div id="alamat-preview" class="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 hidden address-preview">
+                        <div id="alamat-preview"
+                            class="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 hidden address-preview">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1 min-w-0">
                                     <span class="text-xs font-medium text-gray-600 block mb-1">Alamat Terpilih:</span>
-                                    <span id="alamat-text" class="text-sm text-gray-800 break-words leading-relaxed address-text"></span>
+                                    <span id="alamat-text"
+                                        class="text-sm text-gray-800 break-words leading-relaxed address-text"></span>
                                 </div>
-                                <button type="button" id="ubah-alamat" class="ml-2 text-xs text-orange-600 hover:text-orange-800 font-medium">
+                                <button type="button" id="ubah-alamat"
+                                    class="ml-2 text-xs text-orange-600 hover:text-orange-800 font-medium">
                                     Ubah
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Biaya Perjalanan -->
                         <div id="biaya-perjalanan" class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200 hidden">
                             <div class="flex items-center justify-between">
@@ -88,7 +90,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="sm:col-span-2">
                         <label for="damage_type" class="block text-sm font-semibold text-black">Jenis Kerusakan</label>
                         <select id="damage_type" name="idJenisKerusakan" required
@@ -100,11 +102,18 @@
                                 </option>
                             @endforeach
                         </select>
-                        <!-- Biaya Estimasi Servis -->
-                        <div id="biaya-estimasi" class="mt-2 p-3 bg-green-50 rounded-lg border border-green-200 hidden">
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm font-medium text-green-800">Biaya Estimasi Servis:</span>
-                                <span id="biaya-estimasi-text" class="text-sm font-bold text-green-900">Rp 0</span>
+
+                    </div>
+                    <div class="sm:col-span-2">
+                        <div id="estimasi-container" class="hidden">
+                            <label class="block text-sm font-semibold text-black mb-2">Estimasi Perbaikan</label>
+                            <div class="bg-orange-50 border border-orange-200 rounded-md p-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-orange-800">Biaya Estimasi:</span>
+                                    <span id="estimasi-biaya" class="text-sm font-bold text-orange-900"></span>
+                                </div>
+                                <p class="text-xs text-orange-700 mt-1">*Estimasi ini dapat berubah setelah pemeriksaan
+                                    detail oleh teknisi</p>
                             </div>
                         </div>
                     </div>
@@ -196,7 +205,6 @@
 </section>
 
 @push('js')
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Konfigurasi bengkel
@@ -205,16 +213,16 @@
         const tarifPerKm = {{ \App\Models\Setting::where('key', 'tarif_per_km')->first()->value ?? 5000 }};
 
         // Event listeners
-        document.getElementById('alamat_id').addEventListener('change', function() {
+        document.getElementById('alamat_id').addEventListener('change', function () {
             const selectedOption = this.options[this.selectedIndex];
             if (selectedOption.value) {
                 const lat = parseFloat(selectedOption.dataset.lat);
                 const lng = parseFloat(selectedOption.dataset.lng);
                 const alamatLengkap = selectedOption.dataset.alamat;
-                
+
                 // Tampilkan preview alamat
                 tampilkanPreviewAlamat(alamatLengkap);
-                
+
                 // Hitung biaya perjalanan
                 hitungBiayaPerjalanan(lat, lng);
             } else {
@@ -225,7 +233,7 @@
         });
 
         // Event listener untuk tombol "Ubah" alamat
-        document.getElementById('ubah-alamat').addEventListener('click', function() {
+        document.getElementById('ubah-alamat').addEventListener('click', function () {
             document.getElementById('alamat-preview').classList.add('hidden');
             document.getElementById('alamat_id').focus();
         });
@@ -233,33 +241,34 @@
         function tampilkanPreviewAlamat(alamat) {
             const previewElement = document.getElementById('alamat-preview');
             const alamatTextElement = document.getElementById('alamat-text');
-            
+
             alamatTextElement.textContent = alamat;
             previewElement.classList.remove('hidden');
         }
 
-        document.getElementById('damage_type').addEventListener('change', function() {
+        document.getElementById('damage_type').addEventListener('change', function () {
             const selectedOption = this.options[this.selectedIndex];
             if (selectedOption.value) {
                 const biaya = parseFloat(selectedOption.dataset.biaya) || 0;
-                tampilkanBiayaEstimasi(biaya);
+                if (biaya > 0) {
+                    document.getElementById('estimasi-biaya').textContent = `Rp ${biaya.toLocaleString()}`;
+                    document.getElementById('estimasi-container').classList.remove('hidden');
+                } else {
+                    document.getElementById('estimasi-biaya').textContent = 'Belum ditentukan';
+                    document.getElementById('estimasi-container').classList.remove('hidden');
+                }
             } else {
-                document.getElementById('biaya-estimasi').classList.add('hidden');
+                document.getElementById('estimasi-container').classList.add('hidden');
             }
         });
 
         function hitungBiayaPerjalanan(userLat, userLng) {
             const jarak = hitungJarak(userLat, userLng, bengkelLat, bengkelLng);
             const biaya = Math.ceil(jarak) * tarifPerKm;
-            
+
             document.getElementById('jarak-text').textContent = `Jarak: ${jarak.toFixed(2)} km`;
             document.getElementById('biaya-perjalanan-text').textContent = `Rp ${biaya.toLocaleString()}`;
             document.getElementById('biaya-perjalanan').classList.remove('hidden');
-        }
-
-        function tampilkanBiayaEstimasi(biaya) {
-            document.getElementById('biaya-estimasi-text').textContent = `Rp ${biaya.toLocaleString()}`;
-            document.getElementById('biaya-estimasi').classList.remove('hidden');
         }
 
         function hitungJarak(lat1, lon1, lat2, lon2) {
@@ -271,65 +280,19 @@
             return R * c;
         }
 
-        // Peta
-        let map, marker;
-        window.addEventListener('DOMContentLoaded', () => {
-            const defaultLat = -7.437347;
-            const defaultLng = 109.264502;
-            map = L.map('map').setView([defaultLat, defaultLng], 15);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            marker = L.marker([defaultLat, defaultLng], {
-                draggable: true
-            }).addTo(map);
-            marker.on('dragend', function(e) {
-                const latlng = marker.getLatLng();
-                document.getElementById('latitude').value = latlng.lat;
-                document.getElementById('longitude').value = latlng.lng;
-                hitungBiaya(latlng.lat, latlng.lng);
-            });
-            getLocationFromDevice();
-        });
-
-        function getLocationFromDevice() {
-            const status = document.getElementById('lokasi-status');
-            if (navigator.geolocation) {
-                status.textContent = "Mengambil lokasi...";
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    document.getElementById('latitude').value = lat;
-                    document.getElementById('longitude').value = lng;
-                    marker.setLatLng([lat, lng]);
-                    map.setView([lat, lng], 15);
-                    hitungBiaya(lat, lng);
-                }, function(error) {
-                    status.textContent = "❌ Gagal mendapatkan lokasi: " + error.message;
-                });
-            } else {
-                status.textContent = "❌ Browser tidak mendukung geolocation.";
-            }
-        }
-
-        function hitungBiaya(userLat, userLng) {
-            const jarak = hitungJarak(userLat, userLng, bengkelLat, bengkelLng);
-            const biaya = Math.ceil(jarak) * tarifPerKm;
-            document.getElementById('lokasi-status').innerHTML =
-                `✅ Jarak: <b>${jarak.toFixed(2)} km</b>, Biaya: <b>Rp${biaya.toLocaleString()}</b>`;
-        }
-
-        document.getElementById('reservation-form').addEventListener('submit', function(e) {
+        document.getElementById('reservation-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(this);
             const loadingElement = document.getElementById('loading');
             loadingElement.classList.remove('hidden');
 
             fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     loadingElement.classList.add('hidden');
@@ -369,65 +332,65 @@
             max-width: 100%;
             word-wrap: break-word;
         }
-        
+
         .address-select option {
             padding: 8px 12px;
             white-space: normal;
             word-wrap: break-word;
             line-height: 1.4;
         }
-        
+
         .address-preview {
             max-width: 100%;
             overflow-wrap: break-word;
             word-wrap: break-word;
             hyphens: auto;
         }
-        
+
         .address-text {
             display: block;
             line-height: 1.5;
             white-space: pre-wrap;
             word-break: break-word;
         }
-        
+
         /* Responsive adjustments */
         @media (max-width: 640px) {
             .address-select option {
                 font-size: 14px;
                 padding: 10px 12px;
             }
-            
+
             .address-preview {
                 padding: 12px;
             }
-            
+
             .address-text {
                 font-size: 14px;
             }
         }
-        
+
         /* Ensure select dropdown is properly sized */
         select#alamat_id {
             min-height: 44px;
             max-height: 200px;
         }
-        
+
         /* Custom scrollbar for long address lists */
         select#alamat_id::-webkit-scrollbar {
             width: 8px;
         }
-        
+
         select#alamat_id::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 4px;
         }
-        
+
         select#alamat_id::-webkit-scrollbar-thumb {
             background: #c1c1c1;
             border-radius: 4px;
         }
-        
+
         select#alamat_id::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
         }
