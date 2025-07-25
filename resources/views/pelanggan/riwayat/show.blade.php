@@ -73,9 +73,6 @@
                                         </label>
                                         <div class="bg-gray-50 rounded-lg px-4 py-3 border-l-4 border-purple-500">
                                             <p class="text-lg font-semibold text-gray-900">{{ $riwayat->data_kendaraan }}</p>
-                                            @if($riwayat->kendaraan)
-                                                <p class="text-sm text-gray-600">{{ $riwayat->kendaraan->merk ?? '' }} {{ $riwayat->kendaraan->tipe ?? '' }}</p>
-                                            @endif
                                         </div>
                                     </div>
                                 </div>

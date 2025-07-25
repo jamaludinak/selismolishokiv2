@@ -161,6 +161,9 @@ Route::middleware(['auth:pelanggan'])->group(function () {
     // Add specific routes for home service and garage service
     Route::post('/reservasi/home-service', [ReservasiPelangganController::class, 'store'])->name('reservasi.store.home');
     Route::post('/reservasi/garage-service', [ReservasiPelangganController::class, 'storeGarage'])->name('reservasi.store.garage');
+    // Routes for video upload
+    Route::get('/upload-video-reservasi', [ReservasiPelangganController::class, 'showUploadForm'])->name('pelanggan.upload.video.form');
+    Route::post('/upload-video-reservasi', [ReservasiPelangganController::class, 'uploadVideo'])->name('pelanggan.upload.video');
     Route::resource('profile', ProfilePelangganController::class);
     Route::resource('riwayats', RiwayatServisPelangganController::class)->only(['index', 'show']);
     Route::resource('klaim-garansi', KlaimGaransiController::class)->only(['index', 'store']);

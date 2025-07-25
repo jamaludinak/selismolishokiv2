@@ -1,8 +1,8 @@
 <section id="form" class="px-2 sm:px-6 lg:px-4">
     <div class="container mx-auto max-w-full sm:max-w-2xl px-0 sm:px-4">
-        <div class="bg-white rounded-lg p-4 sm:p-8">
+        <div class="rounded-lg p-4 sm:p-8">
 
-            <div class="text-center">
+            <div class="text-center mb-6">
                 <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Formulir Servis di Rumah</h2>
                 <p class="mt-2 text-sm sm:text-base text-gray-600">Isi formulir untuk reservasi servis sepeda listrik
                     Anda di rumah.</p>
@@ -17,7 +17,7 @@
                         <label for="alamat_id" class="block text-sm font-semibold text-black">Pilih Alamat</label>
                         <div class="mt-2">
                             <select name="alamat_id" id="alamat_id" required
-                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 min-h-[44px] address-select">
+                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 min-h-[44px]">
                                 <option value="">Pilih salah satu alamat</option>
                                 @foreach ($alamatList as $alamat)
                                     <option value="{{ $alamat->id }}" data-lat="{{ $alamat->latitude }}"
@@ -26,22 +26,6 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
-
-                        <!-- Alamat Terpilih (Preview) -->
-                        <div id="alamat-preview"
-                            class="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 hidden address-preview">
-                            <div class="flex items-start justify-between">
-                                <div class="flex-1 min-w-0">
-                                    <span class="text-xs font-medium text-gray-600 block mb-1">Alamat Terpilih:</span>
-                                    <span id="alamat-text"
-                                        class="text-sm text-gray-800 break-words leading-relaxed address-text"></span>
-                                </div>
-                                <button type="button" id="ubah-alamat"
-                                    class="ml-2 text-xs text-orange-600 hover:text-orange-800 font-medium">
-                                    Ubah
-                                </button>
-                            </div>
                         </div>
 
                         <!-- Biaya Perjalanan -->
@@ -74,8 +58,8 @@
                     </div>
 
                     <div class="sm:col-span-2">
-                        <label for="damage_type" class="block text-sm font-semibold text-black">Jenis Kerusakan</label>
-                        <select id="damage_type" name="idJenisKerusakan" required
+                        <label for="home_damage_type" class="block text-sm font-semibold text-black">Jenis Kerusakan</label>
+                        <select id="home_damage_type" name="idJenisKerusakan" required
                             class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
                             <option value="">Pilih Jenis Kerusakan</option>
                             @foreach ($jenisKerusakan as $kerusakan)
@@ -87,12 +71,12 @@
 
                     </div>
                     <div class="sm:col-span-2">
-                        <div id="estimasi-container" class="hidden">
+                        <div id="home_estimasi_container" class="hidden">
                             <label class="block text-sm font-semibold text-black mb-2">Estimasi Perbaikan</label>
                             <div class="bg-orange-50 border border-orange-200 rounded-md p-3">
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm font-medium text-orange-800">Biaya Estimasi:</span>
-                                    <span id="estimasi-biaya" class="text-sm font-bold text-orange-900"></span>
+                                    <span id="home_estimasi_biaya" class="text-sm font-bold text-orange-900"></span>
                                 </div>
                                 <p class="text-xs text-orange-700 mt-1">*Estimasi ini dapat berubah setelah pemeriksaan
                                     detail oleh teknisi</p>
@@ -200,49 +184,42 @@
             if (selectedOption.value) {
                 const lat = parseFloat(selectedOption.dataset.lat);
                 const lng = parseFloat(selectedOption.dataset.lng);
-                const alamatLengkap = selectedOption.dataset.alamat;
-
-                // Tampilkan preview alamat
-                tampilkanPreviewAlamat(alamatLengkap);
 
                 // Hitung biaya perjalanan
                 hitungBiayaPerjalanan(lat, lng);
             } else {
-                // Sembunyikan preview dan biaya perjalanan
-                document.getElementById('alamat-preview').classList.add('hidden');
+                // Sembunyikan biaya perjalanan
                 document.getElementById('biaya-perjalanan').classList.add('hidden');
             }
         });
 
-        // Event listener untuk tombol "Ubah" alamat
-        document.getElementById('ubah-alamat').addEventListener('click', function () {
-            document.getElementById('alamat-preview').classList.add('hidden');
-            document.getElementById('alamat_id').focus();
-        });
-
-        function tampilkanPreviewAlamat(alamat) {
-            const previewElement = document.getElementById('alamat-preview');
-            const alamatTextElement = document.getElementById('alamat-text');
-
-            alamatTextElement.textContent = alamat;
-            previewElement.classList.remove('hidden');
-        }
-
-        document.getElementById('damage_type').addEventListener('change', function () {
-            const selectedOption = this.options[this.selectedIndex];
-            if (selectedOption.value) {
-                const biaya = parseFloat(selectedOption.dataset.biaya) || 0;
-                if (biaya > 0) {
-                    document.getElementById('estimasi-biaya').textContent = `Rp ${biaya.toLocaleString()}`;
-                    document.getElementById('estimasi-container').classList.remove('hidden');
-                } else {
-                    document.getElementById('estimasi-biaya').textContent = 'Belum ditentukan';
-                    document.getElementById('estimasi-container').classList.remove('hidden');
-                }
-            } else {
-                document.getElementById('estimasi-container').classList.add('hidden');
+        // Event listener for damage type change - use safer approach
+        document.addEventListener('DOMContentLoaded', function() {
+            const homeSelect = document.getElementById('home_damage_type');
+            if (homeSelect) {
+                homeSelect.addEventListener('change', function () {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        const biaya = parseFloat(selectedOption.dataset.biaya) || 0;
+                        if (biaya > 0) {
+                            document.getElementById('home_estimasi_biaya').textContent = formatCurrency(biaya);
+                            document.getElementById('home_estimasi_container').classList.remove('hidden');
+                        } else {
+                            document.getElementById('home_estimasi_biaya').textContent = 'Belum ditentukan';
+                            document.getElementById('home_estimasi_container').classList.remove('hidden');
+                        }
+                    } else {
+                        document.getElementById('home_estimasi_container').classList.add('hidden');
+                    }
+                });
             }
         });
+
+        // Function to format currency
+        function formatCurrency(amount) {
+            if (!amount || amount == 0) return 'Belum ditentukan';
+            return 'Rp ' + new Intl.NumberFormat('id-ID').format(amount);
+        }
 
         function hitungBiayaPerjalanan(userLat, userLng) {
             const jarak = hitungJarak(userLat, userLng, bengkelLat, bengkelLng);
@@ -284,10 +261,16 @@
                             html: 'No Resi Anda: ' + data.no_resi +
                                 '<br>Simpan No Resi untuk mengecek status servis Anda!',
                             icon: 'success',
-                            confirmButtonText: 'Lihat Riwayat Reservasi'
+                            showCancelButton: true,
+                            confirmButtonText: 'Upload Video Tambahan',
+                            cancelButtonText: 'Lihat Riwayat Reservasi'
                         }).then((result) => {
-                            // Redirect to riwayat index for authenticated pelanggan
-                            window.location.href = '{{ route("riwayats.index") }}';
+                            if (result.isConfirmed) {
+                                window.location.href = '{{ route("pelanggan.upload.video.form") }}?no_resi=' + data.no_resi;
+                            } else {
+                                // Redirect to riwayat index for authenticated pelanggan
+                                window.location.href = '{{ route("riwayats.index") }}';
+                            }
                         });
                     } else {
                         Swal.fire('Error', data.message, 'error');
@@ -317,33 +300,11 @@
             line-height: 1.4;
         }
 
-        .address-preview {
-            max-width: 100%;
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            hyphens: auto;
-        }
-
-        .address-text {
-            display: block;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-
         /* Responsive adjustments */
         @media (max-width: 640px) {
             .address-select option {
                 font-size: 14px;
                 padding: 10px 12px;
-            }
-
-            .address-preview {
-                padding: 12px;
-            }
-
-            .address-text {
-                font-size: 14px;
             }
         }
 

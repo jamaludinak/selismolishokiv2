@@ -223,4 +223,46 @@ class ReservasiPelangganController extends Controller
             'data' => $jadwal,
         ]);
     }
+
+    public function showUploadForm()
+    {
+        return view('pelanggan.upload_video');
+    }
+
+    public function uploadVideo(Request $request)
+    {
+        $request->validate([
+            'video' => 'required|file|mimes:mp4,mov,avi,wmv|max:102400', // 100MB max
+            'no_resi' => 'required|string',
+        ]);
+
+        // Mencari reservasi berdasarkan nomor resi
+        $reservasi = Reservasi::where('noResi', $request->input('no_resi'))->first();
+
+        if (!$reservasi) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Reservasi tidak ditemukan.',
+            ]);
+        }
+
+        try {
+            // Simpan video ke storage
+            $videoPath = $request->file('video')->store('videos/damage', 'public_direct');
+
+            // Simpan path video ke dalam data reservasi
+            $reservasi->video = $videoPath;
+            $reservasi->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Video berhasil diupload!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengupload video: ' . $e->getMessage(),
+            ]);
+        }
+    }
 }
