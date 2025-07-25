@@ -14,9 +14,8 @@ class PegawaiController extends Controller
      */
     public function index()
     {
-        $pegawai = User::with('role')->whereHas('role', function ($query) {
-            $query->where('name', '!=', 'owner');
-        })->get();
+        // Filter users by role attribute directly, excluding 'owner'
+        $pegawai = User::where('role', '!=', 'owner')->get();
 
         return view('pegawai.index', compact('pegawai'));
     }

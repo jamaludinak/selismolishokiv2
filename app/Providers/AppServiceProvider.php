@@ -27,14 +27,7 @@ class AppServiceProvider extends ServiceProvider
             }
             
             $user = auth()->user();
-            $roleMapping = [
-                'admin' => 1,
-                'teknisi' => 2,
-                'owner' => 3
-            ];
-            
-            $roleId = is_numeric($role) ? $role : ($roleMapping[$role] ?? null);
-            return $user->role_id === $roleId;
+            return $user->role === $role;
         });
 
         // Helper function untuk mengecek multiple roles
@@ -44,22 +37,9 @@ class AppServiceProvider extends ServiceProvider
             }
             
             $user = auth()->user();
-            $roleMapping = [
-                'admin' => 1,
-                'teknisi' => 2,
-                'owner' => 3
-            ];
-            
             $roles = is_array($roles) ? $roles : [$roles];
             
-            foreach ($roles as $role) {
-                $roleId = is_numeric($role) ? $role : ($roleMapping[$role] ?? null);
-                if ($user->role_id === $roleId) {
-                    return true;
-                }
-            }
-            
-            return false;
+            return in_array($user->role, $roles);
         });
     }
 }

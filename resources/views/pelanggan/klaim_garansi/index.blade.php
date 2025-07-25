@@ -42,7 +42,7 @@
                                 <td class="px-4 py-2">{{ $k->keterangan ?? '-' }}</td>
                                 <td class="px-4 py-2">
                                     @if ($k->bukti)
-                                        <a href="{{ asset('storage/' . $k->bukti) }}" target="_blank"
+                                        <a href="{{ asset($k->bukti) }}" target="_blank"
                                             class="text-blue-500 underline text-sm">Lihat</a>
                                     @else
                                         <span class="text-gray-500 text-sm">-</span>
@@ -117,7 +117,7 @@
                                 <div>
                                     <h4 class="font-semibold text-gray-800 text-sm mb-1">Bukti:</h4>
                                     @if ($k->bukti)
-                                        <a href="{{ asset('storage/' . $k->bukti) }}" target="_blank"
+                                        <a href="{{ asset($k->bukti) }}" target="_blank"
                                             class="text-blue-500 underline text-sm hover:text-blue-700">
                                             <i class="fas fa-file-image mr-1"></i>Lihat Bukti
                                         </a>

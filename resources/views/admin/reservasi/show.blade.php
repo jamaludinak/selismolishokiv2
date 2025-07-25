@@ -71,7 +71,7 @@
             <div class="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Gambar Kerusakan</h3>
                 @if($reservasi->gambar)
-                    <img src="{{ url('storage/' . $reservasi->gambar) }}" alt="Gambar Kerusakan" class="w-full h-auto rounded-lg shadow-md object-cover cursor-pointer hover:scale-105 transition-transform duration-300" onclick="openImageModal('{{ url('storage/' . $reservasi->gambar) }}')">
+                    <img src="{{ url($reservasi->gambar) }}" alt="Gambar Kerusakan" class="w-full h-auto rounded-lg shadow-md object-cover cursor-pointer hover:scale-105 transition-transform duration-300" onclick="openImageModal('{{ url($reservasi->gambar) }}')">
                 @else
                     <div class="text-center py-4 text-gray-500 italic">
                         <i class="fas fa-image text-4xl mb-2"></i>
@@ -84,7 +84,7 @@
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Video Kerusakan</h3>
                 @if($reservasi->video)
                     <video controls class="w-full h-auto rounded-lg shadow-md">
-                        <source src="{{ url('storage/' . $reservasi->video) }}" type="video/mp4">
+                        <source src="{{ url($reservasi->video) }}" type="video/mp4">
                         Maaf, browser Anda tidak mendukung tag video.
                     </video>
                 @else

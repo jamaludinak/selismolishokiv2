@@ -14,24 +14,9 @@ class CheckRole
         }
 
         $user = Auth::user();
-        $userRoleId = $user->role_id;
-
-        // Mapping role names ke role_id
-        $roleMapping = [
-            'admin' => 1,
-            'teknisi' => 2,
-            'owner' => 3
-        ];
-
-        // Convert role names ke role_id untuk pengecekan
-        $requiredRoleIds = [];
-        foreach ($roles as $role) {
-            if (isset($roleMapping[$role])) {
-                $requiredRoleIds[] = $roleMapping[$role];
-            }
-        }
-
-        if (in_array($userRoleId, $requiredRoleIds)) {
+        
+        // Cek apakah role user ada dalam daftar role yang diizinkan
+        if (in_array($user->role, $roles)) {
             return $next($request);
         }
 

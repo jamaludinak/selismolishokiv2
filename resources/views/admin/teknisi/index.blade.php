@@ -345,7 +345,7 @@ function generateDetailContent(reservasi) {
                     <div>
                         <h5 class="font-medium text-gray-700 mb-2">Foto Kerusakan:</h5>
                         ${reservasi.gambar ? `
-                            <img src="/storage/${reservasi.gambar}" alt="Foto Kerusakan" class="w-full h-48 object-cover rounded shadow-md">
+                            <img src="/${reservasi.gambar}" alt="Foto Kerusakan" class="w-full h-48 object-cover rounded shadow-md">
                         ` : '<p class="text-sm text-gray-500 italic">Tidak ada foto</p>'}
                     </div>
                     
@@ -353,7 +353,7 @@ function generateDetailContent(reservasi) {
                         <h5 class="font-medium text-gray-700 mb-2">Video Kerusakan:</h5>
                         ${reservasi.video ? `
                             <video controls class="w-full h-48 object-cover rounded shadow-md">
-                                <source src="/storage/${reservasi.video}" type="video/mp4">
+                                <source src="/${reservasi.video}" type="video/mp4">
                                 Browser Anda tidak mendukung tag video.
                             </video>
                         ` : '<p class="text-sm text-gray-500 italic">Tidak ada video</p>'}

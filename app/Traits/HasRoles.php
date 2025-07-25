@@ -6,39 +6,37 @@ trait HasRoles
 {
     public function hasRole($role): bool
     {
-        // Mapping role names ke role_id
-        $roleMapping = [
-            'admin' => 1,
-            'teknisi' => 2,
-            'owner' => 3
-        ];
-
-        $roleId = is_numeric($role) ? $role : ($roleMapping[$role] ?? null);
-        return $this->role_id === $roleId;
+        return $this->role === $role;
     }
 
     public function hasAnyRole(array $roles): bool
     {
-        foreach ($roles as $role) {
-            if ($this->hasRole($role)) {
-                return true;
-            }
-        }
-        return false;
+        return in_array($this->role, $roles);
     }
 
     public function isAdmin(): bool
     {
-        return $this->role_id === 1;
+        return $this->role === 'admin';
     }
 
     public function isTeknisi(): bool
     {
-        return $this->role_id === 2;
+        return $this->role === 'teknisi';
     }
 
     public function isOwner(): bool
     {
-        return $this->role_id === 3;
+        return $this->role === 'owner';
+    }
+
+    public function getRoleDisplayName(): string
+    {
+        $roleNames = [
+            'admin' => 'Administrator',
+            'teknisi' => 'Teknisi',
+            'owner' => 'Owner'
+        ];
+
+        return $roleNames[$this->role] ?? ucfirst($this->role);
     }
 } 

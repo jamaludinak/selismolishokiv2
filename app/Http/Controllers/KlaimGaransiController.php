@@ -52,7 +52,7 @@ class KlaimGaransiController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        $path = $request->file('bukti')->store('bukti_klaim', 'public');
+        $path = $request->file('bukti')->store('bukti_klaim', 'public_direct');
 
         // Get customer id from authenticated user
         $user = Auth::guard('pelanggan')->user();

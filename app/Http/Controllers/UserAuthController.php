@@ -25,7 +25,7 @@ class UserAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            $role = Auth::user()->role->name;
+            $role = Auth::user()->role;
 
             if ($role === 'admin') {
                 return redirect('/admin/dashboard');
@@ -62,7 +62,7 @@ class UserAuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => 3, // 1: admin, 2: teknisi, 3: user biasa
+            'role' => 'teknisi', // Set default role as teknisi
         ]);
 
         return redirect('/user/login')->with('success', 'Registrasi berhasil! Silakan login.');

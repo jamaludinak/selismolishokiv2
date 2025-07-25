@@ -6,7 +6,7 @@
                 <p class="mt-2 text-sm sm:text-base text-gray-600">Isi formulir untuk reservasi servis sepeda listrik
                     Anda di bengkel.</p>
             </div>
-            <form id="reservation-form" action="{{ route('services.submitGarage') }}" method="POST"
+            <form id="garage-reservation-form" action="{{ route('services.submitGarage') }}" method="POST"
                 enctype="multipart/form-data" class="mx-auto mt-8 max-w-xl">
                 @csrf
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -17,7 +17,7 @@
                         <div class="mt-2">
                             <input type="text" id="name" placeholder="Tulis nama lengkap anda"
                                 name="namaLengkap" required value="{{ auth('pelanggan')->user()->nama }}"
-                                disabled
+                                readonly
                                 class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 bg-gray-100 text-gray-600">
                         </div>
                     </div>
@@ -145,7 +145,7 @@
         document.getElementById('damage_type').addEventListener('change', handleDamageTypeChange);
 
         // JavaScript for AJAX and SweetAlert Handling
-        document.getElementById('reservation-form').addEventListener('submit', function(e) {
+        document.getElementById('garage-reservation-form').addEventListener('submit', function(e) {
             e.preventDefault(); // Prevent default form submission
 
             const formData = new FormData(this);

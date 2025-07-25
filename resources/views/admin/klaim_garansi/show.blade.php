@@ -61,7 +61,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Bukti Foto</label>
                     @if($klaimGaransi->bukti)
-                        <img src="{{ asset('storage/' . $klaimGaransi->bukti) }}" 
+                        <img src="{{ asset($klaimGaransi->bukti) }}" 
                              alt="Bukti Klaim" 
                              class="mt-2 max-w-full h-auto rounded-lg border border-gray-300"
                              style="max-height: 400px;">

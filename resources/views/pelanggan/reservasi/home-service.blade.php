@@ -8,14 +8,14 @@
                     Anda di rumah.</p>
             </div>
 
-            <form id="reservation-form" action="{{ route('services.submit') }}" method="POST"
+            <form id="home-reservation-form" action="{{ route('services.submit') }}" method="POST"
                 enctype="multipart/form-data" class="mx-auto mt-8 max-w-xl">
                 @csrf
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                         <label for="name" class="block text-sm font-semibold text-black">Nama Lengkap</label>
                         <input type="text" id="name" name="namaLengkap" required placeholder="Tulis nama lengkap anda"
-                            value="{{ auth('pelanggan')->user()->nama }}" disabled
+                            value="{{ auth('pelanggan')->user()->nama }}" readonly
                             class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 bg-gray-100 text-gray-600">
                     </div>
 
@@ -189,6 +189,8 @@
                     </div>
                 </div>
 
+                <input type="hidden" name="alamatLengkap" id="alamat_lengkap_input" value="">
+
                 <div class="mt-6">
                     <button type="submit" style="background-color: #ea580c"
                         class="block w-full rounded-md px-3.5 py-2.5 text-center text-lg font-semibold text-white shadow-sm">
@@ -244,6 +246,8 @@
 
             alamatTextElement.textContent = alamat;
             previewElement.classList.remove('hidden');
+            // Set hidden input for controller
+            document.getElementById('alamat_lengkap_input').value = alamat;
         }
 
         document.getElementById('damage_type').addEventListener('change', function () {
@@ -280,7 +284,7 @@
             return R * c;
         }
 
-        document.getElementById('reservation-form').addEventListener('submit', function (e) {
+        document.getElementById('home-reservation-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(this);
             const loadingElement = document.getElementById('loading');
@@ -297,6 +301,10 @@
                 .then(data => {
                     loadingElement.classList.add('hidden');
                     if (data.success) {
+                        @auth('pelanggan')
+                        // Redirect logged-in pelanggan to riwayats
+                        window.location.href = '{{ url('/riwayats') }}';
+                        @else
                         Swal.fire({
                             title: 'Reservasi Berhasil',
                             html: 'No Resi Anda: ' + data.no_resi +
@@ -312,6 +320,7 @@
                                 window.location.href = '/';
                             }
                         });
+                        @endauth
                     } else {
                         Swal.fire('Error', data.message, 'error');
                     }

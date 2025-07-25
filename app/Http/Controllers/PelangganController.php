@@ -10,6 +10,7 @@ use App\Models\Jadwal;
 use App\Models\Ulasan;
 use App\Models\DataPelanggan;
 use App\Models\ReqJadwal;
+use App\Models\AlamatPelanggan;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -24,32 +25,38 @@ class PelangganController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
+        // Validasi input Home Service dan alamat via alamat_id
+        // Validate input for public Home Service form: use text address and coordinates
         $validatedData = $request->validate([
-            'namaLengkap' => 'required|string|max:255',
-            'noTelp' => 'required|string|max:20',
-            'alamatLengkap' => 'required|string',
-            'idJenisKerusakan' => 'required|integer|exists:jenis_kerusakans,id',
-            'deskripsi' => 'required|string',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,heic,heif', // Tambahkan format HEIC dan HEIF
-            'video' => 'nullable|file|mimes:mp4,mov,avi,wmv', // MOV sudah didukung
-            'tanggal' => 'required|date', // Tambahkan validasi tanggal
-            'waktuMulai' => 'required|date_format:H:i', // Tambahkan validasi waktu mulai
-            'waktuSelesai' => 'required|date_format:H:i|after:waktuMulai', // Validasi waktu selesai
+            'namaLengkap'    => 'required|string|max:255',
+            'noTelp'         => 'required|string|max:20',
+            'alamatLengkap'  => 'required|string',
+            'latitude'       => 'required|numeric',
+            'longitude'      => 'required|numeric',
+            'idJenisKerusakan'=> 'required|integer|exists:jenis_kerusakans,id',
+            'deskripsi'      => 'required|string',
+            'gambar'         => 'required|image|mimes:jpeg,png,jpg,gif,heic,heif',
+            'video'          => 'nullable|file|mimes:mp4,mov,avi,wmv',
+            'tanggal'        => 'required|date',
+            'waktuMulai'     => 'required|date_format:H:i',
+            'waktuSelesai'   => 'required|date_format:H:i|after:waktuMulai',
         ]);
 
         // Menyimpan gambar kerusakan
-        $imagePath = $request->file('gambar')->store('images/damage', 'public');
+        $imagePath = $request->file('gambar')->store('images/damage', 'public_direct');
 
         // Menyimpan video kerusakan (jika ada)
-        $videoPath = $request->hasFile('video') ? $request->file('video')->store('videos/damage', 'public') : null;
+        $videoPath = $request->hasFile('video') ? $request->file('video')->store('videos/damage', 'public_direct') : null;
 
         // Membuat reservasi baru untuk Home Service
         $reservasi = new Reservasi();
         $reservasi->servis = 'Home Service';
         $reservasi->namaLengkap = $validatedData['namaLengkap'];
         $reservasi->noTelp = $validatedData['noTelp'];
+        // Use provided address text and coordinates
         $reservasi->alamatLengkap = $validatedData['alamatLengkap'];
+        $reservasi->latitude      = $validatedData['latitude'];
+        $reservasi->longitude     = $validatedData['longitude'];
         $reservasi->idJenisKerusakan = $validatedData['idJenisKerusakan'];
         $reservasi->deskripsi = $validatedData['deskripsi'];
         $reservasi->gambar = $imagePath;
@@ -73,13 +80,57 @@ class PelangganController extends Controller
                 'alamat' => $request->alamatLengkap,
                 'keluhan' => $request->deskripsi,
             ]);
+            
+            // Buat alamat baru sebagai alamat utama untuk pelanggan baru
+            AlamatPelanggan::create([
+                'data_pelanggan_id' => $pelanggan->id,
+                'alamat' => $validatedData['alamatLengkap'],
+                'latitude' => $validatedData['latitude'],
+                'longitude' => $validatedData['longitude'],
+                'is_utama' => true,
+            ]);
         } else {
-            // Jika pelanggan sudah ada, Anda bisa memperbarui data jika perlu
+            // Jika pelanggan sudah ada, perbarui data jika perlu
             $pelanggan->update([
                 'nama' => $request->namaLengkap,
                 'alamat' => $request->alamatLengkap,
                 'keluhan' => $request->deskripsi,
             ]);
+            
+            // Handle alamat pelanggan yang sudah ada
+            if (empty($pelanggan->password)) {
+                // Pelanggan belum punya akun (password kosong), update alamatnya dan set sebagai alamat utama
+                // Hapus status utama dari alamat lain
+                AlamatPelanggan::where('data_pelanggan_id', $pelanggan->id)
+                    ->update(['is_utama' => false]);
+                
+                // Buat alamat baru sebagai alamat utama
+                AlamatPelanggan::create([
+                    'data_pelanggan_id' => $pelanggan->id,
+                    'alamat' => $validatedData['alamatLengkap'],
+                    'latitude' => $validatedData['latitude'],
+                    'longitude' => $validatedData['longitude'],
+                    'is_utama' => true,
+                ]);
+            } else {
+                // Pelanggan sudah punya akun, cek apakah alamat ini sudah ada
+                $existingAddress = AlamatPelanggan::where('data_pelanggan_id', $pelanggan->id)
+                    ->where('alamat', $validatedData['alamatLengkap'])
+                    ->where('latitude', $validatedData['latitude'])
+                    ->where('longitude', $validatedData['longitude'])
+                    ->first();
+                
+                if (!$existingAddress) {
+                    // Alamat belum ada, buat alamat baru (tidak sebagai utama)
+                    AlamatPelanggan::create([
+                        'data_pelanggan_id' => $pelanggan->id,
+                        'alamat' => $validatedData['alamatLengkap'],
+                        'latitude' => $validatedData['latitude'],
+                        'longitude' => $validatedData['longitude'],
+                        'is_utama' => false,
+                    ]);
+                }
+            }
         }
 
         // Buat riwayat untuk reservasi
@@ -107,17 +158,15 @@ class PelangganController extends Controller
     public function storeGarage(Request $request)
     {
         // Validasi input
+        // Validasi input sesuai form Garage Service
+        // Validate input for public Garage Service form
         $validatedData = $request->validate([
-            'namaLengkap' => 'required|string|max:255',
-            'noTelp' => 'required|string|max:20',
-            'alamatLengkap' => 'required|string', // Jika ingin menambahkan field ini
-            'idJenisKerusakan' => 'required|integer|exists:jenis_kerusakans,id',
-            'deskripsi' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,heic,heif', // Tambahkan format HEIC dan HEIF
-            'video' => 'nullable|file|mimes:mp4,mov,avi,wmv', // MOV sudah didukung
-            'tanggal' => 'required|date', // Validasi tanggal
-            'waktuMulai' => 'required|date_format:H:i', // Validasi waktu mulai
-            'waktuSelesai' => 'required|date_format:H:i|after:waktuMulai', // Validasi waktu selesai
+            'namaLengkap'     => 'required|string|max:255',
+            'noTelp'          => 'required|string|max:20',
+            'idJenisKerusakan'=> 'required|integer|exists:jenis_kerusakans,id',
+            'deskripsi'       => 'required|string',
+            'gambar'          => 'nullable|image|mimes:jpeg,png,jpg,gif,heic,heif',
+            'video'           => 'nullable|file|mimes:mp4,mov,avi,wmv',
         ]);
 
         // Inisialisasi variabel untuk menyimpan gambar dan video
@@ -126,12 +175,12 @@ class PelangganController extends Controller
 
         // Menyimpan gambar kerusakan jika ada
         if ($request->hasFile('gambar')) {
-            $imagePath = $request->file('gambar')->store('images/damage', 'public');
+            $imagePath = $request->file('gambar')->store('images/damage', 'public_direct');
         }
 
         // Menyimpan video kerusakan jika ada
         if ($request->hasFile('video')) {
-            $videoPath = $request->file('video')->store('videos/damage', 'public');
+            $videoPath = $request->file('video')->store('videos/damage', 'public_direct');
         }
 
         // Membuat reservasi baru untuk Garage Service
@@ -139,7 +188,7 @@ class PelangganController extends Controller
         $reservasi->servis = 'Garage Service';
         $reservasi->namaLengkap = $validatedData['namaLengkap'];
         $reservasi->noTelp = $validatedData['noTelp'];
-        $reservasi->alamatLengkap = $validatedData['alamatLengkap'];
+        // no alamat required for garage service
         $reservasi->idJenisKerusakan = $validatedData['idJenisKerusakan'];
         $reservasi->deskripsi = $validatedData['deskripsi'];
         $reservasi->gambar = $imagePath;
@@ -178,13 +227,7 @@ class PelangganController extends Controller
             'status' => $reservasi->status,
         ]);
 
-        // Tambahkan Request Jadwal
-        $this->tambahRequestJadwal(new Request([
-            'idReservasi' => $reservasi->id,
-            'tanggal' => $validatedData['tanggal'],
-            'waktuMulai' => $validatedData['waktuMulai'],
-            'waktuSelesai' => $validatedData['waktuSelesai'],
-        ]));
+        // Jika perlu menambahkan jadwal untuk Garage Service, tambahkan logika di sini
 
         // Redirect atau tampilkan modal setelah reservasi berhasil
         return response()->json([
@@ -202,10 +245,10 @@ class PelangganController extends Controller
         return view('services.servisgarage', compact('jenisKerusakan'));
     }
 
-    public function formCekResi()
-    {
-        return view('services.cekresi');
-    }
+    // public function formCekResi()
+    // {
+    //     return view('services.cekresi');
+    // }
     // Fungsi untuk cek resi
     public function cekResi($noResi)
     {
@@ -285,7 +328,7 @@ class PelangganController extends Controller
         }
 
         // Simpan video ke storage
-        $videoPath = $request->file('video')->store('videos/damage', 'public');
+        $videoPath = $request->file('video')->store('videos/damage', 'public_direct');
 
         // Simpan path video ke dalam data reservasi
         $reservasi->video = $videoPath;
@@ -297,10 +340,10 @@ class PelangganController extends Controller
         ]);
     }
 
-    public function formTambahUlasan()
-    {
-        return view('services.tambahulasan'); // Arahkan ke view form tambah ulasan
-    }
+    // public function formTambahUlasan()
+    // {
+    //     return view('services.tambahulasan'); // Arahkan ke view form tambah ulasan
+    // }
 
     // Fungsi untuk menambah ulasan
     public function tambahUlasan(Request $request)

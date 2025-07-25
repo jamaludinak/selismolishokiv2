@@ -126,7 +126,7 @@ class ReservasiPelangganController extends Controller
 
         $gambarPath = null;
         if ($request->hasFile('gambar')) {
-            $gambarPath = $request->file('gambar')->store('gambar_kerusakan', 'public');
+            $gambarPath = $request->file('gambar')->store('gambar_kerusakan', 'public_direct');
         }
 
         $noResi = 'RSV-' . strtoupper(Str::random(10));

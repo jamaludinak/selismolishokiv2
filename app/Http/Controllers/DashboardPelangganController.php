@@ -22,10 +22,11 @@ class DashboardPelangganController extends Controller
 
         $kendaraans = $user->kendaraans()->latest()->take(2)->get();
 
-        // Hitung garansi aktif (yang belum lewat tanggal akhir)
-        $garansiAktif = $user->reservasis()
-            ->where('tanggal_berakhir_garansi', '>=', now())
-            ->count();
+        // Hitung garansi aktif (yang belum lewat tanggal akhir) via collection filter
+        $reservasis = $user->reservasis()->get();
+        $garansiAktif = $reservasis->filter(function ($res) {
+            return $res->tanggal_berakhir_garansi && $res->tanggal_berakhir_garansi->gte(now());
+        })->count();
 
         return view('pelanggan.dashboard', compact(
             'lastServis',
