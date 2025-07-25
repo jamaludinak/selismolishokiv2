@@ -35,7 +35,7 @@
                 <p><strong>Status:</strong> <span id="current-status"></span></p>
                 <p><strong>Nama:</strong> <span id="nama-lengkap"></span></p>
                 <p><strong>No. Telp:</strong> <span id="nomor-telp"></span></p>
-                <p><strong>Estimasi Harga:</strong> <span id="estimasi-harga"></span></p>
+                <p><strong>Estimasi Biaya:</strong> <span id="estimasi-harga"></span></p>
             </div>
 
             <!-- Riwayat Status Table -->
@@ -129,7 +129,7 @@
                         // Modal ringkasan cepat
                         Swal.fire({
                             icon: 'success',
-                            html: `<b>${nama}</b><br>Status: <b>${statusText}</b><br>Estimasi: <b>${estimasiHarga}</b>`,
+                            html: `<b>${nama}</b><br>Status: <b>${statusText}</b><br>Estimasi Biaya: <b>${estimasiHarga}</b>`,
                             confirmButtonText: 'Lihat Detail',
                             showCancelButton: true,
                             cancelButtonText: 'Tutup'

@@ -6,32 +6,10 @@
                 <p class="mt-2 text-sm sm:text-base text-gray-600">Isi formulir untuk reservasi servis sepeda listrik
                     Anda di bengkel.</p>
             </div>
-            <form id="garage-reservation-form" action="{{ route('services.submitGarage') }}" method="POST"
+            <form id="garage-reservation-form" action="{{ route('reservasi.store.garage') }}" method="POST"
                 enctype="multipart/form-data" class="mx-auto mt-8 max-w-xl">
                 @csrf
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                    <!-- Nama Lengkap -->
-                    <div>
-                        <label for="name" class="block text-sm font-semibold text-black">Nama
-                            Lengkap</label>
-                        <div class="mt-2">
-                            <input type="text" id="name" placeholder="Tulis nama lengkap anda"
-                                name="namaLengkap" required value="{{ auth('pelanggan')->user()->nama }}"
-                                readonly
-                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400 bg-gray-100 text-gray-600">
-                        </div>
-                    </div>
-                    <!-- Nomor Telepon -->
-                    <div>
-                        <label for="phone" class="block text-sm font-semibold text-black">Nomor
-                            WhatsApp/Telepon</label>
-                        <div class="mt-2">
-                            <input type="text" id="phone" placeholder="Tulis nomor WA/Telp anda" name="noTelp"
-                                required value="{{ auth('pelanggan')->user()->noHP }}"
-                                class="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-orange-300 focus:ring-2 focus:ring-orange-400">
-                        </div>
-                    </div>
-                    
                     <!-- Pilih Kendaraan -->
                     <div class="sm:col-span-2">
                         <label for="kendaraan_id" class="block text-sm font-semibold text-black">Pilih Kendaraan</label>
@@ -170,15 +148,10 @@
                             html: 'No Resi Anda: ' + data.no_resi +
                                 '<br>Simpan No Resi anda untuk melihat status servis anda!',
                             icon: 'success',
-                            showCancelButton: true,
-                            confirmButtonText: 'Upload Video Tambahan',
-                            cancelButtonText: 'Kembali ke Beranda'
+                            confirmButtonText: 'Lihat Riwayat Reservasi'
                         }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '/upload-video?no_resi=' + data.no_resi;
-                            } else {
-                                window.location.href = '/';
-                            }
+                            // Redirect to reservasi index for authenticated pelanggan
+                            window.location.href = '{{ route("reservasi.index") }}';
                         });
                     } else {
                         Swal.fire('Error', data.message, 'error');

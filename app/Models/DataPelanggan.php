@@ -9,6 +9,17 @@ class DataPelanggan extends Authenticatable
 {
     protected $fillable = ['kode', 'nama', 'noHP', 'keluhan', 'password'];
 
+    protected $hidden = ['password'];
+
+    /**
+     * Get the password for authentication.
+     * Return null if password is empty to prevent login for accounts without password.
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
     protected static function boot()
     {
         parent::boot();

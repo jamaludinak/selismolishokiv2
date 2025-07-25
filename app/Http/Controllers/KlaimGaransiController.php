@@ -45,7 +45,6 @@ class KlaimGaransiController extends Controller
     }
     public function store(Request $request)
     {
-
         $validated = $request->validate([
             'reservasi_id' => 'required|exists:reservasis,id',
             'bukti' => 'required|image|max:2048',
@@ -56,17 +55,13 @@ class KlaimGaransiController extends Controller
 
         // Get customer id from authenticated user
         $user = Auth::guard('pelanggan')->user();
-        
-        // Get the reservasi to get the customer data
-        $reservasi = Reservasi::find($validated['reservasi_id']);
-        $dataPelanggan = \App\Models\DataPelanggan::where('noTelp', $reservasi->noTelp)->first();
 
         KlaimGaransi::create([
             'reservasi_id' => $validated['reservasi_id'],
             'bukti' => $path,
             'keterangan' => $validated['keterangan'],
             'status' => 'diajukan',
-            'id_pelanggan' => $dataPelanggan ? $dataPelanggan->id : null,
+            'id_pelanggan' => $user->id, // Use authenticated pelanggan's ID directly
         ]);
 
         return redirect()->route('riwayats.index')->with('success', 'Klaim garansi berhasil diajukan.');

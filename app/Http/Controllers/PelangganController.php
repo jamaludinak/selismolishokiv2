@@ -11,6 +11,7 @@ use App\Models\Ulasan;
 use App\Models\DataPelanggan;
 use App\Models\ReqJadwal;
 use App\Models\AlamatPelanggan;
+use App\Helpers\TravelCostHelper;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -48,6 +49,12 @@ class PelangganController extends Controller
         // Menyimpan video kerusakan (jika ada)
         $videoPath = $request->hasFile('video') ? $request->file('video')->store('videos/damage', 'public_direct') : null;
 
+        // Hitung biaya perjalanan menggunakan helper
+        $biayaPerjalanan = TravelCostHelper::hitungBiayaPerjalanan(
+            $validatedData['latitude'],
+            $validatedData['longitude']
+        );
+
         // Membuat reservasi baru untuk Home Service
         $reservasi = new Reservasi();
         $reservasi->servis = 'Home Service';
@@ -61,6 +68,7 @@ class PelangganController extends Controller
         $reservasi->deskripsi = $validatedData['deskripsi'];
         $reservasi->gambar = $imagePath;
         $reservasi->video = $videoPath;
+        $reservasi->biaya_perjalanan = $biayaPerjalanan['biaya'];
 
         // Set status default ke pending
         $reservasi->status = 'pending';
@@ -99,19 +107,27 @@ class PelangganController extends Controller
             
             // Handle alamat pelanggan yang sudah ada
             if (empty($pelanggan->password)) {
-                // Pelanggan belum punya akun (password kosong), update alamatnya dan set sebagai alamat utama
-                // Hapus status utama dari alamat lain
-                AlamatPelanggan::where('data_pelanggan_id', $pelanggan->id)
-                    ->update(['is_utama' => false]);
+                // Pelanggan belum punya akun (password kosong), update alamat yang sudah ada
+                $existingAddress = AlamatPelanggan::where('data_pelanggan_id', $pelanggan->id)->first();
                 
-                // Buat alamat baru sebagai alamat utama
-                AlamatPelanggan::create([
-                    'data_pelanggan_id' => $pelanggan->id,
-                    'alamat' => $validatedData['alamatLengkap'],
-                    'latitude' => $validatedData['latitude'],
-                    'longitude' => $validatedData['longitude'],
-                    'is_utama' => true,
-                ]);
+                if ($existingAddress) {
+                    // Update alamat yang sudah ada
+                    $existingAddress->update([
+                        'alamat' => $validatedData['alamatLengkap'],
+                        'latitude' => $validatedData['latitude'],
+                        'longitude' => $validatedData['longitude'],
+                        'is_utama' => true,
+                    ]);
+                } else {
+                    // Jika belum ada alamat, buat alamat baru
+                    AlamatPelanggan::create([
+                        'data_pelanggan_id' => $pelanggan->id,
+                        'alamat' => $validatedData['alamatLengkap'],
+                        'latitude' => $validatedData['latitude'],
+                        'longitude' => $validatedData['longitude'],
+                        'is_utama' => true,
+                    ]);
+                }
             } else {
                 // Pelanggan sudah punya akun, cek apakah alamat ini sudah ada
                 $existingAddress = AlamatPelanggan::where('data_pelanggan_id', $pelanggan->id)
@@ -291,8 +307,8 @@ class PelangganController extends Controller
                 'noTelp' => $reservasi->noTelp,
                 'servis' => $reservasi->servis,
                 'deskripsi' => $reservasi->deskripsi,
-                'status' => $statusMapping[$reservasi->status] ?? $reservasi->status, // Gunakan mapping atau default ke status asli
-                'estimasiHarga' => $reservasi->jenisKerusakan->estimasi_harga ?? null, // 👈 ini dia!
+                'status' => $statusMapping[$reservasi->status] ?? $reservasi->status,
+                'estimasiHarga' => ($reservasi->jenisKerusakan->biaya_estimasi ?? 0) + ($reservasi->biaya_perjalanan ?? 0),
                 'riwayat' => $riwayat,
                 'jadwal' => $jadwal ? [
                     'tanggal' => $jadwal->tanggal,
@@ -398,6 +414,27 @@ class PelangganController extends Controller
             'success' => true,
             'message' => 'Request jadwal berhasil ditambahkan.',
             'data' => $jadwal,
+        ]);
+    }
+
+    /**
+     * Hitung biaya perjalanan berdasarkan koordinat
+     */
+    public function hitungBiayaPerjalanan(Request $request)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        $hasil = TravelCostHelper::hitungBiayaPerjalanan(
+            $request->latitude,
+            $request->longitude
+        );
+
+        return response()->json([
+            'success' => true,
+            'data' => $hasil
         ]);
     }
 }

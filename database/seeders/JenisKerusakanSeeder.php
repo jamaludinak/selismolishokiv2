@@ -13,19 +13,19 @@ class JenisKerusakanSeeder extends Seeder
         DB::table('jenis_kerusakans')->insert([
             [
                 'nama' => 'Kerusakan Baterai',
-                'estimasi_harga' => 300000,
+                'biaya_estimasi' => 300000,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'nama' => 'Kerusakan Dinamo',
-                'estimasi_harga' => 500000,
+                'biaya_estimasi' => 500000,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'nama' => 'Kerusakan Rem',
-                'estimasi_harga' => 150000,
+                'biaya_estimasi' => 150000,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

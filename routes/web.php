@@ -42,6 +42,7 @@ Route::get('/contact', fn() => view('LandingPage.contact'))->name('contact');
 
 Route::get('/servis', [PelangganController::class, 'create'])->name('services.servis');
 Route::post('/servis/submit', [PelangganController::class, 'store'])->name('services.submit');
+Route::post('/hitung-biaya-perjalanan', [PelangganController::class, 'hitungBiayaPerjalanan'])->name('services.hitungBiayaPerjalanan');
 Route::get('/servisgarage', [PelangganController::class, 'createGarage'])->name('services.servisGarage');
 Route::post('/servisgarage/submit', [PelangganController::class, 'storeGarage'])->name('services.submitGarage');
 Route::get('/cek-resi/{noResi}', [PelangganController::class, 'cekResi'])->name('services.cekResi');
@@ -157,6 +158,9 @@ Route::middleware(['auth:pelanggan'])->group(function () {
     Route::resource('alamat', AlamatPelangganController::class);
     Route::post('/alamat/jadikan-utama/{id}', [AlamatPelangganController::class, 'jadikanUtama'])->name('alamat.utama');
     Route::resource('reservasi', ReservasiPelangganController::class);
+    // Add specific routes for home service and garage service
+    Route::post('/reservasi/home-service', [ReservasiPelangganController::class, 'store'])->name('reservasi.store.home');
+    Route::post('/reservasi/garage-service', [ReservasiPelangganController::class, 'storeGarage'])->name('reservasi.store.garage');
     Route::resource('profile', ProfilePelangganController::class);
     Route::resource('riwayats', RiwayatServisPelangganController::class)->only(['index', 'show']);
     Route::resource('klaim-garansi', KlaimGaransiController::class)->only(['index', 'store']);

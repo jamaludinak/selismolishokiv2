@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Reservasi;
 use App\Models\Jadwal;
+use App\Models\Kendaraan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -43,9 +44,20 @@ class TeknisiController extends Controller
             
             if ($request->tanggal_berakhir_garansi) {
                 $updateData['tanggal_berakhir_garansi'] = $request->tanggal_berakhir_garansi;
+                // Update tanggal berakhir garansi di tabel kendaraan
+                $tanggalGaransi = $request->tanggal_berakhir_garansi;
             } else {
                 // Set default warranty end date (30 days from today)
-                $updateData['tanggal_berakhir_garansi'] = Carbon::now()->addDays(30)->format('Y-m-d');
+                $tanggalGaransi = Carbon::now()->addDays(30)->format('Y-m-d');
+                $updateData['tanggal_berakhir_garansi'] = $tanggalGaransi;
+            }
+
+            // Update tanggal berakhir garansi pada tabel kendaraan
+            if ($reservasi->kendaraan_id) {
+                $kendaraan = Kendaraan::find($reservasi->kendaraan_id);
+                if ($kendaraan) {
+                    $kendaraan->update(['tanggal_berakhir_garansi' => $tanggalGaransi]);
+                }
             }
         }
 

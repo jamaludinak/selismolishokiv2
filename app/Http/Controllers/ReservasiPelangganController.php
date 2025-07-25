@@ -7,6 +7,7 @@ use App\Models\Reservasi;
 use App\Models\Riwayat;
 use App\Models\AlamatPelanggan;
 use App\Models\Setting;
+use App\Models\ReqJadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -30,19 +31,6 @@ class ReservasiPelangganController extends Controller
         return view('pelanggan.reservasi.index', compact('reservasis'));
     }
 
-    public function history()
-    {
-        $user = auth('pelanggan')->user();
-
-        $reservasis = Reservasi::where('noTelp', $user->noHP)
-            ->where('status', 'completed')
-            ->with('jenisKerusakan')
-            ->orderByDesc('created_at')
-            ->get();
-
-        return view('pelanggan.reservasi.history', compact('reservasis'));
-    }
-
     public function create()
     {
         $user = auth('pelanggan')->user();
@@ -64,98 +52,140 @@ class ReservasiPelangganController extends Controller
     {
         $user = auth('pelanggan')->user();
 
+        // Validasi input Home Service dengan alamat_id dan kendaraan_id
+        // Validate input for authenticated Home Service form: use alamat_id and kendaraan_id
         $validatedData = $request->validate([
-            'idJenisKerusakan' => 'required|exists:jenis_kerusakans,id',
-            'deskripsi' => 'required|string',
-            'gambar' => 'nullable|string',
-            'video' => 'nullable|string',
-            'servis' => 'required|string|in:home,garage',
-            'longitude' => 'required|numeric',
-            'latitude' => 'required|numeric',
+            'alamat_id'      => 'required|exists:alamat_pelanggans,id',
+            'kendaraan_id'   => 'required|exists:kendaraans,id',
+            'idJenisKerusakan'=> 'required|integer|exists:jenis_kerusakans,id',
+            'deskripsi'      => 'required|string',
+            'gambar'         => 'required|image|mimes:jpeg,png,jpg,gif,heic,heif',
+            'video'          => 'nullable|file|mimes:mp4,mov,avi,wmv',
+            'tanggal'        => 'required|date',
+            'waktuMulai'     => 'required|date_format:H:i',
+            'waktuSelesai'   => 'required|date_format:H:i|after:waktuMulai',
         ]);
 
-        $bengkelLonglat = Setting::where('key', 'bengkel_longlat')->first();
-        $tarifPerKm = Setting::where('key', 'tarif_per_km')->first();
-        $biayaPerKm = $tarifPerKm ? (int)$tarifPerKm->value : 5000;
-        $biayaPerjalanan = 0;
+        // Ambil data alamat berdasarkan alamat_id
+        $alamat = AlamatPelanggan::findOrFail($request->alamat_id);
 
-        if ($bengkelLonglat) {
-            [$bengkelLong, $bengkelLat] = explode(',', $bengkelLonglat->value);
-            $jarak = $this->haversineDistance($request->latitude, $request->longitude, $bengkelLat, $bengkelLong);
-            $biayaPerjalanan = ceil($jarak) * $biayaPerKm;
-        }
+        // Menyimpan gambar kerusakan
+        $imagePath = $request->file('gambar')->store('images/damage', 'public_direct');
 
-        $noResi = 'RSV-' . strtoupper(Str::random(10));
+        // Menyimpan video kerusakan (jika ada)
+        $videoPath = $request->hasFile('video') ? $request->file('video')->store('videos/damage', 'public_direct') : null;
 
-        $reservasi = Reservasi::create(array_merge($validatedData, [
-            'namaLengkap' => $user->nama,
-            'alamatLengkap' => $user->alamat,
-            'noTelp' => $user->noHP,
-            'noResi' => $noResi,
-            'status' => 'pending',
-            'biaya_perjalanan' => $biayaPerjalanan,
-        ]));
+        // Hitung biaya perjalanan menggunakan helper dengan koordinat dari alamat
+        $biayaPerjalanan = \App\Helpers\TravelCostHelper::hitungBiayaPerjalanan(
+            $alamat->latitude,
+            $alamat->longitude
+        );
 
+        // Membuat reservasi baru untuk Home Service
+        $reservasi = new Reservasi();
+        $reservasi->servis = 'Home Service';
+        $reservasi->namaLengkap = $user->nama;
+        $reservasi->noTelp = $user->noHP;
+        // Use alamat data from alamat_id
+        $reservasi->alamatLengkap = $alamat->alamat;
+        $reservasi->latitude      = $alamat->latitude;
+        $reservasi->longitude     = $alamat->longitude;
+        $reservasi->kendaraan_id  = $validatedData['kendaraan_id'];
+        $reservasi->idJenisKerusakan = $validatedData['idJenisKerusakan'];
+        $reservasi->deskripsi = $validatedData['deskripsi'];
+        $reservasi->gambar = $imagePath;
+        $reservasi->video = $videoPath;
+        $reservasi->biaya_perjalanan = $biayaPerjalanan['biaya'];
+
+        // Set status default ke pending
+        $reservasi->status = 'pending';
+
+        // Format nomor resi untuk Home Service
+        $reservasi->noResi = 'HM-' . now()->format('ymd') . strtoupper(substr(uniqid(), -2));
+        $reservasi->save();
+
+        // Buat riwayat untuk reservasi
         Riwayat::create([
             'idReservasi' => $reservasi->id,
             'status' => $reservasi->status,
         ]);
 
-        return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil ditambahkan.');
+        // Tambahkan Request Jadwal
+        $this->tambahRequestJadwal(new Request([
+            'idReservasi' => $reservasi->id,
+            'tanggal' => $validatedData['tanggal'],
+            'waktuMulai' => $validatedData['waktuMulai'],
+            'waktuSelesai' => $validatedData['waktuSelesai'],
+        ]));
+
+        // Redirect atau tampilkan modal setelah reservasi berhasil
+        return response()->json([
+            'success' => true,
+            'message' => 'Reservasi berhasil dibuat!',
+            'no_resi' => $reservasi->noResi,
+        ]);
     }
 
     public function storeGarage(Request $request)
     {
-        $alamat = AlamatPelanggan::findOrFail($request->alamat_id);
         $user = auth('pelanggan')->user();
+        
+        // Validasi input sesuai form Garage Service
+        // Validate input for authenticated Garage Service form
         $validatedData = $request->validate([
-            'namaLengkap' => 'required|string',
-            'noTelp' => 'required|string',
-            'idJenisKerusakan' => 'required|exists:jenis_kerusakans,id',
-            'deskripsi' => 'required|string',
-            'gambar' => 'nullable|image',
-            'tanggal' => 'required|date',
-            'waktuMulai' => 'required',
-            'waktuSelesai' => 'required',
-            'servis' => 'required|string|in:home,garage',
-            'alamat_id' => 'required|exists:alamat_pelanggans,id',
-            'kendaraan_id' => 'required|exists:kendaraans,id',
+            'idJenisKerusakan'=> 'required|integer|exists:jenis_kerusakans,id',
+            'deskripsi'       => 'required|string',
+            'gambar'          => 'nullable|image|mimes:jpeg,png,jpg,gif,heic,heif',
+            'video'           => 'nullable|file|mimes:mp4,mov,avi,wmv',
+            'kendaraan_id'    => 'required|exists:kendaraans,id',
         ]);
 
-        $alamat = AlamatPelanggan::findOrFail($request->alamat_id);
+        // Inisialisasi variabel untuk menyimpan gambar dan video
+        $imagePath = null;
+        $videoPath = null;
 
-        $gambarPath = null;
+        // Menyimpan gambar kerusakan jika ada
         if ($request->hasFile('gambar')) {
-            $gambarPath = $request->file('gambar')->store('gambar_kerusakan', 'public_direct');
+            $imagePath = $request->file('gambar')->store('images/damage', 'public_direct');
         }
 
-        $noResi = 'RSV-' . strtoupper(Str::random(10));
+        // Menyimpan video kerusakan jika ada
+        if ($request->hasFile('video')) {
+            $videoPath = $request->file('video')->store('videos/damage', 'public_direct');
+        }
 
-        $reservasi = Reservasi::create([
-            'noResi' => $noResi,
-            'namaLengkap' => $validatedData['namaLengkap'],
-            'noTelp' => $validatedData['noTelp'],
-            'alamatLengkap' => $alamat->alamat,
-            'longitude' => $alamat->longitude,
-            'latitude' => $alamat->latitude,
-            'kendaraan_id' => $validatedData['kendaraan_id'], // <- ini tambahan penting
-            'idJenisKerusakan' => $validatedData['idJenisKerusakan'],
-            'deskripsi' => $validatedData['deskripsi'],
-            'gambar' => $gambarPath,
-            'tanggal' => $validatedData['tanggal'],
-            'waktuMulai' => $validatedData['waktuMulai'],
-            'waktuSelesai' => $validatedData['waktuSelesai'],
-            'servis' => 'garage',
-            'status' => 'pending',
-            'biaya_perjalanan' => 0,
-        ]);
-        
+        // Membuat reservasi baru untuk Garage Service
+        $reservasi = new Reservasi();
+        $reservasi->servis = 'Garage Service';
+        $reservasi->namaLengkap = $user->nama;
+        $reservasi->noTelp = $user->noHP;
+        // No alamat required for garage service
+        $reservasi->kendaraan_id = $validatedData['kendaraan_id'];
+        $reservasi->idJenisKerusakan = $validatedData['idJenisKerusakan'];
+        $reservasi->deskripsi = $validatedData['deskripsi'];
+        $reservasi->gambar = $imagePath;
+        $reservasi->video = $videoPath;
+
+        // Set status default ke pending
+        $reservasi->status = 'pending';
+
+        // Format nomor resi untuk Garage Service
+        $reservasi->noResi = 'GR-' . now()->format('ymd') . strtoupper(substr(uniqid(), -2));
+        $reservasi->biaya_perjalanan = 0;
+        $reservasi->save();
+
+        // Buat riwayat untuk reservasi
         Riwayat::create([
             'idReservasi' => $reservasi->id,
             'status' => $reservasi->status,
         ]);
 
-        return response()->json(['success' => true, 'no_resi' => $reservasi->noResi]);
+        // Redirect atau tampilkan modal setelah reservasi berhasil
+        return response()->json([
+            'success' => true,
+            'message' => 'Reservasi berhasil dibuat!',
+            'no_resi' => $reservasi->noResi,
+        ]);
     }
 
     private function haversineDistance($lat1, $lon1, $lat2, $lon2)
@@ -172,5 +202,25 @@ class ReservasiPelangganController extends Controller
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
         return $earthRadius * $c;
+    }
+
+    public function tambahRequestJadwal(Request $request)
+    {
+        // Validasi data input
+        $validatedData = $request->validate([
+            'idReservasi' => 'required|exists:reservasis,id', // Sesuaikan nama tabel jika berbeda
+            'tanggal' => 'required|date',
+            'waktuMulai' => 'required|date_format:H:i',
+            'waktuSelesai' => 'required|date_format:H:i|after:waktuMulai',
+        ]);
+
+        // Simpan data request jadwal
+        $jadwal = ReqJadwal::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Request jadwal berhasil ditambahkan.',
+            'data' => $jadwal,
+        ]);
     }
 }

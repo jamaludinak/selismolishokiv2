@@ -13,7 +13,8 @@ class Kendaraan extends Model
         'tipe',
         'nomor_rangka',
         'tahun_pembelian',
-        'status_garansi'
+        'tanggal_berakhir_garansi',
+        'foto'
     ];
 
     public function pelanggan()

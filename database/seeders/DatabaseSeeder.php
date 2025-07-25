@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(UlasanSeeder::class);
         $this->call(JenisKerusakanSeeder::class);
-        $this->call(ReservasiSeeder::class);
-        $this->call(RiwayatSeeder::class);
+        // $this->call(ReservasiSeeder::class);
+        // $this->call(RiwayatSeeder::class);
         // Create an admin user
         \App\Models\Setting::updateOrCreate([
             'key' => 'bengkel_longlat'
