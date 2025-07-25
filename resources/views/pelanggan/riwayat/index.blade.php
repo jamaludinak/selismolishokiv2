@@ -4,16 +4,16 @@
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 py-8">
-        <!-- Header with gradient -->
-        <div class="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 rounded-lg shadow-lg mb-8 overflow-hidden">
+        <!-- Header with orange color -->
+        <div class="bg-orange-500 rounded-lg shadow-lg mb-8 overflow-hidden">
             <div class="px-6 py-8 text-white">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div class="mb-4 md:mb-0">
                         <h1 class="text-3xl font-bold flex items-center">
                             <i class="fas fa-history mr-3 text-4xl"></i>
-                            Riwayat Servis
+                            Riwayat Reservasi
                         </h1>
-                        <p class="text-blue-100 mt-2">Lihat semua riwayat layanan servis kendaraan Anda</p>
+                        <p class="text-orange-100 mt-2">Lihat semua riwayat layanan servis kendaraan Anda</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a href="{{ route('reservasi.create') }}" 
@@ -71,27 +71,27 @@
                 <!-- Desktop Table View -->
                 <div class="hidden md:block overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                        <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-receipt mr-2 text-green-500"></i>No. Resi
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-calendar mr-2 text-blue-500"></i>Tanggal
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-motorcycle mr-2 text-purple-500"></i>Kendaraan
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-money-bill mr-2 text-orange-500"></i>Total Biaya
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-info-circle mr-2 text-indigo-500"></i>Status
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-shield-alt mr-2 text-red-500"></i>Garansi
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-cogs mr-2 text-gray-500"></i>Aksi
                                 </th>
                             </tr>

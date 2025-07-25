@@ -4,16 +4,16 @@
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 py-8">
-        <!-- Header with gradient -->
-        <div class="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 rounded-lg shadow-lg mb-8 overflow-hidden">
+        <!-- Header with orange color -->
+        <div class="bg-orange-500 rounded-lg shadow-lg mb-8 overflow-hidden">
             <div class="px-6 py-8 text-white">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div class="mb-4 md:mb-0">
                         <h1 class="text-3xl font-bold flex items-center">
                             <i class="fas fa-shield-alt mr-3 text-4xl"></i>
-                            Daftar Klaim Garansi
+                            Daftar Garansi
                         </h1>
-                        <p class="text-blue-100 mt-2">Kelola klaim garansi kendaraan Anda</p>
+                        <p class="text-orange-100 mt-2">Kelola klaim garansi kendaraan Anda</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3">
                         @if ($reservasis->isNotEmpty())
@@ -75,24 +75,24 @@
                 <!-- Desktop Table View -->
                 <div class="hidden md:block overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                        <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-receipt mr-2 text-green-500"></i>No. Resi
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    <i class="fas fa-calendar mr-2 text-blue-500"></i>Tanggal Klaim
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
+                                    <i class="fas fa-calendar mr-2 text-blue-500"></i>Tanggal
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-file-alt mr-2 text-purple-500"></i>Deskripsi
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-image mr-2 text-orange-500"></i>Bukti
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-info-circle mr-2 text-indigo-500"></i>Status
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-black uppercase tracking-wider">
                                     <i class="fas fa-clock mr-2 text-red-500"></i>Tanggal Diproses
                                 </th>
                             </tr>
@@ -110,7 +110,11 @@
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900 font-mono">{{ $k->reservasi->noResi ?? '-' }}</div>
-                                                <div class="text-sm text-gray-500">ID: {{ $k->id }}</div>
+                                                @if($k->reservasi && $k->reservasi->kendaraan)
+                                                    <div class="text-sm text-gray-500">{{ $k->reservasi->kendaraan->merk }} {{ $k->reservasi->kendaraan->tipe }}</div>
+                                                @else
+                                                    <div class="text-sm text-gray-500">Kendaraan tidak terdaftar</div>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -199,6 +203,11 @@
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <h3 class="text-lg font-semibold text-gray-900 font-mono">{{ $k->reservasi->noResi ?? '-' }}</h3>
+                                        @if($k->reservasi && $k->reservasi->kendaraan)
+                                            <p class="text-sm text-gray-600 mb-1">
+                                                <i class="fas fa-motorcycle mr-1"></i>{{ $k->reservasi->kendaraan->merk }} {{ $k->reservasi->kendaraan->tipe }}
+                                            </p>
+                                        @endif
                                         <p class="text-sm text-gray-600">{{ $k->created_at->format('d M Y, H:i') }}</p>
                                         @php
                                             $statusConfig = match ($k->status) {

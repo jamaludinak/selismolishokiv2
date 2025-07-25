@@ -25,17 +25,17 @@
             class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('reservasi.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
             <i class="fas fa-calendar-check"></i> Reservasi
         </a>
+        <a href="{{ route('riwayats.index') }}"
+            class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('riwayats.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
+            <i class="fas fa-clock"></i> Riwayat Reservasi
+        </a>
         <a href="{{ route('klaim-garansi.index') }}"
             class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('klaim-garansi.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
-            <i class="fas fa-shield-alt"></i> Klaim Garansi
+            <i class="fas fa-shield-alt"></i> Garansi
         </a>
         <a href="{{ route('kendaraan.index') }}"
             class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('kendaraan.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
             <i class="fas fa-motorcycle"></i> Kendaraan
-        </a>
-        <a href="{{ route('riwayats.index') }}"
-            class="flex items-center gap-2 px-4 py-2 rounded-lg {{ request()->routeIs('riwayats.*') ? 'bg-orange-500 text-white' : 'hover:bg-orange-400' }}">
-            <i class="fas fa-clock"></i> Riwayat
         </a>
     </nav>
 

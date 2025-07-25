@@ -227,12 +227,12 @@
         <!-- Map Modal -->
         <div id="mapModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
-                <div class="bg-gradient-to-r from-green-500 to-blue-500 px-6 py-4 flex justify-between items-center">
-                    <h3 class="text-xl font-semibold text-white flex items-center">
-                        <i class="fas fa-map mr-2"></i>
+                <div class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-black flex items-center">
+                        <i class="fas fa-map mr-2 text-green-500"></i>
                         Lokasi pada Peta
                     </h3>
-                    <button onclick="closeMap()" class="text-white hover:text-gray-200 transition-colors">
+                    <button onclick="closeMap()" class="text-gray-600 hover:text-gray-800 transition-colors">
                         <i class="fas fa-times text-2xl"></i>
                     </button>
                 </div>

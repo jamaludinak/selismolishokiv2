@@ -4,8 +4,8 @@
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 py-8">
-        <!-- Header with gradient -->
-        <div class="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 rounded-lg shadow-lg mb-8 overflow-hidden">
+        <!-- Header with orange color -->
+        <div class="bg-orange-500 rounded-lg shadow-lg mb-8 overflow-hidden">
             <div class="px-6 py-8 text-white">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div class="mb-4 md:mb-0">
@@ -13,7 +13,7 @@
                             <i class="fas fa-motorcycle mr-3 text-4xl"></i>
                             Detail Kendaraan
                         </h1>
-                        <p class="text-blue-100 mt-2">Informasi lengkap kendaraan Anda</p>
+                        <p class="text-orange-100 mt-2">Informasi lengkap kendaraan Anda</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a href="{{ route('kendaraan.index') }}" 
@@ -37,9 +37,9 @@
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Vehicle Basic Info -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-gradient-to-r from-green-500 to-blue-500 px-6 py-4">
-                            <h3 class="text-xl font-semibold text-white flex items-center">
-                                <i class="fas fa-info-circle mr-2"></i>
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-info-circle mr-2 text-blue-500"></i>
                                 Informasi Kendaraan
                             </h3>
                         </div>
@@ -97,15 +97,6 @@
                                             <p class="text-lg font-semibold text-gray-900">{{ $kendaraan->tahun_pembelian ?: 'Tidak tersedia' }}</p>
                                         </div>
                                     </div>
-
-                                    <div class="group">
-                                        <label class="text-sm font-medium text-gray-600 block mb-1">
-                                            <i class="fas fa-user text-gray-500 mr-2"></i>Pemilik
-                                        </label>
-                                        <div class="bg-gray-50 rounded-lg px-4 py-3 border-l-4 border-gray-500">
-                                            <p class="text-lg font-semibold text-gray-900">{{ $kendaraan->user->name ?? 'Tidak tersedia' }}</p>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -114,9 +105,9 @@
                     <!-- Vehicle Photo -->
                     @if($kendaraan->foto)
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4">
-                            <h3 class="text-xl font-semibold text-white flex items-center">
-                                <i class="fas fa-camera mr-2"></i>
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-camera mr-2 text-purple-500"></i>
                                 Foto Kendaraan
                             </h3>
                         </div>
@@ -137,16 +128,20 @@
                     <!-- Related Reservations -->
                     @if(isset($reservasi) && $reservasi->count() > 0)
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-4">
-                            <h3 class="text-xl font-semibold text-white flex items-center">
-                                <i class="fas fa-calendar-check mr-2"></i>
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-calendar-check mr-2 text-indigo-500"></i>
                                 Riwayat Reservasi
                             </h3>
                         </div>
                         <div class="p-6">
-                            <div class="space-y-4">
-                                @foreach($reservasi as $item)
-                                <div class="bg-gray-50 rounded-lg p-4 border-l-4 border-indigo-500 hover:shadow-md transition-shadow duration-200">
+                            <div class="space-y-4" id="reservasiContainer">
+                                @php
+                                    $sortedReservasi = $reservasi->sortByDesc('tanggal');
+                                @endphp
+                                @foreach($sortedReservasi as $index => $item)
+                                <div class="bg-gray-50 rounded-lg p-4 border-l-4 border-indigo-500 hover:shadow-md transition-shadow duration-200 reservasi-item" 
+                                     data-index="{{ $index }}" style="{{ $index >= 10 ? 'display: none;' : '' }}">
                                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                                         <div class="space-y-1">
                                             <p class="font-semibold text-gray-900">{{ $item->noResi }}</p>
@@ -170,6 +165,18 @@
                                 </div>
                                 @endforeach
                             </div>
+                            
+                            @if($sortedReservasi->count() > 10)
+                            <!-- Pagination Controls -->
+                            <div class="mt-6 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+                                <div class="text-sm text-gray-700">
+                                    Menampilkan <span id="showingStart">1</span> - <span id="showingEnd">10</span> dari <span id="totalItems">{{ $sortedReservasi->count() }}</span> reservasi
+                                </div>
+                                <div class="flex space-x-1" id="paginationControls">
+                                    <!-- Pagination buttons will be generated by JavaScript -->
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                     @endif
@@ -179,9 +186,9 @@
                 <div class="space-y-6">
                     <!-- Warranty Status Card -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-4">
-                            <h3 class="text-xl font-semibold text-white flex items-center">
-                                <i class="fas fa-shield-alt mr-2"></i>
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-shield-alt mr-2 text-yellow-500"></i>
                                 Status Garansi
                             </h3>
                         </div>
@@ -209,27 +216,6 @@
                                         <label class="text-sm font-medium text-gray-600 block mb-1">Tanggal Berakhir</label>
                                         <p class="font-semibold text-gray-900">{{ $tanggalGaransi->format('d F Y') }}</p>
                                     </div>
-
-                                    @if($isAktif)
-                                    <div class="bg-green-50 rounded-lg px-4 py-3">
-                                        <label class="text-sm font-medium text-green-600 block mb-1">Sisa Waktu</label>
-                                        <p class="font-semibold text-green-800">{{ $sisaHari }} hari lagi</p>
-                                    </div>
-
-                                    @if($sisaHari <= 30)
-                                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3">
-                                        <div class="flex items-center">
-                                            <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
-                                            <span class="text-yellow-700 text-sm font-medium">Garansi akan berakhir dalam 30 hari!</span>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @else
-                                    <div class="bg-red-50 rounded-lg px-4 py-3">
-                                        <label class="text-sm font-medium text-red-600 block mb-1">Berakhir Sejak</label>
-                                        <p class="font-semibold text-red-800">{{ $tanggalGaransi->diffForHumans() }}</p>
-                                    </div>
-                                    @endif
                                 </div>
                             @else
                                 <div class="text-center">
@@ -245,9 +231,9 @@
 
                     <!-- Action Cards -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-4">
-                            <h3 class="text-xl font-semibold text-white flex items-center">
-                                <i class="fas fa-tools mr-2"></i>
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-tools mr-2 text-indigo-500"></i>
                                 Aksi Cepat
                             </h3>
                         </div>
@@ -294,19 +280,6 @@
                         </div>
                     </div>
 
-                    <!-- Help Card -->
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg text-white p-6">
-                        <div class="text-center">
-                            <i class="fas fa-question-circle text-3xl mb-3 opacity-80"></i>
-                            <h3 class="text-lg font-semibold mb-2">Butuh Bantuan?</h3>
-                            <p class="text-blue-100 text-sm mb-4">Tim customer service kami siap membantu Anda</p>
-                            <a href="#" 
-                               class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 inline-flex items-center">
-                                <i class="fas fa-headset mr-2"></i>
-                                Hubungi Kami
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -359,6 +332,124 @@
             if (e.key === 'Escape') {
                 closeImageModal();
             }
+        });
+
+        // Pagination for reservations
+        class ReservasiPagination {
+            constructor() {
+                this.itemsPerPage = 10;
+                this.currentPage = 1;
+                this.allItems = [];
+                this.init();
+            }
+
+            init() {
+                this.allItems = Array.from(document.querySelectorAll('.reservasi-item'));
+                if (this.allItems.length > this.itemsPerPage) {
+                    this.setupPagination();
+                    this.showPage(1);
+                }
+            }
+
+            setupPagination() {
+                const totalPages = Math.ceil(this.allItems.length / this.itemsPerPage);
+                const paginationContainer = document.getElementById('paginationControls');
+                
+                if (!paginationContainer) return;
+
+                paginationContainer.innerHTML = '';
+
+                // Previous button
+                const prevBtn = this.createButton('‹', this.currentPage - 1, this.currentPage === 1);
+                paginationContainer.appendChild(prevBtn);
+
+                // Page numbers
+                const startPage = Math.max(1, this.currentPage - 2);
+                const endPage = Math.min(totalPages, this.currentPage + 2);
+
+                if (startPage > 1) {
+                    paginationContainer.appendChild(this.createButton(1, 1));
+                    if (startPage > 2) {
+                        const ellipsis = document.createElement('span');
+                        ellipsis.textContent = '...';
+                        ellipsis.className = 'px-2 py-1 text-gray-500';
+                        paginationContainer.appendChild(ellipsis);
+                    }
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const btn = this.createButton(i, i, false, i === this.currentPage);
+                    paginationContainer.appendChild(btn);
+                }
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        const ellipsis = document.createElement('span');
+                        ellipsis.textContent = '...';
+                        ellipsis.className = 'px-2 py-1 text-gray-500';
+                        paginationContainer.appendChild(ellipsis);
+                    }
+                    paginationContainer.appendChild(this.createButton(totalPages, totalPages));
+                }
+
+                // Next button
+                const nextBtn = this.createButton('›', this.currentPage + 1, this.currentPage === totalPages);
+                paginationContainer.appendChild(nextBtn);
+            }
+
+            createButton(text, page, disabled = false, active = false) {
+                const button = document.createElement('button');
+                button.textContent = text;
+                button.className = `px-3 py-1 rounded text-sm transition-colors duration-200 ${
+                    disabled 
+                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                        : active 
+                            ? 'bg-indigo-500 text-white' 
+                            : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                }`;
+                
+                if (!disabled) {
+                    button.addEventListener('click', () => this.showPage(page));
+                } else {
+                    button.disabled = true;
+                }
+
+                return button;
+            }
+
+            showPage(page) {
+                this.currentPage = page;
+                const startIndex = (page - 1) * this.itemsPerPage;
+                const endIndex = startIndex + this.itemsPerPage;
+
+                // Hide all items
+                this.allItems.forEach(item => {
+                    item.style.display = 'none';
+                });
+
+                // Show items for current page
+                this.allItems.slice(startIndex, endIndex).forEach(item => {
+                    item.style.display = 'block';
+                });
+
+                // Update pagination UI
+                this.setupPagination();
+                this.updateItemsInfo();
+            }
+
+            updateItemsInfo() {
+                const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
+                const endIndex = Math.min(this.currentPage * this.itemsPerPage, this.allItems.length);
+
+                document.getElementById('showingStart').textContent = startIndex;
+                document.getElementById('showingEnd').textContent = endIndex;
+                document.getElementById('totalItems').textContent = this.allItems.length;
+            }
+        }
+
+        // Initialize pagination when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            new ReservasiPagination();
         });
     </script>
 @endsection

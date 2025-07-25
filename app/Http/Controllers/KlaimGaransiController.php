@@ -13,13 +13,14 @@ class KlaimGaransiController extends Controller
     public function index()
     {
         $user = Auth::guard('pelanggan')->user();
-        $reservasis = Reservasi::where('status', 'selesai')
+        $reservasis = Reservasi::with('kendaraan')
+            ->where('status', 'selesai')
             ->where('tanggal_berakhir_garansi', '>=', now())
             ->where('noTelp', $user->noHP)
             ->doesntHave('klaimGaransi')
             ->get();
 
-        $klaimGaransis = KlaimGaransi::with('reservasi')
+        $klaimGaransis = KlaimGaransi::with(['reservasi', 'reservasi.kendaraan'])
             ->whereHas('reservasi', function ($query) use ($user) {
                 $query->where('noTelp', $user->noHP);
             })
@@ -64,6 +65,6 @@ class KlaimGaransiController extends Controller
             'id_pelanggan' => $user->id, // Use authenticated pelanggan's ID directly
         ]);
 
-        return redirect()->route('riwayats.index')->with('success', 'Klaim garansi berhasil diajukan.');
+        return redirect()->route('klaim-garansi.index')->with('success', 'Klaim garansi berhasil diajukan.');
     }
 }

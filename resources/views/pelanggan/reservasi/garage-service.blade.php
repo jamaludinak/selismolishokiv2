@@ -150,8 +150,8 @@
                             icon: 'success',
                             confirmButtonText: 'Lihat Riwayat Reservasi'
                         }).then((result) => {
-                            // Redirect to reservasi index for authenticated pelanggan
-                            window.location.href = '{{ route("reservasi.index") }}';
+                            // Redirect to riwayat index for authenticated pelanggan
+                            window.location.href = '{{ route("riwayats.index") }}';
                         });
                     } else {
                         Swal.fire('Error', data.message, 'error');

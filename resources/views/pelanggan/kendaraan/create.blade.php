@@ -1,10 +1,15 @@
-@extends('pelanggan.layouts.app')
-@section('title', 'Tambah Kendaraan')
+@extends('pelanggan.layouts.            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-white border-b border-gray-200 px-6 py-4">
+                    <h3 class="text-xl font-semibold text-black flex items-center">
+                        <i class="fas fa-motorcycle mr-2 text-green-500"></i>
+                        Form Kendaraan Baru
+                    </h3>
+                </div>section('title', 'Tambah Kendaraan')
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 py-8">
-        <!-- Header with gradient -->
-        <div class="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 rounded-lg shadow-lg mb-8 overflow-hidden">
+        <!-- Header with orange color -->
+        <div class="bg-orange-500 rounded-lg shadow-lg mb-8 overflow-hidden">
             <div class="px-6 py-8 text-white">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div class="mb-4 md:mb-0">
@@ -12,7 +17,7 @@
                             <i class="fas fa-plus-circle mr-3 text-4xl"></i>
                             Tambah Kendaraan
                         </h1>
-                        <p class="text-blue-100 mt-2">Daftarkan kendaraan listrik Anda</p>
+                        <p class="text-orange-100 mt-2">Daftarkan kendaraan listrik Anda</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a href="{{ route('kendaraan.index') }}" 
@@ -151,11 +156,11 @@
             </div>
 
             <!-- Help Card -->
-            <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg text-white p-6 mt-8">
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mt-8">
                 <div class="text-center">
-                    <i class="fas fa-info-circle text-3xl mb-3 opacity-80"></i>
-                    <h3 class="text-lg font-semibold mb-2">Tips Pengisian Data</h3>
-                    <div class="text-blue-100 text-sm space-y-1">
+                    <i class="fas fa-info-circle text-3xl mb-3 text-gray-600"></i>
+                    <h3 class="text-lg font-semibold mb-2 text-black">Tips Pengisian Data</h3>
+                    <div class="text-gray-700 text-sm space-y-1">
                         <p>• Pastikan data kendaraan yang dimasukkan akurat</p>
                         <p>• Foto kendaraan akan membantu identifikasi saat servis</p>
                         <p>• Simpan nomor rangka dengan benar untuk keperluan garansi</p>

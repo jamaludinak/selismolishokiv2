@@ -4,16 +4,16 @@
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 py-8">
-        <!-- Header with gradient -->
-        <div class="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 rounded-lg shadow-lg mb-8 overflow-hidden">
+        <!-- Header with orange color -->
+        <div class="bg-orange-500 rounded-lg shadow-lg mb-8 overflow-hidden">
             <div class="px-6 py-8 text-white">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div class="mb-4 md:mb-0">
                         <h1 class="text-3xl font-bold flex items-center">
                             <i class="fas fa-file-alt mr-3 text-4xl"></i>
-                            Detail Riwayat Servis
+                            Detail Riwayat Reservasi
                         </h1>
-                        <p class="text-blue-100 mt-2">No. Resi: {{ $riwayat->noResi }}</p>
+                        <p class="text-orange-100 mt-2">No. Resi: {{ $riwayat->noResi }}</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a href="{{ route('riwayats.index') }}" 
@@ -39,9 +39,9 @@
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Service Basic Info -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-gradient-to-r from-green-500 to-blue-500 px-6 py-4">
-                            <h3 class="text-xl font-semibold text-white flex items-center">
-                                <i class="fas fa-info-circle mr-2"></i>
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-info-circle mr-2 text-green-500"></i>
                                 Informasi Servis
                             </h3>
                         </div>
@@ -109,25 +109,58 @@
                                             </span>
                                         </div>
                                     </div>
-
-                                    <div class="group">
-                                        <label class="text-sm font-medium text-gray-600 block mb-1">
-                                            <i class="fas fa-user text-gray-500 mr-2"></i>Pelanggan
-                                        </label>
-                                        <div class="bg-gray-50 rounded-lg px-4 py-3 border-l-4 border-gray-500">
-                                            <p class="text-lg font-semibold text-gray-900">{{ $riwayat->user->name ?? 'Tidak tersedia' }}</p>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Photo and Video Section -->
+                    @if($riwayat->gambar || $riwayat->video)
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-camera mr-2 text-pink-500"></i>
+                                Dokumentasi Kerusakan
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                @if($riwayat->gambar)
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600 block mb-2">
+                                        <i class="fas fa-image text-pink-500 mr-2"></i>Foto Kerusakan
+                                    </label>
+                                    <div class="bg-gray-50 rounded-lg p-3">
+                                        <img src="{{ asset($riwayat->gambar) }}" alt="Foto Kerusakan" 
+                                             class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                                             onclick="openImageModal('{{ asset($riwayat->gambar) }}')">
+                                    </div>
+                                </div>
+                                @endif
+
+                                @if($riwayat->video)
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600 block mb-2">
+                                        <i class="fas fa-video text-purple-500 mr-2"></i>Video Kerusakan
+                                    </label>
+                                    <div class="bg-gray-50 rounded-lg p-3">
+                                        <video controls class="w-full h-48 rounded-lg">
+                                            <source src="{{ asset($riwayat->video) }}" type="video/mp4">
+                                            Browser Anda tidak mendukung video.
+                                        </video>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Cost Breakdown -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-gradient-to-r from-orange-500 to-red-500 px-6 py-4">
-                            <h3 class="text-xl font-semibold text-white flex items-center">
-                                <i class="fas fa-money-bill-wave mr-2"></i>
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-money-bill-wave mr-2 text-orange-500"></i>
                                 Rincian Biaya
                             </h3>
                         </div>
@@ -156,9 +189,9 @@
                 <div class="space-y-6">
                     <!-- Warranty Status Card -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-4">
-                            <h3 class="text-xl font-semibold text-white flex items-center">
-                                <i class="fas fa-shield-alt mr-2"></i>
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-shield-alt mr-2 text-yellow-500"></i>
                                 Status Garansi
                             </h3>
                         </div>
@@ -186,27 +219,6 @@
                                         <label class="text-sm font-medium text-gray-600 block mb-1">Tanggal Berakhir</label>
                                         <p class="font-semibold text-gray-900">{{ $tanggalGaransi->format('d F Y') }}</p>
                                     </div>
-
-                                    @if($isAktif)
-                                    <div class="bg-green-50 rounded-lg px-4 py-3">
-                                        <label class="text-sm font-medium text-green-600 block mb-1">Sisa Waktu</label>
-                                        <p class="font-semibold text-green-800">{{ $sisaHari }} hari lagi</p>
-                                    </div>
-
-                                    @if($sisaHari <= 30)
-                                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3">
-                                        <div class="flex items-center">
-                                            <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
-                                            <span class="text-yellow-700 text-sm font-medium">Garansi akan berakhir dalam 30 hari!</span>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @else
-                                    <div class="bg-red-50 rounded-lg px-4 py-3">
-                                        <label class="text-sm font-medium text-red-600 block mb-1">Berakhir Sejak</label>
-                                        <p class="font-semibold text-red-800">{{ $tanggalGaransi->diffForHumans() }}</p>
-                                    </div>
-                                    @endif
                                 </div>
                             @else
                                 <div class="text-center">
@@ -222,9 +234,9 @@
 
                     <!-- Action Cards -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-4">
-                            <h3 class="text-xl font-semibold text-white flex items-center">
-                                <i class="fas fa-tools mr-2"></i>
+                        <div class="bg-white border-b border-gray-200 px-6 py-4">
+                            <h3 class="text-xl font-semibold text-black flex items-center">
+                                <i class="fas fa-tools mr-2 text-indigo-500"></i>
                                 Aksi Cepat
                             </h3>
                         </div>
@@ -252,20 +264,6 @@
                                class="w-full bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center group">
                                 <i class="fas fa-list mr-2 group-hover:scale-110 transition-transform"></i>
                                 Lihat Semua Riwayat
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Help Card -->
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg text-white p-6">
-                        <div class="text-center">
-                            <i class="fas fa-question-circle text-3xl mb-3 opacity-80"></i>
-                            <h3 class="text-lg font-semibold mb-2">Butuh Bantuan?</h3>
-                            <p class="text-blue-100 text-sm mb-4">Tim customer service kami siap membantu Anda</p>
-                            <a href="#" 
-                               class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 inline-flex items-center">
-                                <i class="fas fa-headset mr-2"></i>
-                                Hubungi Kami
                             </a>
                         </div>
                     </div>

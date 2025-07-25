@@ -3,8 +3,8 @@
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 py-8">
-        <!-- Header with gradient -->
-        <div class="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 rounded-lg shadow-lg mb-8 overflow-hidden">
+        <!-- Header with orange color -->
+        <div class="bg-orange-500 rounded-lg shadow-lg mb-8 overflow-hidden">
             <div class="px-6 py-8 text-white">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div class="mb-4 md:mb-0">
@@ -12,7 +12,7 @@
                             <i class="fas fa-motorcycle mr-3 text-4xl"></i>
                             Data Kendaraan
                         </h1>
-                        <p class="text-blue-100 mt-2">Kelola informasi kendaraan listrik Anda</p>
+                        <p class="text-orange-100 mt-2">Kelola informasi kendaraan listrik Anda</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a href="{{ route('kendaraan.create') }}" 
@@ -76,24 +76,24 @@
             <!-- Desktop Table View -->
             <div class="hidden md:block overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200" id="kendaraanTable">
-                    <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            <th class="px-6 py-4 text-left text-xs font-bold text-black uppercase tracking-wider">
                                 <i class="fas fa-motorcycle mr-1"></i>Merk & Tipe
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            <th class="px-6 py-4 text-left text-xs font-bold text-black uppercase tracking-wider">
                                 <i class="fas fa-tag mr-1"></i>Jenis
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            <th class="px-6 py-4 text-left text-xs font-bold text-black uppercase tracking-wider">
                                 <i class="fas fa-barcode mr-1"></i>No. Rangka
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            <th class="px-6 py-4 text-left text-xs font-bold text-black uppercase tracking-wider">
                                 <i class="fas fa-calendar mr-1"></i>Tahun
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            <th class="px-6 py-4 text-left text-xs font-bold text-black uppercase tracking-wider">
                                 <i class="fas fa-shield-alt mr-1"></i>Status Garansi
                             </th>
-                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            <th class="px-6 py-4 text-center text-xs font-bold text-black uppercase tracking-wider">
                                 <i class="fas fa-cogs mr-1"></i>Aksi
                             </th>
                         </tr>
