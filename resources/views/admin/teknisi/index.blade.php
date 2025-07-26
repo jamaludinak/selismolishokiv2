@@ -46,8 +46,8 @@
                     <h4 class="font-semibold text-gray-800 mb-2">Informasi Pelanggan</h4>
                     <div class="space-y-1 text-sm">
                         <p><span class="font-medium">Nama:</span> {{ $reservasi->namaLengkap }}</p>
-                        <p><span class="font-medium">Telepon:</span> {{ $reservasi->noTelp }}</p>
-                        <p><span class="font-medium">Alamat:</span> {{ Str::limit($reservasi->alamatLengkap, 50) }}</p>
+                        <p><span class="font-medium">Telepon:</span> <a href="https://wa.me/{{ $reservasi->noTelp }}?text=Saya%20Dari%20Teknisi%20Selis%20Molis%20Hoki%20akan%20segera%20ke%20lokasi,%20apakah%20benar%20lokasi%20anda%20disini?%20https://www.google.com/maps?q={{ $reservasi->latitude }},{{ $reservasi->longitude }}" target="_blank" class="text-green-600 underline">{{ $reservasi->noTelp }}</a></p>
+                        <p><span class="font-medium">Alamat:</span> <a href="https://www.google.com/maps?q={{ $reservasi->latitude }},{{ $reservasi->longitude }}" target="_blank" class="text-blue-600 underline">{{ $reservasi->alamatLengkap }}</a></p>
                     </div>
                 </div>
 
@@ -58,8 +58,9 @@
                         <p><span class="font-medium">Jenis Servis:</span> {{ $reservasi->servis }}</p>
                         <p><span class="font-medium">Kerusakan:</span> {{ $reservasi->jenisKerusakan->nama ?? '-' }}</p>
                         @if($reservasi->kendaraan)
-                            <p><span class="font-medium">Kendaraan:</span> {{ $reservasi->kendaraan->kode ?? '-' }}</p>
+                            <p><span class="font-medium">Kendaraan:</span> {{ $reservasi->kendaraan->merk ?? '-' }} {{ $reservasi->kendaraan->tipe ?? '-' }}</p>
                         @endif
+                        <p><span class="font-medium">Biaya Perjalanan:</span> Rp {{ number_format($reservasi->biaya_perjalanan, 0, ',', '.') }}</p>
                         @if($reservasi->teknisi)
                             <p><span class="font-medium">Teknisi:</span> <span class="text-green-600 font-semibold">{{ $reservasi->teknisi->name }}</span></p>
                         @endif
@@ -284,60 +285,6 @@ function closeDetailModal() {
 function generateDetailContent(reservasi) {
     return `
         <div class="space-y-6">
-            <!-- Reservation Info -->
-            <div class="space-y-4">
-                <h4 class="text-lg font-semibold text-gray-800 border-b pb-2">Informasi Reservasi</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <p><span class="font-medium">No. Resi:</span> <span class="font-mono text-orange-600">${reservasi.noResi}</span></p>
-                        <p><span class="font-medium">Nama:</span> ${reservasi.namaLengkap}</p>
-                        <p><span class="font-medium">Telepon:</span> ${reservasi.noTelp}</p>
-                        <p><span class="font-medium">Jenis Servis:</span> ${reservasi.servis}</p>
-                        <p><span class="font-medium">Kerusakan:</span> ${reservasi.jenis_kerusakan ? reservasi.jenis_kerusakan.nama : 'N/A'}</p>
-                    </div>
-                    <div>
-                        <p><span class="font-medium">Status:</span> 
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full
-                                ${reservasi.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : ''}
-                                ${reservasi.status == 'confirmed' ? 'bg-blue-100 text-blue-800' : ''}
-                                ${reservasi.status == 'process' ? 'bg-indigo-100 text-indigo-800' : ''}
-                                ${reservasi.status == 'completed' ? 'bg-green-100 text-green-800' : ''}
-                                ${reservasi.status == 'cancelled' ? 'bg-red-100 text-red-800' : ''}">
-                                ${reservasi.status.charAt(0).toUpperCase() + reservasi.status.slice(1)}
-                            </span>
-                        </p>
-                        ${reservasi.kendaraan ? `<p><span class="font-medium">Kendaraan:</span> ${reservasi.kendaraan.kode || 'N/A'}</p>` : ''}
-                        ${reservasi.total_harga ? `<p><span class="font-medium">Total Harga:</span> Rp ${Number(reservasi.total_harga).toLocaleString()}</p>` : ''}
-                        ${reservasi.tanggal_berakhir_garansi ? `<p><span class="font-medium">Garansi:</span> ${new Date(reservasi.tanggal_berakhir_garansi).toLocaleDateString('id-ID')}</p>` : ''}
-                    </div>
-                </div>
-                
-                <div class="mt-4">
-                    <h5 class="font-medium text-gray-800 mb-2">Alamat Lengkap:</h5>
-                    <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded">${reservasi.alamatLengkap}</p>
-                </div>
-                
-                <div class="mt-4">
-                    <h5 class="font-medium text-gray-800 mb-2">Deskripsi Kerusakan:</h5>
-                    <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded">${reservasi.deskripsi || 'Tidak ada deskripsi'}</p>
-                </div>
-            </div>
-            
-            <!-- Schedule Info -->
-            ${reservasi.jadwals && reservasi.jadwals.length > 0 ? `
-                <div class="space-y-4">
-                    <h4 class="text-lg font-semibold text-gray-800 border-b pb-2">Jadwal</h4>
-                    <div class="space-y-2">
-                        ${reservasi.jadwals.map(jadwal => `
-                            <div class="bg-gray-50 rounded p-3">
-                                <p class="text-sm"><span class="font-medium">Tanggal:</span> ${new Date(jadwal.tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                                <p class="text-sm"><span class="font-medium">Waktu:</span> ${new Date(jadwal.waktuMulai).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} - ${new Date(jadwal.waktuSelesai).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            ` : ''}
-            
             <!-- Existing Media -->
             <div class="space-y-4">
                 <h4 class="text-lg font-semibold text-gray-800 border-b pb-2">Media</h4>
@@ -466,4 +413,4 @@ document.getElementById('detailModal').addEventListener('click', function(e) {
     }
 });
 </script>
-@endpush 
+@endpush
