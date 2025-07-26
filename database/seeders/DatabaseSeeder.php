@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(UlasanSeeder::class);
         $this->call(JenisKerusakanSeeder::class);
+        $this->call(DataPelangganSeeder::class);
         // $this->call(ReservasiSeeder::class);
         // $this->call(RiwayatSeeder::class);
         // Create an admin user

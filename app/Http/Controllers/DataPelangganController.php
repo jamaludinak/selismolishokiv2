@@ -10,16 +10,17 @@ class DataPelangganController extends Controller
 {
     public function index(Request $request)
     {
-        // Membuat query dasar dengan relasi alamat
+        // Ambil data pelanggan dengan relasi alamat utama
         $query = DataPelanggan::with(['alamatPelanggan' => function($query) {
             $query->orderBy('is_utama', 'desc')->orderBy('created_at', 'asc');
         }]);
-        // Mengambil data tanpa pagination
-        $dataPelanggan = $query->get();
-
+    
+        // Gunakan pagination, bukan get()
+        $dataPelanggan = $query->paginate(10); // 10 data per halaman
+    
         return view('admin.pelanggan.index', compact('dataPelanggan'));
     }
-
+    
     public function create()
     {
         return view('admin.pelanggan.create');
