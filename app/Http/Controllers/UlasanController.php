@@ -9,10 +9,7 @@ class UlasanController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Ulasan::query();
-
-        $ulasans = $query->get();
-
+        $ulasans = Ulasan::all();
         return view('admin.ulasan.index', compact('ulasans'));
     }
 
