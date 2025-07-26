@@ -14,23 +14,9 @@ class DataPelangganController extends Controller
         $query = DataPelanggan::with(['alamatPelanggan' => function($query) {
             $query->orderBy('is_utama', 'desc')->orderBy('created_at', 'asc');
         }]);
-    
-        // Cek apakah ada parameter pencarian yang diberikan
-        if ($request->filled('searchNama')) {
-            $query->where('nama', 'like', '%' . $request->searchNama . '%');
-        }
-    
-        if ($request->filled('searchKode')) {
-            $query->where('kode', 'like', '%' . $request->searchKode . '%');
-        }
-    
-        if ($request->filled('searchNoHP')) {
-            $query->where('noHP', 'like', '%' . $request->searchNoHP . '%');
-        }
-    
-        // Mengambil data dengan pagination
-        $dataPelanggan = $query->paginate(10);
-    
+        // Mengambil data tanpa pagination
+        $dataPelanggan = $query->get();
+
         return view('admin.pelanggan.index', compact('dataPelanggan'));
     }
 

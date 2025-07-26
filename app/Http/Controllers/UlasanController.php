@@ -11,17 +11,7 @@ class UlasanController extends Controller
     {
         $query = Ulasan::query();
 
-        // Search by name
-        if ($request->filled('search_nama')) {
-            $query->where('nama', 'like', '%' . $request->search_nama . '%');
-        }
-
-        // Filter by rating
-        if ($request->filled('filter_rating')) {
-            $query->where('rating', $request->filter_rating);
-        }
-
-        $ulasans = $query->paginate(10);
+        $ulasans = $query->get();
 
         return view('admin.ulasan.index', compact('ulasans'));
     }
