@@ -64,15 +64,14 @@
                                 @php
                                     $currentDate = $startOfWeek->copy()->addDays($index)->format('Y-m-d');
                                     $jadwalsInHour = $jadwals->filter(function($item) use ($currentDate, $i) {
-                                        $waktuMulai = \Carbon\Carbon::parse($item->waktuMulai);
-                                        $waktuSelesai = \Carbon\Carbon::parse($item->waktuSelesai);
-                                        $startHour = $i;
-                                        $endHour = $i + 1; // For current hour slot
-
-                                        // Check if event starts or is ongoing within the current hour slot
-                                        return $item->tanggal == $currentDate &&
-                                               ($waktuMulai->hour == $startHour ||
-                                               ($waktuMulai->hour < $startHour && $waktuSelesai->hour > $startHour));
+                                        // Construct datetime for the current slot
+                                        $slotStart = \Carbon\Carbon::parse("{$currentDate} " . str_pad($i, 2, '0', STR_PAD_LEFT) . ":00");
+                                        $slotEnd = $slotStart->copy()->addHour();
+                                        // Parse schedule start and end times with date
+                                        $startTime = \Carbon\Carbon::parse("{$item->tanggal} {$item->waktuMulai}");
+                                        $endTime = \Carbon\Carbon::parse("{$item->tanggal} {$item->waktuSelesai}");
+                                        // Check if the schedule overlaps with the slot
+                                        return $startTime < $slotEnd && $endTime > $slotStart;
                                     });
                                 @endphp
 
@@ -161,6 +160,10 @@
                                 <button type="button" onclick="confirmDeleteJadwal({{ $item->id }})" class="text-red-600 hover:text-red-800 transition">
                                     <i class="fas fa-trash"></i> Hapus
                                 </button>
+                                <form id="delete-jadwal-form-{{ $item->id }}" action="{{ route('jadwal.destroy', $item->id) }}" method="POST" class="hidden">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
                             </div>
                         </div>
                     @endforeach
