@@ -142,7 +142,7 @@
                     <a href="{{ route('admin.reservasi.show', $reservasi->id) }}" class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                         <i class="fas fa-info-circle mr-2"></i> Detail
                     </a>
-                    <a href="{{ route('reservasi.edit', $reservasi->id) }}" class="flex items-center justify-center bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-2 px-4 rounded-md transition duration-300">
+                    <a href="{{ route('admin.reservasi.edit', $reservasi->id) }}" class="flex items-center justify-center bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-2 px-4 rounded-md transition duration-300">
                         <i class="fas fa-edit mr-2"></i> Edit
                     </a>
                 </div>
@@ -233,13 +233,13 @@
                                 <a href="{{ route('admin.reservasi.show', $reservasi->id) }}" class="text-blue-600 hover:text-blue-900 transition duration-150 ease-in-out">
                                     <i class="fas fa-eye text-lg"></i>
                                 </a>
-                                <a href="{{ route('reservasi.edit', $reservasi->id) }}" class="text-yellow-600 hover:text-yellow-900 transition duration-150 ease-in-out">
+                                <a href="{{ route('admin.reservasi.edit', $reservasi->id) }}" class="text-yellow-600 hover:text-yellow-900 transition duration-150 ease-in-out">
                                     <i class="fas fa-edit text-lg"></i>
                                 </a>
                                 <button type="button" onclick="confirmDeleteReservasi({{ $reservasi->id }})" class="text-red-600 hover:text-red-900 transition duration-150 ease-in-out">
                                     <i class="fas fa-trash-alt text-lg"></i>
                                 </button>
-                                <form id="delete-reservasi-form-{{ $reservasi->id }}" action="{{ route('reservasi.destroy', $reservasi->id) }}" method="POST" class="hidden">
+                                <form id="delete-reservasi-form-{{ $reservasi->id }}" action="{{ route('admin.reservasi.destroy', $reservasi->id) }}" method="POST" class="hidden">
                                     @csrf
                                     @method('DELETE')
                                 </form>

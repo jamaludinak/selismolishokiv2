@@ -181,26 +181,26 @@ class ReservasiController extends Controller
         $reservasi = Reservasi::findOrFail($id);
 
         $validatedData = $request->validate([
-            'namaLengkap' => 'nullable|string|max:255', // Nullable
-            'alamatLengkap' => 'nullable|string', // Nullable
-            'noTelp' => 'nullable|string|max:15', // Nullable
-            'idJenisKerusakan' => 'nullable|exists:jenis_kerusakans,id', // Nullable
-            'deskripsi' => 'nullable|string', // Nullable
-            'gambar' => 'nullable|string', // Tetap nullable
-            'video' => 'nullable|string', // Tetap nullable
-            'noResi' => 'nullable|unique:reservasis,noResi,' . $reservasi->id, // Nullable
-            'servis' => 'nullable|string', // Nullable
-            'status' => 'nullable|string|in:pending,confirmed,process,completed,cancelled', // Tetap nullable
+            'namaLengkap' => 'required|string|max:255',
+            'alamatLengkap' => 'required|string',
+            'noTelp' => 'required|string|max:15',
+            'idJenisKerusakan' => 'required|exists:jenis_kerusakans,id',
+            'deskripsi' => 'required|string',
+            'gambar' => 'nullable|string',
+            'video' => 'nullable|string',
+            'noResi' => 'nullable|unique:reservasis,noResi,' . $reservasi->id,
+            'servis' => 'required|string',
+            'status' => 'nullable|string|in:pending,confirmed,process,completed,cancelled',
         ]);
 
         // Update data reservasi
         $reservasi->update($validatedData);
 
-        // Simpan riwayat hanya jika status diberikan
-        if (!is_null($reservasi->status)) {
+        // Simpan riwayat hanya jika status diberikan dalam validatedData
+        if (isset($validatedData['status']) && !is_null($validatedData['status'])) {
             Riwayat::create([
                 'idReservasi' => $reservasi->id,
-                'status' => $reservasi->status,
+                'status' => $validatedData['status'],
             ]);
         }
 
@@ -213,6 +213,12 @@ class ReservasiController extends Controller
     
         // Hapus data terkait di req_jadwals
         $reservasi->reqJadwals()->delete();
+        
+        // Hapus data terkait di jadwals
+        $reservasi->jadwals()->delete();
+        
+        // Hapus data terkait di riwayats
+        $reservasi->riwayats()->delete();
     
         // Hapus data di reservasi
         $reservasi->delete();

@@ -119,7 +119,7 @@
                     <button type="button" onclick="confirmDeleteHistory({{ $reservasi->id }})" class="flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                         <i class="fas fa-trash-alt mr-2"></i> Hapus
                     </button>
-                    <form id="delete-history-form-{{ $reservasi->id }}" action="{{ route('reservasi.destroy', $reservasi->id) }}" method="POST" class="hidden">
+                    <form id="delete-history-form-{{ $reservasi->id }}" action="{{ route('admin.reservasi.destroy', $reservasi->id) }}" method="POST" class="hidden">
                         @csrf
                         @method('DELETE')
                     </form>

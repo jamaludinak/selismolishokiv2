@@ -24,7 +24,7 @@
     @endif
 
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <form action="{{ route('reservasi.update', $reservasi->id) }}" method="POST" class="space-y-6">
+        <form action="{{ route('admin.reservasi.update', $reservasi->id) }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -63,6 +63,25 @@
                     <select name="servis" id="servis" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm" required>
                         <option value="Home Service" {{ old('servis', $reservasi->servis) == 'Home Service' ? 'selected' : '' }}>Home Service</option>
                         <option value="Garage Service" {{ old('servis', $reservasi->servis) == 'Garage Service' ? 'selected' : '' }}>Garage Service</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="noResi" class="block text-sm font-medium text-gray-700">No. Resi</label>
+                    <input type="text" name="noResi" id="noResi" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm" value="{{ old('noResi', $reservasi->noResi) }}" placeholder="Contoh: HM-240528AA">
+                </div>
+
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select name="status" id="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                        <option value="">Pilih Status</option>
+                        <option value="pending" {{ old('status', $reservasi->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="confirmed" {{ old('status', $reservasi->status) == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                        <option value="process" {{ old('status', $reservasi->status) == 'process' ? 'selected' : '' }}>Process</option>
+                        <option value="completed" {{ old('status', $reservasi->status) == 'completed' ? 'selected' : '' }}>Completed</option>
+                        <option value="cancelled" {{ old('status', $reservasi->status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                     </select>
                 </div>
             </div>
