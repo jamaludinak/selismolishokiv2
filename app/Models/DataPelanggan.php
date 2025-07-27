@@ -42,5 +42,5 @@ class DataPelanggan extends Authenticatable
     public function reservasis()
     {
         return $this->hasMany(Reservasi::class, 'noTelp', 'noHP');
-    }
+}
 }

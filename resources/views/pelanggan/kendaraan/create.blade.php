@@ -23,18 +23,7 @@
                 </div>
             </div>
         </div>
-        <!-- Help Card -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mt-8 mb-8">
-            <div class="text-center">
-                <i class="fas fa-info-circle text-3xl mb-3 text-gray-600"></i>
-                <h3 class="text-lg font-semibold mb-2 text-black">Tips Pengisian Data</h3>
-                <div class="text-gray-700 text-sm space-y-1">
-                    <p>• Pastikan data kendaraan yang dimasukkan akurat</p>
-                    <p>• Foto kendaraan akan membantu identifikasi saat servis</p>
-                    <p>• Simpan nomor rangka dengan benar untuk keperluan garansi</p>
-                </div>
-            </div>
-        </div>
+
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div class="bg-gradient-to-r from-green-500 to-blue-500 px-6 py-4">
@@ -55,7 +44,8 @@
                                     <i class="fas fa-tag text-green-500 mr-2"></i>Merk Kendaraan
                                     <span class="text-red-500 ml-1">*</span>
                                 </label>
-                                <input type="text" id="merk" name="merk" placeholder="Contoh: Yamaha, Honda, Selis" required
+                                <input type="text" id="merk" name="merk"
+                                    placeholder="Contoh: Yamaha, Honda, Selis" required
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200">
                                 @error('merk')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -159,6 +149,18 @@
                         </a>
                     </div>
                 </form>
+            </div>
+        </div>
+        <!-- Help Card -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mt-8 mb-8">
+            <div class="text-center">
+                <i class="fas fa-info-circle text-3xl mb-3 text-gray-600"></i>
+                <h3 class="text-lg font-semibold mb-2 text-black">Tips Pengisian Data</h3>
+                <div class="text-gray-700 text-sm space-y-1">
+                    <p>• Pastikan data kendaraan yang dimasukkan akurat</p>
+                    <p>• Foto kendaraan akan membantu identifikasi saat servis</p>
+                    <p>• Simpan nomor rangka dengan benar untuk keperluan garansi</p>
+                </div>
             </div>
         </div>
     </div>

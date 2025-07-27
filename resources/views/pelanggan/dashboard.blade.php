@@ -1,6 +1,41 @@
 @extends('pelanggan.layouts.app')
 @section('title', 'Dashboard Pelanggan')
 @section('content')
+    @if ($alamatCount == 0 || $kendaraansCount == 0)
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded-lg shadow-md mb-6 mx-4">
+            <div class="flex items-center">
+                <div class="text-2xl mr-3">⚠️</div>
+                <div>
+                    <h3 class="font-bold text-lg">Peringatan</h3>
+                    <p class="text-sm">
+                        Anda belum menambahkan
+                        @if ($alamatCount == 0 && $kendaraansCount == 0)
+                            alamat dan kendaraan
+                        @elseif ($alamatCount == 0)
+                            alamat
+                        @else
+                            kendaraan
+                        @endif
+                        di akun Anda. Silakan tambahkan terlebih dahulu untuk menggunakan layanan kami.
+                    </p>
+                </div>
+            </div>
+            <div class="mt-4 flex space-x-3">
+                @if ($alamatCount == 0)
+                    <a href="{{ route('alamat.create') }}"
+                        class="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded shadow">
+                        Tambah Alamat
+                    </a>
+                @endif
+                @if ($kendaraansCount == 0)
+                    <a href="{{ route('kendaraan.create') }}"
+                        class="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded shadow">
+                        Tambah Kendaraan
+                    </a>
+                @endif
+            </div>
+        </div>
+    @endif
 
     <div class=" grid grid-cols-2 p-4 md:grid-cols-4 gap-4 mb-6">
         <!-- Reservasi Servis -->
@@ -40,7 +75,7 @@
         <!-- Total Kendaraan -->
         <div class="bg-white border border-orange-200 rounded-md shadow p-4 text-center">
             <h3 class="font-bold text-lg text-gray-800 mb-2">Total Kendaraan</h3>
-            <p class="text-2xl text-orange-600 font-bold">{{ $totalKendaraan }}</p>
+            <p class="text-2xl text-orange-600 font-bold">{{ $kendaraansCount }}</p>
         </div>
 
         <!-- Garansi Aktif -->
