@@ -77,7 +77,10 @@
                                     <div class="group">
                                         <label class="text-sm font-medium text-gray-600 block mb-1">Alamat Lengkap</label>
                                         <div class="bg-gray-50 rounded-lg px-4 py-3 border-l-4 border-indigo-500">
-                                            <p class="text-gray-900 font-semibold">{{ $reservasi->alamatLengkap }}</p>
+                                            <a href="https://www.google.com/maps/search/?api=1&query={{ $reservasi->latitude }},{{ $reservasi->longitude }}"
+                                                target="_blank" class="text-blue-600 hover:underline flex items-center">
+                                                {{ $reservasi->alamatLengkap }} <i class="fas fa-map-marked-alt ml-2"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

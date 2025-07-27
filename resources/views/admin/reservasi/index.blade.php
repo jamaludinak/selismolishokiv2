@@ -78,44 +78,53 @@
             @forelse ($reservasis as $reservasi)
                 <div class="bg-white rounded-lg shadow-md border border-gray-200 p-5 relative">
                     <div class="absolute top-3 right-3">
-                        <span class="px-3 py-1 text-xs font-semibold rounded-full
-                            @if($reservasi->status == 'pending') bg-yellow-100 text-yellow-800
+                        <span
+                            class="px-3 py-1 text-xs font-semibold rounded-full
+                            @if ($reservasi->status == 'pending') bg-yellow-100 text-yellow-800
                             @elseif($reservasi->status == 'confirmed') bg-blue-100 text-blue-800
                             @elseif($reservasi->status == 'process') bg-indigo-100 text-indigo-800
                             @elseif($reservasi->status == 'completed') bg-green-100 text-green-800
-                            @elseif($reservasi->status == 'cancelled') bg-red-100 text-red-800
-                            @endif">
+                            @elseif($reservasi->status == 'cancelled') bg-red-100 text-red-800 @endif">
                             {{ ucfirst($reservasi->status) }}
                         </span>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $reservasi->namaLengkap }}</h3>
-                    <p class="text-gray-600 mb-1"><strong class="text-gray-800">No. Resi:</strong> <span class="font-mono text-orange-600">{{ $reservasi->noResi }}</span></p>
-                    <p class="text-gray-600 mb-1"><strong class="text-gray-800">Jenis Servis:</strong> {{ $reservasi->servis }}</p>
-                    <p class="text-gray-600 mb-1"><strong class="text-gray-800">Jenis Kerusakan:</strong> {{ $reservasi->jenisKerusakan->nama ?? 'N/A' }}</p>
-                    <p class="text-gray-600 mb-1 break-words"><strong class="text-gray-800">Alamat:</strong> {{ $reservasi->alamatLengkap }}</p>
+                    <p class="text-gray-600 mb-1"><strong class="text-gray-800">No. Resi:</strong> <span
+                            class="font-mono text-orange-600">{{ $reservasi->noResi }}</span></p>
+                    <p class="text-gray-600 mb-1"><strong class="text-gray-800">Jenis Servis:</strong>
+                        {{ $reservasi->servis }}</p>
+                    <p class="text-gray-600 mb-1"><strong class="text-gray-800">Jenis Kerusakan:</strong>
+                        {{ $reservasi->jenisKerusakan->nama ?? 'N/A' }}</p>
+                    <p class="text-gray-600 mb-1 break-words"><strong class="text-gray-800">Alamat:</strong>
+                        {{ $reservasi->alamatLengkap }}</p>
                     <p class="text-gray-600 mb-3">
                         <strong class="text-gray-800">No. Telepon:</strong>
-                        <a href="https://wa.me/62{{ ltrim(preg_replace('/[^0-9]/', '', $reservasi->noTelp), '0') }}" target="_blank" class="text-blue-600 hover:underline">
+                        <a href="https://wa.me/62{{ ltrim(preg_replace('/[^0-9]/', '', $reservasi->noTelp), '0') }}"
+                            target="_blank" class="text-blue-600 hover:underline">
                             {{ $reservasi->noTelp }} <i class="fab fa-whatsapp ml-1"></i>
                         </a>
                     </p>
-                    @if($reservasi->teknisi)
+                    @if ($reservasi->teknisi)
                         <p class="text-gray-600 mb-3">
                             <strong class="text-gray-800">Teknisi:</strong>
                             <span class="text-green-600 font-semibold">{{ $reservasi->teknisi->name }}</span>
                         </p>
                     @endif
                     <div class="flex flex-col space-y-3 mt-5">
-                        <a href="{{ route('admin.reservasi.show', $reservasi->id) }}" class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                        <a href="{{ route('admin.reservasi.show', $reservasi->id) }}"
+                            class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                             <i class="fas fa-info-circle mr-2"></i> Detail
                         </a>
-                        <a href="{{ route('admin.reservasi.edit', $reservasi->id) }}" class="flex items-center justify-center bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                        <a href="{{ route('admin.reservasi.edit', $reservasi->id) }}"
+                            class="flex items-center justify-center bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                             <i class="fas fa-edit mr-2"></i> Edit
                         </a>
-                        <button type="button" onclick="confirmDeleteReservasi({{ $reservasi->id }})" class="flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                        <button type="button" onclick="confirmDeleteReservasi({{ $reservasi->id }})"
+                            class="flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                             <i class="fas fa-trash-alt mr-2"></i> Hapus
                         </button>
-                        <form id="delete-reservasi-form-{{ $reservasi->id }}" action="{{ route('admin.reservasi.destroy', $reservasi->id) }}" method="POST" class="hidden">
+                        <form id="delete-reservasi-form-{{ $reservasi->id }}"
+                            action="{{ route('admin.reservasi.destroy', $reservasi->id) }}" method="POST" class="hidden">
                             @csrf
                             @method('DELETE')
                         </form>
@@ -141,7 +150,8 @@
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">No. Telp
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Jenis Kerusakan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Jenis
+                            Kerusakan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Servis</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">No. Resi
                         </th>
@@ -159,7 +169,10 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {{ $reservasi->namaLengkap }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 max-w-xs truncate">
-                                {{ $reservasi->alamatLengkap }}</td>
+                                <a href="https://maps.google.com/?q={{ $reservasi->latitude }},{{ $reservasi->longitude }}" target="_blank" class="text-blue-600 hover:underline">
+                                    {{ $reservasi->alamatLengkap }}
+                                </a>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                 @if ($reservasi->reqJadwals->isNotEmpty())
                                     @foreach ($reservasi->reqJadwals as $jadwal)
