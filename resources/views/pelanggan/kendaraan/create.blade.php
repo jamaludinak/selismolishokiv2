@@ -26,7 +26,7 @@
 
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <div class="bg-gradient-to-r from-green-500 to-blue-500 px-6 py-4">
+                <div class="bg-orange-500 px-6 py-4">
                     <h3 class="text-xl font-semibold text-white flex items-center">
                         <i class="fas fa-edit mr-2"></i>
                         Form Kendaraan Baru
@@ -108,18 +108,6 @@
                             </div>
 
                             <div class="group">
-                                <label for="tanggal_berakhir_garansi" class="text-sm font-medium text-gray-600 block mb-2">
-                                    <i class="fas fa-shield-alt text-teal-500 mr-2"></i>Tanggal Berakhir Garansi
-                                </label>
-                                <input type="date" id="tanggal_berakhir_garansi" name="tanggal_berakhir_garansi"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200">
-                                <p class="text-xs text-gray-500 mt-1">Opsional - untuk keperluan tracking garansi</p>
-                                @error('tanggal_berakhir_garansi')
-                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="group">
                                 <label for="foto" class="text-sm font-medium text-gray-600 block mb-2">
                                     <i class="fas fa-camera text-pink-500 mr-2"></i>Foto Kendaraan
                                 </label>
@@ -138,7 +126,7 @@
                     <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-gray-200">
                         <button type="submit"
-                            class="flex-1 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center group">
+                            class="flex-1 bg-blue-500 hover:from-green-600 hover:to-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center group">
                             <i class="fas fa-save mr-2 group-hover:scale-110 transition-transform"></i>
                             Simpan Kendaraan
                         </button>

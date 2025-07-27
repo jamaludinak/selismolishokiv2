@@ -152,6 +152,15 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('admin.klaim-garansi.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('admin.klaim-garansi.*') ? 'bg-orange-800' : '' }}">
+                        <i class="fas fa-shield-alt mr-3"></i> Klaim Garansi
+                    </a>
+                </li>
+                @endanyrole
+
+                {{-- Menu untuk Owner saja --}}
+                @role('owner')
+                <li>
                     <a href="{{ route('pelanggan.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('pelanggan.index') ? 'bg-orange-800' : '' }}">
                         <i class="fas fa-users mr-3"></i> Data Pelanggan
                     </a>
@@ -162,17 +171,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.klaim-garansi.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('admin.klaim-garansi.*') ? 'bg-orange-800' : '' }}">
-                        <i class="fas fa-shield-alt mr-3"></i> Klaim Garansi
-                    </a>
-                </li>
-                @endanyrole
-
-                {{-- Menu untuk Owner saja --}}
-                @role('owner')
-                <li>
                     <a href="{{ route('pegawai.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('pegawai.index') ? 'bg-orange-800' : '' }}">
                         <i class="fas fa-user-tie mr-3"></i> Data Pegawai
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('settings.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('settings.*') ? 'bg-orange-800' : '' }}">
+                        <i class="fas fa-cog mr-3"></i> Pengaturan
                     </a>
                 </li>
                 @endrole
@@ -185,13 +190,6 @@
                     </a>
                 </li>
                 @endanyrole
-
-                {{-- Menu untuk semua role --}}
-                <li>
-                    <a href="{{ route('settings.index') }}" class="flex items-center p-2 rounded-md hover:bg-orange-800 {{ request()->routeIs('settings.*') ? 'bg-orange-800' : '' }}">
-                        <i class="fas fa-cog mr-3"></i> Pengaturan
-                    </a>
-                </li>
             </ul>
         </div>
     </aside>

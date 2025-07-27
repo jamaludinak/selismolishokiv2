@@ -98,7 +98,7 @@ class KendaraanController extends Controller
             $data['foto'] = 'uploads/kendaraan/' . $filename;
         }
         $kendaraan->update($data);
-        return redirect()->route('kendaraan.index')->with('success', 'Data kendaraan berhasil diupdate.');
+        return redirect()->route('kendaraan.index')->with('success', 'Perubahan data kendaraan berhasil disimpan.');
     }
 
     // Hapus kendaraan

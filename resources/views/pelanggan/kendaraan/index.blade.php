@@ -163,7 +163,10 @@
                                             class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 shadow-sm hover:shadow-md">
                                             <i class="fas fa-edit mr-1"></i>Edit
                                         </a>
-                                        <form action="{{ route('kendaraan.destroy', $k->id) }}" method="POST" class="delete-form" data-entity="kendaraan">
+                                        <form action="{{ route('kendaraan.destroy', $k->id) }}" method="POST" class="delete-form" 
+                                              data-entity="kendaraan" 
+                                              data-merk="{{ $k->merk }}" 
+                                              data-tipe="{{ $k->tipe ?: 'Tanpa Tipe' }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
@@ -270,7 +273,10 @@
                                     class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-md text-xs font-medium text-center transition-colors duration-200">
                                     <i class="fas fa-edit mr-1"></i>Edit
                                 </a>
-                                <form action="{{ route('kendaraan.destroy', $k->id) }}" method="POST" class="delete-form flex-1" data-entity="kendaraan">
+                                <form action="{{ route('kendaraan.destroy', $k->id) }}" method="POST" class="delete-form flex-1" 
+                                      data-entity="kendaraan" 
+                                      data-merk="{{ $k->merk }}" 
+                                      data-tipe="{{ $k->tipe ?: 'Tanpa Tipe' }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
@@ -516,9 +522,79 @@
 
             confirmDelete(form) {
                 const entity = form.getAttribute('data-entity') || 'item';
-                if (confirm(`Apakah Anda yakin ingin menghapus ${entity} ini?`)) {
-                    form.submit();
+                const merk = form.getAttribute('data-merk') || '';
+                const tipe = form.getAttribute('data-tipe') || '';
+                
+                // Create detailed message
+                let vehicleInfo = '';
+                if (merk && tipe) {
+                    vehicleInfo = `${merk} ${tipe}`;
+                } else if (merk) {
+                    vehicleInfo = merk;
+                } else {
+                    vehicleInfo = entity;
                 }
+                
+                Swal.fire({
+                    title: 'Konfirmasi Hapus Kendaraan',
+                    html: `<div class="text-center">
+                            <div class="mb-4">
+                                <i class="fas fa-motorcycle text-6xl text-red-400"></i>
+                            </div>
+                            <p class="text-gray-700 mb-2">Apakah Anda yakin ingin menghapus kendaraan:</p>
+                            <p class="text-lg font-bold text-gray-900 mb-4">${vehicleInfo}</p>
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                                <p class="text-sm text-red-600">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    <strong>Peringatan:</strong> Data kendaraan yang dihapus tidak dapat dikembalikan!
+                                </p>
+                            </div>
+                           </div>`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: '<i class="fas fa-trash mr-2"></i>Ya, Hapus Kendaraan!',
+                    cancelButtonText: '<i class="fas fa-times mr-2"></i>Batal',
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'rounded-xl shadow-2xl',
+                        title: 'text-xl font-bold text-gray-800 mb-4',
+                        content: 'text-gray-600',
+                        confirmButton: 'font-medium px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200',
+                        cancelButton: 'font-medium px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200'
+                    },
+                    buttonsStyling: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: true,
+                    focusConfirm: false,
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Menghapus Kendaraan...',
+                            html: `<div class="text-center">
+                                    <div class="mb-4">
+                                        <i class="fas fa-trash text-4xl text-red-500 animate-pulse"></i>
+                                    </div>
+                                    <p class="text-gray-600">Mohon tunggu, sedang menghapus <strong>${vehicleInfo}</strong></p>
+                                   </div>`,
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            customClass: {
+                                popup: 'rounded-xl'
+                            },
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        // Submit the form
+                        form.submit();
+                    }
+                });
             }
         }
 

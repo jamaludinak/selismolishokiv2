@@ -74,12 +74,16 @@
     </style>
     
     <!-- External CSS with async loading -->
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"></noscript>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"></noscript>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"></noscript>
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Alpine.js -->
@@ -116,12 +120,14 @@
             const loader = document.getElementById('loader');
             const mainContent = document.getElementById('main-content');
             
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                mainContent.classList.remove('loading');
-                mainContent.classList.add('loaded');
-                setTimeout(() => loader.style.display = 'none', 300);
-            }, 500);
+            if (loader && mainContent) {
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    mainContent.classList.remove('loading');
+                    mainContent.classList.add('loaded');
+                    setTimeout(() => loader.style.display = 'none', 300);
+                }, 500);
+            }
         });
         
         // Lazy load non-critical scripts
