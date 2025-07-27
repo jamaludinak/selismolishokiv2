@@ -106,7 +106,7 @@ Route::middleware(['auth', 'role:admin,teknisi,owner'])->group(function () {
             'update' => 'jenis_kerusakan.update',
             'destroy' => 'jenis_kerusakan.destroy',
         ]);
-        
+         
         // Jadwal
         Route::resource('jadwal', JadwalController::class);
         

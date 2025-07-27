@@ -294,7 +294,8 @@
             <i class="fas fa-times"></i>
         </button>
     </div>
-
+@endsection
+@push('js')
     <!-- Scripts -->
     <script>
         // Image modal functions
@@ -452,4 +453,4 @@
             new ReservasiPagination();
         });
     </script>
-@endsection
+@endpush
